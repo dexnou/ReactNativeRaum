@@ -1,13 +1,10 @@
-
-
-
 import { FlatList,StyleSheet, ScrollView, Image } from 'react-native';
 import 'react-native-url-polyfill/auto';
 import { Text, View } from '@/components/Themed';
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
-
+-
 export default function ProfileScreen() {
   // const { userId } = route.params;
   const [userTea, setUserTea] = useState(null);
@@ -15,10 +12,7 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data, error } = await supabase
-      .from('Usuario_TEA')
-      .select('*, Paises(nombre_pais), Categoria(nombre), Curso(id_curso, nombre)')
-      .innerJoin('Curso', 'Curso-Usuario.id_curso', 'Curso.id_curso');
+      const { data, error } = await supabase.from('Usuario_TEA').select('*, Categoria(*), Paises(nombre_pais), Curso(*)')
       if (error) {
         console.log(error);
       } else {
@@ -38,7 +32,13 @@ export default function ProfileScreen() {
       <Text>País: {item.Paises.nombre_pais}</Text>
       <Text>Categoría Favorita: {item.Categoria.nombre}</Text>
       <Text>Descripcion: {item.descripcion}</Text>
-      <Text>Cursos Hechos: {} </Text>
+      <Text>Curso:</Text>
+      {
+        item.Curso && item.Curso.map((curso) => (
+          <Text key={curso.id_curso}>{curso.nombre}</Text>
+        ))
+      }
+      
       <Text>Amigos: {}</Text>
     </View>
   );
