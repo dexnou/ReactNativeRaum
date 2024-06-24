@@ -4,25 +4,17 @@ import { Text, View } from '@/components/Themed';
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
--
+import {UserQuery} from '@/lib/user'
+
 export default function ProfileScreen() {
   // const { userId } = route.params;
-  const [userTea, setUserTea] = useState(null);
+  const [userTea, setUserTea] = useState({});
   const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data, error } = await supabase.from('Usuario_TEA').select('*, Categoria(*), Paises(nombre_pais), Curso(*)')
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('User data fetched:', data);
+   
 
-        setUserTea(data);
-      }
-    };
-
-    fetchUser();
+    const data = UserQuery.fetchUser();
   }, []);
 
   const renderItem = ({ item }) => (
