@@ -4,17 +4,23 @@ import { Text, View } from '@/components/Themed';
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
-import {UserQuery} from '@/lib/user'
+import { fetchUser } from '@/lib/user'; // Importamos fetchUser desde user.ts
 
 export default function ProfileScreen() {
-  // const { userId } = route.params;
-  const [userTea, setUserTea] = useState({});
+  const [userTea, setUserTea] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-   
+    const fetchData = async () => {
+      try {
+        const data = await fetchUser();
+        setUserTea(data); // Actualizamos el estado con los datos obtenidos
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
 
-    const data = UserQuery.fetchUser();
+    fetchData();
   }, []);
 
   const renderItem = ({ item }) => (
