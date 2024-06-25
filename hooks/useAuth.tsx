@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase'; // Asegúrate de importar correctamente tu instancia de Supabase
+import { supabase } from '@/lib/supabase'; // Importa tu instancia de Supabase
 import * as SecureStore from 'react-native-sensitive-info'; // Importa SecureStore para almacenamiento seguro en React Native
 
 // Tipo para el usuario autenticado
 type User = {
   id: string;
   email: string;
-  // Agrega otros campos del usuario según tu aplicación
+  // Puedes agregar más campos del usuario según tu aplicación
 };
 
 // Nombre para la clave en SecureStore
@@ -71,7 +71,35 @@ const useAuth = () => {
     }
   };
 
-  return { user, loading, signIn, signOut };
+  // Función para registrarse
+  const signUp = async (email: string, password: string, nombre: string, apellido: string, fechaNacimiento: Date) => {
+    try {
+      // Registrar el usuario en Supabase Auth
+      const { user: authUser, session, error: authError } = await supabase.auth.signUp({ email, password });
+      if (authError) {
+        throw authError;
+      }
+
+      // Insertar datos en la tabla Usuario_TEA
+      const { data, error: insertError } = await supabase
+        .from('Usuario_TEA')
+        .insert([{ mail: email, nombre, apellido, fec_nac: fechaNacimiento }]);
+      
+      if (insertError) {
+        throw insertError;
+      }
+      
+      if (authUser && session) {
+        setUser(authUser);
+        await SecureStore.setItem(USER_SESSION_KEY, session);
+      }
+    } catch (error) {
+      console.error('Sign up error:', error);
+      throw error;
+    }
+  };
+
+  return { user, loading, signIn, signOut, signUp };
 };
 
 export default useAuth;

@@ -3,16 +3,18 @@ import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import useAuth from '@/hooks/useAuth'; // Asegúrate de importar correctamente el hook useAuth
 
 const SignUpScreen = () => {
-  const { signUp } = useAuth();  
+  const { signUp, error } = useAuth(); // Obtén signUp y error del hook useAuth
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [fechaNacimiento, setFechaNacimiento] = useState('');
 
   const handleSignUp = async () => {
     try {
-      await signUp(email, password);
+      await signUp(email, password, nombre, apellido, new Date(fechaNacimiento)); // Llama a signUp con los datos necesarios
     } catch (error) {
-      setError(error.message);
+      console.error('Sign up error:', error); // Maneja o muestra el error si ocurre
     }
   };
 
@@ -34,7 +36,25 @@ const SignUpScreen = () => {
         value={password}
         secureTextEntry
       />
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      <TextInput
+        style={styles.input}
+        placeholder="Nombre"
+        onChangeText={setNombre}
+        value={nombre}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Apellido"
+        onChangeText={setApellido}
+        value={apellido}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Fecha de Nacimiento (YYYY-MM-DD)"
+        onChangeText={setFechaNacimiento}
+        value={fechaNacimiento}
+      />
+      {error && <Text style={styles.errorText}>{error.message}</Text>} {/* Muestra el mensaje de error si hay un error */}
       <Button title="Sign Up" onPress={handleSignUp} />
     </View>
   );
