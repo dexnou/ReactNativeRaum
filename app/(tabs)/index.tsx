@@ -1,4 +1,4 @@
-import { FlatList,StyleSheet, ScrollView, Image } from 'react-native';
+import { FlatList, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import 'react-native-url-polyfill/auto';
 import { Text, View } from '@/components/Themed';
 import { useState, useEffect } from 'react';
@@ -24,27 +24,53 @@ export default function ProfileScreen() {
   }, []);
 
   const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <Image source={{ uri: item.fotoUsuario }} style={styles.profilePicture} />
-      <Text style={styles.name}>{`${item.nombre} ${item.apellido}`}</Text>
-      <Text>País: {item.Paises.nombre_pais}</Text>
-      <Text>Categoría Favorita: {item.Categoria.nombre}</Text>
-      <Text>Descripcion: {item.descripcion}</Text>
-      <Text>Curso:</Text>
-      {
-        item.Curso && item.Curso.map((curso) => (
-          <Text key={curso.id_curso}>{curso.nombre}</Text>
-        ))
-      }
-      
-      <Text>Amigos: {}</Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Image source={{ uri: item.fotoUsuario }} style={styles.profilePicture} />
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>{`${item.nombre} ${item.apellido}`}</Text>
+        <Text style={styles.infoUserBold}>País: {item.Paises.nombre_pais}</Text>
+        <Text style={styles.infoUserBold}>Categoría Favorita: {item.Categoria.nombre}</Text>
+        <Text style={styles.infoUserBold}>{item.descripcion}</Text>
+      </View>
+
+      <View style={styles.section}>
+        
+        <Text style={styles.sectionTitle}>Cursos hechos:</Text>
+        <View style={styles.courses}>
+          {
+            item.Curso && item.Curso.map((curso) => (
+              <Text key={curso.id_curso} style={styles.course}>{curso.nombre}</Text>
+            ))
+          }
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Amigos:</Text>
+        <ScrollView horizontal style={styles.friends}>
+          {
+            item.Amigos && item.Amigos.map((amigo) => (
+              <TouchableOpacity 
+                key={amigo.id} 
+                style={styles.friend} 
+                /*onPress={() => navigation.navigate('FriendDetail', { amigoId: amigo.id })}*/
+              >
+                <Image source={{ uri: amigo.foto }} style={styles.friendPicture} />
+              </TouchableOpacity>
+            ))
+          }
+        </ScrollView>
+      </View>
+
+      <Text style={styles.logout}>Cerrar Sesión</Text>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Profile</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <FlatList
         data={userTea}
         keyExtractor={item => item.id.toString()}
@@ -54,70 +80,86 @@ export default function ProfileScreen() {
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    display:'flex',
+    justifyContent:'center',
+    backgroundColor: '#f4f4f4',
+    borderRadius:0,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  title: {
-    marginTop: 20,
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-  itemContainer: {
-    alignItems: 'center',
+  header: {
+    display:'flex',
+    justifyContent:'flex-start',
+    backgroundColor: '#1e3a8a',
     padding: 20,
+    alignItems: 'center',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   profilePicture: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginBottom: 20,
+    borderWidth: 3,
+    borderColor: '#fff',
+    marginBottom: 10,
   },
   name: {
     fontSize: 24,
     fontWeight: 'bold',
+  },
+  infoUserBold:{
+    fontWeight:'bold',
+    textAlign:'justify',
+    fontSize: 16,
+  },
+  infoUser:{
+    textAlign:'justify',
+    fontSize: 16,
+  },
+  section: {
+    display:'flex',
+    justifyContent:'space-between',
+    textAlign:'justify',
+    backgroundColor: '#fff',
+    padding: 20,
+    marginVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
     marginBottom: 10,
   },
-  username: {
-    fontSize: 18,
-    color: 'gray',
-    marginBottom: 5,
+  courses: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
   },
-  email: {
-    fontSize: 18,
-    color: 'gray',
-    marginBottom: 5,
+  course: {
+    fontSize: 14,
+    color: '#374151',
+    backgroundColor: '#e5e7eb',
+    padding: 10,
+    borderRadius: 5,
+    margin: 5,
   },
-  dni: {
-    fontSize: 18,
-    color: 'gray',
-    marginBottom: 5,
+  friends: {
+    flexDirection: 'row',
   },
-  birthDate: {
-    fontSize: 18,
-    color: 'gray',
-    marginBottom: 20,
+  friend: {
+    alignItems: 'center',
+    marginRight: 10,
   },
-  dniPicture: {
-    width: 200,
-    height: 100,
-    marginBottom: 20,
+  friendPicture: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  logout: {
+    color: '#d32f2f',
+    fontWeight: 'bold',
+    marginTop: 20,
   },
 });

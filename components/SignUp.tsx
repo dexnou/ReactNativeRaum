@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Button, StyleSheet } from 'react-native';
 
-interface Props{
-    onSubmit: {content: string} => void;
+interface Props {
+  onSubmit: (content: string) => void;
 }
 
 export default function SignUp({onSubmit}: Props){
