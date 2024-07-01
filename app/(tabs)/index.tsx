@@ -30,10 +30,10 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.section}>
-        <div><Text style={styles.sectionTitle}>{`${item.nombre} ${item.apellido}`}</Text></div>
-        <div><Text style={styles.infoUserBold}>País: </Text><Text style={styles.infoUser}>{item.Paises.nombre_pais}</Text></div>
-        <div><Text style={styles.infoUserBold}>Categoría Favorita: </Text><Text style={styles.infoUser}>{item.Categoria.nombre}</Text></div>
-        <div><Text style={styles.infoUser}>{item.descripcion}</Text></div>
+        <div style={{width:'90%'}}><Text style={styles.sectionTitle}>{`${item.nombre} ${item.apellido}`}</Text></div>
+        <div style={{width:'90%'}}><Text style={styles.infoUserBold}>Ubicacion: </Text><Text style={styles.infoUser}>{item.Paises.nombre_pais}</Text></div>
+        <div style={{width:'90%'}}><Text style={styles.infoUserBold}>Categoria Favorita: </Text><Text style={styles.infoUser}>{item.Categoria.nombre}</Text></div>
+        <div style={{width:'90%'}}><Text style={styles.infoUserBold}>Sobre mi: </Text><Text style={styles.infoUser}>{item.descripcion}</Text></div>
       </View>
 
       <View style={styles.section}>
@@ -84,7 +84,9 @@ const styles = StyleSheet.create({
   container: {
     display:'flex',
     justifyContent:'center',
-    backgroundColor: '#f4f4f4',
+    width:'100%',
+    height:'100%',
+    backgroundColor: '#ffff',
     borderRadius:0,
   },
   header: {
@@ -112,6 +114,7 @@ const styles = StyleSheet.create({
     fontWeight:'bold',
     textAlign:'justify',
     fontSize: 16,
+    color:'#1D59CB',
   },
   infoUser:{
     textAlign:'justify',
@@ -119,18 +122,21 @@ const styles = StyleSheet.create({
   },
   section: {
     display:'flex',
-    justifyContent:'space-between',
+    justifyContent:'flex-start',
     textAlign:'justify',
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
     padding: 20,
     marginVertical: 10,
     borderRadius: 10,
     alignItems: 'center',
   },
   sectionTitle: {
+    display:'flex',
+    justifyContent:'center',
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    textAlign:'center'
   },
   courses: {
     flexDirection: 'row',
