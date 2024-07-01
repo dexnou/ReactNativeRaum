@@ -30,10 +30,10 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{`${item.nombre} ${item.apellido}`}</Text>
-        <Text style={styles.infoUserBold}>País: {item.Paises.nombre_pais}</Text>
-        <Text style={styles.infoUserBold}>Categoría Favorita: {item.Categoria.nombre}</Text>
-        <Text style={styles.infoUserBold}>{item.descripcion}</Text>
+        <div><Text style={styles.sectionTitle}>{`${item.nombre} ${item.apellido}`}</Text></div>
+        <div><Text style={styles.infoUserBold}>País: </Text><Text style={styles.infoUser}>{item.Paises.nombre_pais}</Text></div>
+        <div><Text style={styles.infoUserBold}>Categoría Favorita: </Text><Text style={styles.infoUser}>{item.Categoria.nombre}</Text></div>
+        <div><Text style={styles.infoUser}>{item.descripcion}</Text></div>
       </View>
 
       <View style={styles.section}>
@@ -161,5 +161,6 @@ const styles = StyleSheet.create({
     color: '#d32f2f',
     fontWeight: 'bold',
     marginTop: 20,
+    textAlign: 'center'
   },
 });
