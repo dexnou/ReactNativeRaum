@@ -31,7 +31,7 @@ export default function ProfileScreen() {
 
       <View style={styles.section}>
         <div style={{width:'90%'}}><Text style={styles.sectionTitle}>{`${item.nombre} ${item.apellido}`}</Text></div>
-        <div style={{width:'90%'}}><Text style={styles.infoUserBold}>Ubicacion: </Text><Text style={styles.infoUser}>{item.Paises.nombre_pais}</Text></div>
+        <div style={{width:'90%'}}><Text style={styles.infoUserBold}>Ubicacion: </Text><Text style={styles.infoUser}>{item.Provincias.nombre}</Text></div>
         <div style={{width:'90%'}}><Text style={styles.infoUserBold}>Categoria Favorita: </Text><Text style={styles.infoUser}>{item.Categoria.nombre}</Text></div>
         <div style={{width:'90%'}}><Text style={styles.infoUserBold}>Sobre mi: </Text><Text style={styles.infoUser}>{item.descripcion}</Text></div>
       </View>
