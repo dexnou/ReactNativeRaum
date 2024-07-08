@@ -1,29 +1,50 @@
-// components/NavBar.tsx
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // o cualquier otra librería de íconos que prefieras
-import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 
-const NavBar: React.FC = () => {
-  const navigation = useNavigation();
-
+const NavBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-        <Ionicons name="home" size={24} color="white" />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Friends')}>
-        <Ionicons name="people" size={24} color="white" />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Ionicons name="log-in" size={24} color="white" />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-        <Ionicons name="person-add" size={24} color="white" />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('User')}>
-        <Ionicons name="person" size={24} color="white" />
-      </TouchableOpacity>
+      {state.routes.map((route, index) => {
+        const { options } = descriptors[route.key];
+        const label =
+          options.tabBarLabel !== undefined
+            ? options.tabBarLabel
+            : options.title !== undefined
+            ? options.title
+            : route.name;
+
+        const isFocused = state.index === index;
+
+        const onPress = () => {
+          const event = navigation.emit({
+            type: 'tabPress',
+            target: route.key,
+            canPreventDefault: true,
+          });
+
+          if (!isFocused && !event.defaultPrevented) {
+            navigation.navigate(route.name);
+          }
+        };
+
+        return (
+          <TouchableOpacity
+            key={index}
+            onPress={onPress}
+            style={styles.tab}
+          >
+            {options.tabBarIcon && (
+              <Ionicons
+                name={options.tabBarIcon({ color: isFocused ? 'white' : 'gray', size: 24 }).props.name}
+                size={24}
+                color={isFocused ? 'white' : 'gray'}
+              />
+            )}
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };
@@ -32,9 +53,12 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: '#002366', // color de fondo similar al de la imagen
+    backgroundColor: '#002366',
     paddingVertical: 10,
     borderRadius: 10,
+  },
+  tab: {
+    alignItems: 'center',
   },
 });
 

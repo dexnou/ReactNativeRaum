@@ -1,172 +1,86 @@
-import { FlatList, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
-import 'react-native-url-polyfill/auto';
-import { Text, View } from '@/components/Themed';
-import { useState, useEffect } from 'react';
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ImageBackground } from 'react-native';
+import { Svg, Path } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
-import { supabase } from '@/lib/supabase';
-import { fetchUser } from '@/lib/user'; // Importamos fetchUser desde user.ts
+import { StackNavigationProp } from '@react-navigation/stack';
 
-export default function ProfileScreen() {
-  const [userTea, setUserTea] = useState([]);
-  const navigation = useNavigation();
+const { width, height } = Dimensions.get('window');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchUser();
-        setUserTea(data); // Actualizamos el estado con los datos obtenidos
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
+type RootStackParamList = {
+  Login: undefined;
+  Signup: undefined;
+};
 
-    fetchData();
-  }, []);
+type FirstPageNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
-  const renderItem = ({ item }) => (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Image source={{ uri: item.fotoUsuario }} style={styles.profilePicture} />
-      </View>
-
-      <View style={styles.section}>
-        <div style={{width:'90%'}}><Text style={styles.sectionTitle}>{`${item.nombre} ${item.apellido}`}</Text></div>
-        <div style={{width:'90%'}}><Text style={styles.infoUserBold}>Ubicacion: </Text><Text style={styles.infoUser}>{item.Provincias.nombre}</Text></div>
-        <div style={{width:'90%'}}><Text style={styles.infoUserBold}>Categoria Favorita: </Text><Text style={styles.infoUser}>{item.Categoria.nombre}</Text></div>
-        <div style={{width:'90%'}}><Text style={styles.infoUserBold}>Sobre mi: </Text><Text style={styles.infoUser}>{item.descripcion}</Text></div>
-      </View>
-
-      <View style={styles.section}>
-        
-        <Text style={styles.sectionTitle}>Cursos hechos:</Text>
-        <View style={styles.courses}>
-          {
-            item.Curso && item.Curso.map((curso) => (
-              <Text key={curso.id_curso} style={styles.course}>{curso.nombre}</Text>
-            ))
-          }
+const FirstPage: React.FC = () => {
+    const navigation = useNavigation<FirstPageNavigationProp>();
+    
+    return (
+      <ImageBackground 
+            source={{ uri: 'https://i.postimg.cc/nLgZHcLH/background-image.png' }} 
+            style={styles.container}
+        >
+        <View style={styles.container}>
+            <View style={styles.contentContainer}>
+                <TouchableOpacity 
+                    style={styles.buttonPrimary} 
+                    onPress={() => navigation.navigate('Login')}
+                >
+                    <Text style={styles.buttonTextPrimary}>YA TENGO CUENTA</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    style={styles.buttonSecondary} 
+                    onPress={() => navigation.navigate('Signup')}
+                >
+                    <Text style={styles.buttonTextSecondary}>QUIERO TENER UNA CUENTA</Text>
+                </TouchableOpacity>
+            </View>
         </View>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Amigos:</Text>
-        <ScrollView horizontal style={styles.friends}>
-          {
-            item.Amigos && item.Amigos.map((amigo) => (
-              <TouchableOpacity 
-                key={amigo.id} 
-                style={styles.friend} 
-                /*onPress={() => navigation.navigate('FriendDetail', { amigoId: amigo.id })}*/
-              >
-                <Image source={{ uri: amigo.foto }} style={styles.friendPicture} />
-              </TouchableOpacity>
-            ))
-          }
-        </ScrollView>
-      </View>
-
-      <Text style={styles.logout}>Cerrar Sesión</Text>
-    </View>
-  );
-
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={userTea}
-        keyExtractor={item => item.id.toString()}
-        renderItem={renderItem}
-      />
-    </View>
-  );
-}
-
+        </ImageBackground>
+    );
+};
 const styles = StyleSheet.create({
   container: {
-    display:'flex',
-    justifyContent:'center',
-    width:'100%',
-    height:'100%',
-    backgroundColor: '#ffff',
-    borderRadius:0,
-  },
-  header: {
-    display:'flex',
-    justifyContent:'flex-start',
-    backgroundColor: '#1e3a8a',
-    padding: 20,
-    alignItems: 'center',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-  },
-  profilePicture: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 3,
-    borderColor: '#fff',
-    marginBottom: 10,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  infoUserBold:{
-    fontWeight:'bold',
-    textAlign:'justify',
-    fontSize: 16,
-    color:'#1D59CB',
-  },
-  infoUser:{
-    textAlign:'justify',
-    fontSize: 16,
-  },
-  section: {
-    display:'flex',
-    justifyContent:'flex-start',
-    textAlign:'justify',
-    backgroundColor: 'transparent',
-    padding: 20,
-    marginVertical: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  sectionTitle: {
-    display:'flex',
-    justifyContent:'center',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign:'center'
-  },
-  courses: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flex: 1,
+    resizeMode: 'cover', // Esto asegura que la imagen cubra todo el fondo
     justifyContent: 'center',
+    zIndex:999999,
   },
-  course: {
-    fontSize: 14,
-    color: '#374151',
-    backgroundColor: '#e5e7eb',
-    padding: 10,
-    borderRadius: 5,
-    margin: 5,
-  },
-  friends: {
-    flexDirection: 'row',
-  },
-  friend: {
+  contentContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    marginRight: 10,
+    paddingBottom: 50,
   },
-  friendPicture: {
-    width: 50,
-    height: 50,
+  buttonPrimary: {
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
     borderRadius: 25,
+    marginBottom: 20,
+    width: width * 0.8,
+    alignItems: 'center',
   },
-  logout: {
-    color: '#d32f2f',
+  buttonSecondary: {
+    backgroundColor: 'transparent',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+    width: width * 0.8,
+    alignItems: 'center',
+  },
+  buttonTextPrimary: {
+    color: '#1E3A8A',
     fontWeight: 'bold',
-    marginTop: 20,
-    textAlign: 'center'
+    fontSize: 16,
+  },
+  buttonTextSecondary: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
+export default FirstPage;
