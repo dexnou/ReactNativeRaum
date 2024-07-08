@@ -44,8 +44,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     resizeMode: 'cover', // Esto asegura que la imagen cubra todo el fondo
-    justifyContent: 'center',
-    zIndex:999999,
+    justifyContent: 'center'
   },
   contentContainer: {
     flex: 1,
@@ -61,16 +60,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: width * 0.8,
     alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#1E3A8A',
   },
   buttonSecondary: {
-    backgroundColor: 'transparent',
+    backgroundColor: '#1E3A8A',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 25,
     borderWidth: 2,
-    borderColor: '#FFFFFF',
     width: width * 0.8,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   buttonTextPrimary: {
     color: '#1E3A8A',
