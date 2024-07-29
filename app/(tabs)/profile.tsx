@@ -15,10 +15,10 @@ export default function ProfileScreen() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const amigosData = await fetchAmigos(2); // Asume que el usuario actual tiene id 2
+        const amigosData: any = await fetchAmigos(2); // Asume que el usuario actual tiene id 2
         console.log('Amigos data:', amigosData); // Verificar los datos de amigos obtenidos
         setAmigosFotos(amigosData);
-        const userData = await fetchUser();
+        const userData: any = await fetchUser();
         setUserTea(userData);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -51,7 +51,6 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      <Text style={styles.logout}>Cerrar Sesión</Text>
     </View>
   );
   const renderFotosItem = ({ item }) => (
@@ -65,6 +64,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
+      <Text style={styles.logout}>Cerrar Sesión</Text>
     </View>
   );
 
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     textAlign:'justify',
     backgroundColor: 'transparent',
     padding: 20,
-    marginVertical: 10,
+    marginVertical: 20,
     borderRadius: 10,
     alignItems: 'center',
   },

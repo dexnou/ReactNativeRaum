@@ -2,19 +2,28 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import useAuth from '@/hooks/useAuth'; // Asegúrate de importar correctamente el hook useAuth
 import SignUp from '@/components/SignUp';
-
+import { supabase } from '@/lib/supabase';
 
 export default function signUp(){
 
   const handleSubmit = async (content: string) => {
-    alert(content);
+    // const {data, error} = await supabase.auth.signUp({
+    //   email: "noahdemianr@gmail.com",
+    //   password: "Noah1234",
+    //   options: {
+    //     emailRedirectTo: "www.google.com",
+    //   }
+    // })
+    const {data,error} = await supabase.auth.signInAnonymously()
+    const {dataUpdate,errorUpdate} = await supabase.auth.updateUser({
+      email: "policianoah@gmail.com"
+    })
+    console.log(dataUpdate,errorUpdate)
   };
 
   return (
     <View style={styles.container}>
-      <SignUp 
-        onSubmit={handleSubmit}
-      />
+      <button onClick={() => handleSubmit()} />
     </View>
   );
 }

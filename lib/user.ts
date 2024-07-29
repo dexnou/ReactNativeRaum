@@ -1,5 +1,4 @@
 import { supabase } from '@/lib/supabase';
-
 export const fetchUser = async () => {//, Amigos(*) .eq('id1','2').eq('id2','2')
   const { data, error } = await supabase.from('Usuario_TEA')
   .select(`
@@ -49,8 +48,8 @@ export const registroUsuario = async () => {
       .from('Usuario_TEA')
       .insert([
         { 
-          nombre: 'valor1',
-          apellido: 'valor2',
+          nombre: '',
+          apellido: '',
           username: '',
           mail: '',
           contraseña: '',
@@ -168,7 +167,3 @@ export const registroUsuario = async () => {
 //     return eventos as Evento[];
 //   }
 // };
-
-
-
-

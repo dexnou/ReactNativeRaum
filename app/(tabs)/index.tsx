@@ -1,87 +1,73 @@
-import React from "react";
-import {View, Text, TouchableOpacity, StyleSheet, Dimensions, ImageBackground} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const { width, height } = Dimensions.get("window");
-
-type RootStackParamList = {
-  Login: undefined;
-  Signup: undefined;
-};
-
-type FirstPageNavigationProp = StackNavigationProp<RootStackParamList, "Login">;
-
-const FirstPage: React.FC = () => {
-  const navigation = useNavigation<FirstPageNavigationProp>();
-
+const LoginScreen = ({ navigation }: { navigation: any }) => {
   return (
-    <ImageBackground
-      source={{ uri: "https://i.postimg.cc/nLgZHcLH/background-image.png" }}
-      style={styles.container}
-    >
+    <View style={styles.background}>
+      <View style={styles.topShape} />
+      <View style={styles.bottomShape} />
       <View style={styles.container}>
-        <View style={styles.contentContainer}>
-          <TouchableOpacity
-            style={styles.buttonPrimary}
-            onPress={() => navigation.navigate("Login")}
-          >
-            <Text style={styles.buttonTextPrimary}>YA TENGO CUENTA</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonSecondary}
-            onPress={() => navigation.navigate("Signup")}
-          >
-            <Text style={styles.buttonTextSecondary}>
-              QUIERO TENER UNA CUENTA
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.buttonText}>YA TENGO CUENTA</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, styles.secondaryButton]} onPress={() => navigation.navigate('Signup')}>
+          <Text style={styles.secondaryButtonText}>QUIERO TENER UNA CUENTA</Text>
+        </TouchableOpacity>
       </View>
-    </ImageBackground>
+    </View>
   );
 };
+
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: '#03175E',
+  },
+  topShape: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '60%',
+    backgroundColor: '#03175E',
+    borderBottomRightRadius: 200,
+  },
+  bottomShape: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '40%',
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 200,
+  },
   container: {
-    flex: 1,
-    resizeMode: "cover", // Esto asegura que la imagen cubra todo el fondo
-    justifyContent: "center",
+    alignItems: 'center',
+    padding: 20,
   },
-  contentContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    paddingBottom: 50,
-  },
-  buttonPrimary: {
-    backgroundColor: "#FFFFFF",
-    paddingVertical: 15,
-    paddingHorizontal: 30,
+  button: {
+    width: '80%',
+    height: 50,
+    backgroundColor: '#000080',
     borderRadius: 25,
-    marginBottom: 20,
-    width: width * 0.8,
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  secondaryButton: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#000080',
     borderWidth: 2,
-    borderColor: "#1E3A8A",
   },
-  buttonSecondary: {
-    backgroundColor: "#1E3A8A",
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 25,
-    borderWidth: 2,
-    width: width * 0.8,
-    alignItems: "center",
-  },
-  buttonTextPrimary: {
-    color: "#1E3A8A",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  buttonTextSecondary: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    fontSize: 16,
+  secondaryButtonText: {
+    color: '#000080',
+    fontWeight: 'bold',
   },
 });
-export default FirstPage;
+
+export default LoginScreen;

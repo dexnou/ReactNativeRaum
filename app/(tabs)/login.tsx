@@ -1,31 +1,53 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground, TouchableOpacity, Image } from 'react-native';
-import useAuth from '@/hooks/useAuth'; // Asegúrate de importar correctamente el hook useAuth
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { supabase } from '@/lib/supabase';
 
-const LoginScreen = () => {
-  const { signIn } = useAuth();
+import type {
+  SignInWithPasswordCredentials,
+  SignUpWithPasswordCredentials,
+} from '@supabase/supabase-js';
+
+const LoginScreen = ({ navigation }: { navigation: any }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSignIn = async () => {
+  const handleLogin = async () => {
+    setError('');
+    setLoading(true);
+
     try {
-      await signIn(email, password);
-    } catch (error) {
-      setError(error.message);
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setError(error.message);
+        Alert.alert('Error', error.message);
+      } else {
+        console.log('Login successful');
+        navigation.navigate('FirstPage'); // Navega a la pantalla deseada si el login es exitoso
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      setError('Unexpected error occurred');
+      Alert.alert('Error', 'Unexpected error occurred');
     }
+
+    setLoading(false);
   };
 
   return (
-    <ImageBackground
-      source={{ uri: "https://i.postimg.cc/sDDLsdZ3/Captura-de-pantalla-2024-07-11-154822.png" }}
-      style={styles.background}
-    >
+    <View style={styles.background}>
+      <View style={styles.topShape} />
+      <View style={styles.bottomShape} />
       <View style={styles.container}>
         <Text style={styles.title}>LOGIN</Text>
         <TextInput
           style={styles.input}
-          placeholder="Nombre de Usuario / Email"
+          placeholder="Email"
           onChangeText={setEmail}
           value={email}
           keyboardType="email-address"
@@ -33,31 +55,44 @@ const LoginScreen = () => {
         />
         <TextInput
           style={styles.input}
-          placeholder="Contraseña"
+          placeholder="Password"
           onChangeText={setPassword}
           value={password}
           secureTextEntry
         />
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
-        <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-          <Text style={styles.buttonText}>Iniciar Sesión</Text>
+        <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+          <Text style={styles.buttonText}>{loading ? 'Loading...' : 'Login'}</Text>
         </TouchableOpacity>
-        <Text style={styles.forgotPassword}>Olvidé mi contraseña</Text>
-        <View style={styles.socialLoginContainer}>
-          <Image style={styles.socialIcon} source={{ uri: 'https://img.icons8.com/color/48/000000/google-logo.png' }} />
-          <Image style={styles.socialIcon} source={{ uri: 'https://img.icons8.com/color/48/000000/facebook-new.png' }} />
-          <Image style={styles.socialIcon} source={{ uri: 'https://img.icons8.com/ios-filled/50/000000/mac-os.png' }} />
-        </View>
       </View>
-    </ImageBackground>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover',
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000080',
+  },
+  topShape: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '60%',
+    backgroundColor: '#000080',
+    borderBottomRightRadius: 200,
+  },
+  bottomShape: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '40%',
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 200,
   },
   container: {
     backgroundColor: 'white',
@@ -102,16 +137,6 @@ const styles = StyleSheet.create({
   forgotPassword: {
     color: '#000080',
     marginVertical: 10,
-  },
-  socialLoginContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '50%',
-    marginTop: 20,
-  },
-  socialIcon: {
-    width: 40,
-    height: 40,
   },
 });
 
