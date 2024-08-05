@@ -45,8 +45,8 @@ export default function TabNavigator() {
           }}
         />
         <Tab.Screen
-          name="TabTwo"
-          component={TabTwoScreen}
+          name="Home"
+          component={StackNavigator}
           options={{
             tabBarIcon: () => (
               <Ionicons name="reorder-two" size={24} color="black" />
@@ -63,7 +63,7 @@ export default function TabNavigator() {
           }}
         />
         <Tab.Screen
-          name="Signup"
+          name="SignUp"
           component={SignUpScreen}
           options={{
             tabBarIcon: () => (

@@ -68,7 +68,6 @@ export default function ProfileScreen() {
     </View>
   );
 
-
   const renderFotosItem = ({ item }) => (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Amigos:</Text>
@@ -88,12 +87,13 @@ export default function ProfileScreen() {
     </View>
   );
 
+
   
   return (
     <View style={styles.container}>
       <FlatList
         data={userTea}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item) => item.id.toString()}        
         renderItem={renderUsuarioItem}
       />
       {amigosFotos.length > 0 && renderFotosItem({ item: amigosFotos })}

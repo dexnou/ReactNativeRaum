@@ -17,7 +17,7 @@ export default function StackNavigator() {
       <Stack.Screen name="Comunidad" component={ComunidadScreen}/>
       <Stack.Screen name="SignUp" component={SignUpScreen}/>
       <Stack.Screen name="Login" component={LoginScreen}/>
-      <Stack.Screen name="IndexNormal" component={FirstPage}/>
+      <Stack.Screen name="FirstPage" component={FirstPage}/>
     </Stack.Navigator>
   );
 }

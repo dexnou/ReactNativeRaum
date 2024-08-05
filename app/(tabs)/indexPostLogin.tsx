@@ -9,7 +9,7 @@ export default function HomeScreen() {
     const navigation = useNavigation();
     return (
         <View>
-            <Text>Hola</Text>
+            <Text>Hola, estas en index post login</Text>
             {/*<Button title='Seguir con el progreso' 
             onPress={() => navigation.navigate('')}/>
             <Button title='Más cursos' 
