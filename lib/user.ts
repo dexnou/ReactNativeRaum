@@ -41,6 +41,60 @@ export const combinadoUserAmigos = () => {
   }
 }
 
+interface UserInput {
+  nombre: string;
+  apellido: string;
+  username: string;
+  mail: string;  
+  contraseña: string;
+  fec_nac: string;
+  num_dni: string;
+}
+
+export const fetchOrCreateUser = async (userInput: UserInput) => {
+  const { nombre, apellido, username, mail, contraseña, fec_nac, num_dni } = userInput;
+
+  // Verificar si el usuario ya existe
+  const { data: existingUser, error: fetchError } = await supabase
+    .from('Usuario_TEA')
+    .select('*')
+    .eq('mail', mail)  // Cambiado de email a mail
+    .single();
+
+  if (fetchError && fetchError.code !== 'PGRST116') {
+    console.log('Error al buscar usuario:', fetchError.message);
+    throw new Error('Error fetching user');
+  }
+
+  if (existingUser) {
+    console.log('El usuario ya existe:', existingUser);
+    return existingUser;
+  }
+
+  // Insertar el nuevo usuario
+  const { data: newUser, error: insertError } = await supabase
+    .from('Usuario_TEA')
+    .insert([{ 
+      nombre, 
+      apellido, 
+      username, 
+      mail, 
+      contraseña, 
+      fec_nac, 
+      num_dni 
+    }])
+    .single();
+
+  if (insertError) {
+    console.log('Error al insertar usuario:', insertError.message);
+    throw new Error('Error inserting user');
+  }
+
+  console.log('Usuario creado con éxito:', newUser);
+  return newUser;
+};
+
+
 /*
 export const registroUsuario = async () => {
     try {

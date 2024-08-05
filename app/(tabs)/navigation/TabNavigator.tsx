@@ -4,11 +4,11 @@ import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
 import NavBar from "@/components/NavBar";
-import ProfileScreen from "./profile";
-import TabTwoScreen from "./two";
-import LoginScreen from "./login";
-import signUp from "./signup";
-import FirstPage from "./index";
+import ProfileScreen from "../profile";
+import TabTwoScreen from "../two";
+import LoginScreen from "../login";
+import signUp from "../signup";
+import FirstPage from "../index";
 import { AuthProvider, useUserInfo } from "@/lib/userContext";
 
 const Tab = createBottomTabNavigator();
@@ -74,5 +74,3 @@ export default function TabNavigator() {
     </AuthProvider>
   );
 }
-
-//ver como solucionar lo de los 2 tipos de navegadores dentro de una MainNavigator

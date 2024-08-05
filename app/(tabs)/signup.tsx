@@ -3,27 +3,91 @@ import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import useAuth from '@/hooks/useAuth'; // Asegúrate de importar correctamente el hook useAuth
 import SignUp from '@/components/SignUp';
 import { supabase } from '@/lib/supabase';
+import { fetchOrCreateUser } from '@/lib/user'; // Asegúrate de importar la función correctamente
+
 
 export default function signUp(){
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [username, setUsername] = useState('');
+  const [mail, setMail] = useState('');
+  const [contraseña, setContraseña] = useState('');
+  const [fecNac, setFecNac] = useState('');
+  const [numDni, setNumDni] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSubmit = async (content: string) => {
-    // const {data, error} = await supabase.auth.signUp({
-    //   email: "noahdemianr@gmail.com",
-    //   password: "Noah1234",
-    //   options: {
-    //     emailRedirectTo: "www.google.com",
-    //   }
-    // })
-    const {data,error} = await supabase.auth.signInAnonymously()
-    const {dataUpdate,errorUpdate} = await supabase.auth.updateUser({
-      email: "policianoah@gmail.com"
-    })
-    console.log(dataUpdate,errorUpdate)
+  const handleSubmit = async () => {
+    if (!mail || !contraseña || !nombre || !apellido || !username || !fecNac || !numDni) {
+      setError('Todos los campos son obligatorios');
+      return;
+    }
+  
+    try {
+      const user = await fetchOrCreateUser({ 
+        nombre, 
+        apellido, 
+        username, 
+        mail,  // Verifica que este valor no sea null
+        contraseña, 
+        fec_nac: fecNac, 
+        num_dni: numDni 
+      });
+      console.log('User:', user);
+      // Navegar a la pantalla de inicio de sesión o inicio de la app
+    } catch (err) {
+      setError(err.message);
+    }
   };
+  
 
   return (
     <View style={styles.container}>
-      <button onClick={() => handleSubmit()} />
+      <Text style={styles.title}>Sign Up</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your name"
+        value={nombre}
+        onChangeText={setNombre}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your last name"
+        value={apellido}
+        onChangeText={setApellido}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your username"
+        value={username}
+        onChangeText={setUsername}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your email"
+        value={mail}
+        onChangeText={setMail}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your contraseña"
+        value={contraseña}
+        onChangeText={setContraseña}
+        secureTextEntry
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your birth date (YYYY-MM-DD)"
+        value={fecNac}
+        onChangeText={setFecNac}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your DNI number"
+        value={numDni}
+        onChangeText={setNumDni}
+      />
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+      <Button title="Submit" onPress={handleSubmit} />
     </View>
   );
 }
@@ -34,6 +98,18 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  error: {
+    color: 'red',
+    marginBottom: 10,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    width: '80%',
   },
   loadingContainer: {
     flex: 1,
