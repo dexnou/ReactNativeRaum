@@ -1,19 +1,22 @@
 import { supabase } from '@/lib/supabase';
-export const fetchUser = async () => {//, Amigos(*) .eq('id1','2').eq('id2','2')
+export const fetchUser = async (id: number) => {
   const { data, error } = await supabase.from('Usuario_TEA')
-  .select(`
-    *, 
-    Categoria(*), 
-    Provincias(nombre), 
-    Curso(*)`)
-  .eq('id','2');
+    .select(`
+      *, 
+      Categoria(*), 
+      Provincias(nombre), 
+      Curso(*)`)
+    .eq('id', id); // Usa el parámetro id en lugar de 2
   if (error) {
     console.log(error);
+    return null; // Asegúrate de devolver null si hay un error
   } else {
     console.log('User data fetched:', data);
     return data;
   }
 };
+
+
 
 export const fetchAmigos = async (idUsuario: number) => {
   console.log("entraaaa");
@@ -34,12 +37,12 @@ export const fetchAmigos = async (idUsuario: number) => {
   }
 };
 
-export const combinadoUserAmigos = () => {
+/*export const combinadoUserAmigos = () => {
   return {
-    usuarioTea: fetchUser(),
+    usuarioTea: fetchUser(userId),
     amigos: fetchAmigos(2)
   }
-}
+}*/
 
 interface UserInput {
   nombre: string;
@@ -93,6 +96,34 @@ export const fetchOrCreateUser = async (userInput: UserInput) => {
   console.log('Usuario creado con éxito:', newUser);
   return newUser;
 };
+
+interface LoginInput {
+  mail: string;
+  password: string;
+}
+
+export const loginUser = async ({ mail, password }: LoginInput) => {
+  // Buscar el usuario en la base de datos
+  console.log('Email:', mail ,'y contraseña: ', password);
+  const { data, error } = await supabase
+    .from('Usuario_TEA')
+    .select('*')
+    .eq('mail', mail)
+    .eq('contraseña', password) // Asegúrate de que 'contraseña' es el nombre correcto de la columna
+    .single();
+
+  if (error) {
+    console.log('Error al verificar usuario:', error.message);
+    throw new Error('Error al iniciar sesión');
+  }
+
+  if (!data) {
+    throw new Error('Usuario no encontrado o contraseña incorrecta');
+  }
+
+  return data;
+};
+
 
 
 /*

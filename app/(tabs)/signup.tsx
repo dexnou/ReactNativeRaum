@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
 import { fetchOrCreateUser } from '@/lib/user'; // Asegúrate de importar la función correctamente
 
 
-export default function signUp(){
+export default function SignUpScreen(){
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [username, setUsername] = useState('');

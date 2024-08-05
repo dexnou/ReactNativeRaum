@@ -7,9 +7,10 @@ import NavBar from "@/components/NavBar";
 import ProfileScreen from "../profile";
 import TabTwoScreen from "../two";
 import LoginScreen from "../login";
-import signUp from "../signup";
+import SignUpScreen from "../signup";
 import FirstPage from "../index";
 import { AuthProvider, useUserInfo } from "@/lib/userContext";
+import StackNavigator from "./ScreenNavigator";
 
 const Tab = createBottomTabNavigator();
 export default function TabNavigator() {
@@ -63,7 +64,7 @@ export default function TabNavigator() {
         />
         <Tab.Screen
           name="Signup"
-          component={signUp}
+          component={SignUpScreen}
           options={{
             tabBarIcon: () => (
               <Ionicons name="log-in-outline" size={24} color="black" />

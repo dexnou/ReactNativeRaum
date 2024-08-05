@@ -8,44 +8,37 @@ import {
   Alert,
 } from "react-native";
 import { supabase } from "@/lib/supabase";
-
-import type {
-  SignInWithPasswordCredentials,
-  SignUpWithPasswordCredentials,
-} from "@supabase/supabase-js";
+import { loginUser } from "@/lib/user"; // Asegúrate de importar correctamente la función
 
 const LoginScreen = ({ navigation }: { navigation: any }) => {
-  const [email, setEmail] = useState("");
+  const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    setError("");
+    if (!mail || !password) {
+      setError("Email y contraseña son obligatorios");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        setError(error.message);
-        Alert.alert("Error", error.message);
-      } else {
-        console.log("Login successful");
-        navigation.navigate("FirstPage"); // Navega a la pantalla deseada si el login es exitoso
-      }
+      const user = await loginUser({ mail, password });
+      console.log("Usuario logueado:", user);
+      // Aquí puedes redirigir al usuario a la pantalla principal o a otra pantalla
+      console.log('Login manda el userId', user.id)
+      navigation.navigate('Profile',{ userId: user.id });
+      //Hay que pasar por props el id del usuario conseguido
     } catch (err) {
-      console.error("Unexpected error:", err);
-      setError("Unexpected error occurred");
-      Alert.alert("Error", "Unexpected error occurred");
+      console.error("Error al iniciar sesión:", err.message);
+      setError("Error al iniciar sesión. Verifica tus credenciales.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
-
+  
   return (
     <View style={styles.background}>
       <View style={styles.topShape} />
@@ -55,8 +48,8 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
         <TextInput
           style={styles.input}
           placeholder="Email"
-          onChangeText={setEmail}
-          value={email}
+          onChangeText={setMail}
+          value={mail}
           keyboardType="email-address"
           autoCapitalize="none"
         />

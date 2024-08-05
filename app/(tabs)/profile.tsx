@@ -2,67 +2,87 @@ import { FlatList, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react
 import 'react-native-url-polyfill/auto';
 import { Text, View } from '@/components/Themed';
 import { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
 import { fetchUser, fetchAmigos } from '@/lib/user'; // Importamos fetchUser desde user.ts
 
 export default function ProfileScreen() {
-  // const [userTeaAmigos, setUserTeaAmigos] = useState([]);
+  const route = useRoute();
+  const { userId } = route.params; // Accede al userId desde los parámetros de la ruta
+  console.log(userId)
   const [amigosFotos, setAmigosFotos] = useState([]);
-  const [userTea, setUserTea] = useState([]);
+  const [userTea, setUserTea] = useState<any[]>([]); // Asegúrate de inicializar como array vacío
   const navigation = useNavigation();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const amigosData: any = await fetchAmigos(2); // Asume que el usuario actual tiene id 2
-        console.log('Amigos data:', amigosData); // Verificar los datos de amigos obtenidos
+        const amigosData: any = await fetchAmigos(userId);
+        console.log('Amigos data:', amigosData);
         setAmigosFotos(amigosData);
-        const userData: any = await fetchUser();
-        setUserTea(userData);
+
+        const userData: any = await fetchUser(userId);
+        // Manejar el caso donde userData puede ser null
+        if (userData) {
+          setUserTea([userData]); // Ajustar según la estructura de tu dato
+        } else {
+          setUserTea([]);
+        }
+        
+        if (userData?.fotoUsuario === null) {
+          userData.fotoUsuario = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+        }
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
 
     fetchData();
-  }, []);
-
+  }, [userId]); // Agrega userId como dependencia
 
   const renderUsuarioItem = ({ item }) => (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image source={{ uri: item.fotoUsuario }} style={styles.profilePicture} />
+        <Image source={{ uri: item.fotoUsuario || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }} style={styles.profilePicture} />
       </View>
 
       <View style={styles.section}>
-        <div style={{width:'90%'}}><Text style={styles.sectionTitle}>{`${item.nombre} ${item.apellido}`}</Text></div>
-        <div style={{width:'90%'}}><Text style={styles.infoUserBold}>Ubicacion: </Text><Text style={styles.infoUser}>{item.Provincias.nombre}</Text></div>
-        <div style={{width:'90%'}}><Text style={styles.infoUserBold}>Categoria Favorita: </Text><Text style={styles.infoUser}>{item.Categoria.nombre}</Text></div>
-        <div style={{width:'90%'}}><Text style={styles.infoUserBold}>Sobre mi: </Text><Text style={styles.infoUser}>{item.descripcion}</Text></div>
+        <Text style={styles.sectionTitle}>{`${item.nombre || 'Nombre no disponible'} ${item.apellido || 'Apellido no disponible'}`}</Text>
+        <Text style={styles.infoUserBold}>Ubicacion: </Text><Text style={styles.infoUser}>{item.Provincias?.nombre || 'Ubicación no disponible'}</Text>
+        <Text style={styles.infoUserBold}>Categoria Favorita: </Text><Text style={styles.infoUser}>{item.Categoria?.nombre || 'Categoría no disponible'}</Text>
+        <Text style={styles.infoUserBold}>Sobre mi: </Text><Text style={styles.infoUser}>{item.descripcion || 'Descripción no disponible'}</Text>
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Cursos hechos:</Text>
         <View style={styles.courses}>
-          {item.Curso && item.Curso.map((curso) => (
-            <Text key={curso.id_curso} style={styles.course}>{curso.nombre}</Text>
-          ))}
+          {item.Curso && item.Curso.length > 0 ? (
+            item.Curso.map((curso) => (
+              <Text key={curso.id_curso} style={styles.course}>{curso.nombre || 'Curso sin nombre'}</Text>
+            ))
+          ) : (
+            <Text style={styles.infoUser}>No hay cursos disponibles</Text>
+          )}
         </View>
       </View>
-
     </View>
   );
+
+
   const renderFotosItem = ({ item }) => (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Amigos:</Text>
       <ScrollView horizontal style={styles.friends}>
-        {item.map((amigo) => (
-          <TouchableOpacity key={amigo.id} style={styles.friend}>
-            <Image source={{ uri: amigo.fotoUsuario }} style={styles.friendPicture} />
-            <Text>{amigo.nombre} {amigo.apellido}</Text>
-          </TouchableOpacity>
-        ))}
+        {item.length > 0 ? (
+          item.map((amigo) => (
+            <TouchableOpacity key={amigo.id} style={styles.friend}>
+              <Image source={{ uri: amigo.fotoUsuario || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }} style={styles.friendPicture} />
+              <Text>{amigo.nombre || 'Nombre no disponible'} {amigo.apellido || 'Apellido no disponible'}</Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={styles.infoUser}>No tienes amigos</Text>
+        )}
       </ScrollView>
       <Text style={styles.logout}>Cerrar Sesión</Text>
     </View>
@@ -78,7 +98,6 @@ export default function ProfileScreen() {
       />
       {amigosFotos.length > 0 && renderFotosItem({ item: amigosFotos })}
     </View>
-
   );
 }
 
