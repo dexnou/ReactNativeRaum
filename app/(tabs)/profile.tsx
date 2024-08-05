@@ -44,17 +44,17 @@ export default function ProfileScreen() {
   const renderUsuarioItem = ({ item }) => (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image source={{ uri: item.fotoUsuario }} style={styles.profilePicture} />
+        <Image source={{ uri: item[0].fotoUsuario }} style={styles.profilePicture} />
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{`${item.nombre || ''} ${item.apellido || ''}`.trim() || 'Nombre no disponible'}</Text>
+        <Text style={styles.sectionTitle}>{`${item[0].nombre || ''} ${item[0].apellido || ''}`.trim() || 'Nombre no disponible'}</Text>
         <Text style={styles.infoUserBold}>Ubicación: </Text>
-        <Text style={styles.infoUser}>{item.Provincias?.nombre || 'Ubicación no disponible'}</Text>
+        <Text style={styles.infoUser}>{item[0].Provincias?.nombre || 'Ubicación no disponible'}</Text>
         <Text style={styles.infoUserBold}>Categoría Favorita: </Text>
-        <Text style={styles.infoUser}>{item.Categoria?.nombre || 'Categoría no disponible'}</Text>
+        <Text style={styles.infoUser}>{item[0].Categoria?.nombre || 'Categoría no disponible'}</Text>
         <Text style={styles.infoUserBold}>Sobre mí: </Text>
-        <Text style={styles.infoUser}>{item.descripcion || 'Descripción no disponible'}</Text>
+        <Text style={styles.infoUser}>{item[0].descripcion || 'Descripción no disponible'}</Text>
       </View>
 
       <View style={styles.section}>
