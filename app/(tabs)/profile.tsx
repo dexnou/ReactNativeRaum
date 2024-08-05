@@ -22,15 +22,16 @@ export default function ProfileScreen() {
         setAmigosFotos(amigosData);
 
         const userData: any = await fetchUser(userId);
+        console.log('User data:', userData); // Verifica que los datos se están obteniendo correctamente
         // Manejar el caso donde userData puede ser null
         if (userData) {
+          // Asignar foto de usuario predeterminada si es null
+          if (userData.fotoUsuario === null) {
+            userData.fotoUsuario = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+          }
           setUserTea([userData]); // Ajustar según la estructura de tu dato
         } else {
           setUserTea([]);
-        }
-        
-        if (userData?.fotoUsuario === null) {
-          userData.fotoUsuario = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -43,14 +44,17 @@ export default function ProfileScreen() {
   const renderUsuarioItem = ({ item }) => (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image source={{ uri: item.fotoUsuario || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }} style={styles.profilePicture} />
+        <Image source={{ uri: item.fotoUsuario }} style={styles.profilePicture} />
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{`${item.nombre || 'Nombre no disponible'} ${item.apellido || 'Apellido no disponible'}`}</Text>
-        <Text style={styles.infoUserBold}>Ubicacion: </Text><Text style={styles.infoUser}>{item.Provincias?.nombre || 'Ubicación no disponible'}</Text>
-        <Text style={styles.infoUserBold}>Categoria Favorita: </Text><Text style={styles.infoUser}>{item.Categoria?.nombre || 'Categoría no disponible'}</Text>
-        <Text style={styles.infoUserBold}>Sobre mi: </Text><Text style={styles.infoUser}>{item.descripcion || 'Descripción no disponible'}</Text>
+        <Text style={styles.sectionTitle}>{`${item.nombre || ''} ${item.apellido || ''}`.trim() || 'Nombre no disponible'}</Text>
+        <Text style={styles.infoUserBold}>Ubicación: </Text>
+        <Text style={styles.infoUser}>{item.Provincias?.nombre || 'Ubicación no disponible'}</Text>
+        <Text style={styles.infoUserBold}>Categoría Favorita: </Text>
+        <Text style={styles.infoUser}>{item.Categoria?.nombre || 'Categoría no disponible'}</Text>
+        <Text style={styles.infoUserBold}>Sobre mí: </Text>
+        <Text style={styles.infoUser}>{item.descripcion || 'Descripción no disponible'}</Text>
       </View>
 
       <View style={styles.section}>
@@ -76,7 +80,7 @@ export default function ProfileScreen() {
           item.map((amigo) => (
             <TouchableOpacity key={amigo.id} style={styles.friend}>
               <Image source={{ uri: amigo.fotoUsuario || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }} style={styles.friendPicture} />
-              <Text>{amigo.nombre || 'Nombre no disponible'} {amigo.apellido || 'Apellido no disponible'}</Text>
+              <Text>{`${amigo.nombre || ''} ${amigo.apellido || ''}`.trim() || 'Nombre no disponible'}</Text>
             </TouchableOpacity>
           ))
         ) : (
@@ -88,12 +92,12 @@ export default function ProfileScreen() {
   );
 
 
-  
+  console.log(userTea);
   return (
     <View style={styles.container}>
       <FlatList
         data={userTea}
-        keyExtractor={(item) => item.id.toString()}        
+        keyExtractor={item => item.id ? item.id.toString() : 'default-key'} // Agrega una clave predeterminada
         renderItem={renderUsuarioItem}
       />
       {amigosFotos.length > 0 && renderFotosItem({ item: amigosFotos })}

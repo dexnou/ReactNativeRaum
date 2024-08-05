@@ -10,12 +10,12 @@ export default function HomeScreen() {
     return (
         <View>
             <Text>Hola, estas en index post login</Text>
-            {/*<Button title='Seguir con el progreso' 
+            <Button title='Seguir con el progreso' 
             onPress={() => navigation.navigate('')}/>
             <Button title='Más cursos' 
-            onPress={() => navigation.navigate('')}/>
+            onPress={() => navigation.navigate('Cursos')}/>
             <Button title='¿Qué hacen mis amigos?' 
-            onPress={() => navigation.navigate('')}/>*/}
+            onPress={() => navigation.navigate('')}/>
         </View>
     );
 }
