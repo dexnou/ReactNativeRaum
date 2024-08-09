@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { supabase } from "@/lib/supabase";
 import { loginUser } from "@/lib/user"; // Asegúrate de importar correctamente la función
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const LoginScreen = ({ navigation }: { navigation: any }) => {
   const [mail, setMail] = useState("");
@@ -27,6 +29,10 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
     try {
       const user = await loginUser({ mail, password });
       console.log("Usuario logueado:", user);
+
+      // Almacenar el ID del usuario en AsyncStorage
+      await AsyncStorage.setItem('userId', user.id);
+
       // Aquí puedes redirigir al usuario a la pantalla principal o a otra pantalla
       console.log('Login manda el userId', user.id)
       navigation.navigate('Home',{userId: user.id});

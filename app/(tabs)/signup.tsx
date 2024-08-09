@@ -6,6 +6,9 @@ import { supabase } from '@/lib/supabase';
 import { fetchOrCreateUser } from '@/lib/user'; // Asegúrate de importar la función correctamente
 
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 export default function SignUpScreen({ navigation }: {navigation: any}){
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
@@ -33,6 +36,9 @@ export default function SignUpScreen({ navigation }: {navigation: any}){
         num_dni: numDni 
       });
       console.log('User:', user);
+
+      // Almacenar el ID del usuario en AsyncStorage
+      await AsyncStorage.setItem('userId', user.id);
       
       // Navegar a la pantalla de inicio de sesión o inicio de la app
       navigation.navigate('Profile',{userId: user.id})

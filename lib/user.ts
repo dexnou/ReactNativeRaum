@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase';
 export const fetchUser = async (id: number) => {
 
-  
+
   const { data, error } = await supabase.from('Usuario_TEA')
     .select(`
       *, 
@@ -126,6 +126,28 @@ export const loginUser = async ({ mail, password }: LoginInput) => {
   return data;
 };
 
+
+export const fetchProgress = async (userId: number) => {
+  console.log('llega a obtenerProgreso');
+  const { data, error } = await supabase
+    .from('Curso_Usuario')
+    .select(`
+      id,
+      id_usuario,
+      active,
+      modification_date
+    `)
+    .eq('id_usuario', userId)
+    .eq('active', true)
+    .order('modification_date', { ascending: false });
+    if (error) {
+      console.log('Error al obtener el progreso:', error.message);
+      return null;
+    } else {
+      console.log('Progreso obtenido con éxito:', data);
+      return data;
+    }
+}
 
 
 /*

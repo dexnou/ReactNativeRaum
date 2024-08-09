@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { FlatList, StyleSheet, ScrollView, Image, TouchableOpacity, Button} from 'react-native';
 import 'react-native-url-polyfill/auto';
 import { Text, View } from '@/components/Themed';
 import { useState, useEffect } from 'react';
@@ -6,9 +6,11 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
 import { fetchUser, fetchAmigos } from '@/lib/user'; // Importamos fetchUser desde user.ts
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default function ProfileScreen() {
   const route = useRoute();
-  const { userId } = route.params; // Accede al userId desde los parámetros de la ruta
+  const userId  = route.params?.userId; // Accede al userId desde los parámetros de la ruta
   console.log(userId)
   const [amigosFotos, setAmigosFotos] = useState([]);
   const [userTea, setUserTea] = useState<any[]>([]); // Asegúrate de inicializar como array vacío
@@ -17,21 +19,25 @@ export default function ProfileScreen() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const amigosData: any = await fetchAmigos(userId);
-        console.log('Amigos data:', amigosData);
-        setAmigosFotos(amigosData);
-
-        const userData: any = await fetchUser(userId);
-        console.log('User data:', userData); // Verifica que los datos se están obteniendo correctamente
-        // Manejar el caso donde userData puede ser null
-        if (userData) {
-          // Asignar foto de usuario predeterminada si es null
-          if (userData.fotoUsuario === null) {
-            userData.fotoUsuario = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+        // Verificar si el userId es undefined y recuperarlo de AsyncStorage si es necesario
+        const storedUserId = userId || await AsyncStorage.getItem('userId');
+        if(storedUserId){
+          const amigosData: any = await fetchAmigos(storedUserId);
+          console.log('Amigos data:', amigosData);
+          setAmigosFotos(amigosData);
+          const userData: any = await fetchUser(storedUserId);
+          console.log('User data:', userData); // Verifica que los datos se están obteniendo correctamente
+          if(userData){
+            // Asignar foto de usuario predeterminada si es null
+            if(userData.fotoUsuario === null){
+              userData.fotoUsuario = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+            }
+            setUserTea([userData]);  // Ajustar según la estructura de tu dato
+          } else{
+            setUserTea([]);
           }
-          setUserTea([userData]); // Ajustar según la estructura de tu dato
-        } else {
-          setUserTea([]);
+        } else{
+          console.error('No se encontró el ID del usuario en AsyncStorage');
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -40,6 +46,18 @@ export default function ProfileScreen() {
 
     fetchData();
   }, [userId]); // Agrega userId como dependencia
+
+  const handleLogout = async () => {
+    try{
+      setUserTea([]);
+      setAmigosFotos([]);
+      await AsyncStorage.removeItem('userId');
+      navigation.navigate('FirstPage');
+    } catch(error){
+      console.error('Error al cerrar sesión', error)
+    }
+  }
+
 
   const renderUsuarioItem = ({ item }) => (
     <View style={styles.container}>
@@ -87,7 +105,11 @@ export default function ProfileScreen() {
           <Text style={styles.infoUser}>No tienes amigos</Text>
         )}
       </ScrollView>
-      <Text style={styles.logout}>Cerrar Sesión</Text>
+      <Button 
+        onPress={handleLogout}
+        style={styles.logout}
+        title="Cerrar Sesión"
+      />
     </View>
   );
 

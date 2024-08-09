@@ -22,6 +22,7 @@ export default function StackNavigator() {
       <Stack.Screen name="FirstPage" component={FirstPage}/>
       <Stack.Screen name="Cursos" component={Cursos}/>
       <Stack.Screen name="SeguirProgreso" component={SeguirProgreso}/>
+
     </Stack.Navigator>
   );
 }
