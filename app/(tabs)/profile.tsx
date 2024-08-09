@@ -1,63 +1,102 @@
-import { FlatList, StyleSheet, ScrollView, Image, TouchableOpacity, Button} from 'react-native';
+import { FlatList, StyleSheet, ScrollView, Image, TouchableOpacity, Button, Alert } from 'react-native';
 import 'react-native-url-polyfill/auto';
 import { Text, View } from '@/components/Themed';
-import { useState, useEffect } from 'react';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
 import { fetchUser, fetchAmigos } from '@/lib/user'; // Importamos fetchUser desde user.ts
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen() {
+  
+
   const route = useRoute();
-  const userId  = route.params?.userId; // Accede al userId desde los parámetros de la ruta
-  console.log(userId)
-  const [amigosFotos, setAmigosFotos] = useState([]);
-  const [userTea, setUserTea] = useState<any[]>([]); // Asegúrate de inicializar como array vacío
   const navigation = useNavigation();
+  const [amigosFotos, setAmigosFotos] = useState([]);
+  const [userTea, setUserTea] = useState<any[]>([]);
+  // useEffect(() => {
+  //   const checkLoginStatus = async () => {
+  //     try {
+  //       const userId = await AsyncStorage.getItem('userId');
+  //       console.log('Verificando si hay un ID de usuario guardado:', userId); // Log adicional
+  //       if (!userId) {
+  //         Alert.alert(
+  //           'No estás logueado', 
+  //           'Por favor, inicia sesión para acceder a tu perfil.',
+  //           [
+  //             {
+  //               text: "OK",
+  //               onPress: () => navigation.navigate('Login') // Redirigir después de que el usuario presione "OK"
+  //             }
+  //           ]
+  //         );
+  //       }
+  //     } catch (error) {
+  //       console.error('Error verificando el estado de la sesión:', error);
+  //     }
+  //   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Verificar si el userId es undefined y recuperarlo de AsyncStorage si es necesario
-        const storedUserId = userId || await AsyncStorage.getItem('userId');
-        if(storedUserId){
-          const amigosData: any = await fetchAmigos(storedUserId);
-          console.log('Amigos data:', amigosData);
-          setAmigosFotos(amigosData);
-          const userData: any = await fetchUser(storedUserId);
-          console.log('User data:', userData); // Verifica que los datos se están obteniendo correctamente
-          if(userData){
-            // Asignar foto de usuario predeterminada si es null
-            if(userData.fotoUsuario === null){
-              userData.fotoUsuario = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
-            }
-            setUserTea([userData]);  // Ajustar según la estructura de tu dato
-          } else{
-            setUserTea([]);
-          }
-        } else{
-          console.error('No se encontró el ID del usuario en AsyncStorage');
+  //   checkLoginStatus();
+  // }, [navigation]);
+
+  const fetchData = async (storedUserId: string) => {
+    try {
+      const amigosData: any = await fetchAmigos(storedUserId);
+      setAmigosFotos(amigosData);
+
+      const userData: any = await fetchUser(storedUserId);
+      if (userData) {
+        if (userData.fotoUsuario === null) {
+          userData.fotoUsuario = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
         }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
+        setUserTea([userData]);
+      } else {
+        setUserTea([]);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
 
-    fetchData();
-  }, [userId]); // Agrega userId como dependencia
+  useFocusEffect(
+    useCallback(() => {
+      const loadProfileData = async () => {
+        const storedUserId = route.params?.userId || await AsyncStorage.getItem('userId');
+        console.log('ID de usuario obtenido en useFocusEffect:', storedUserId); // Log adicional
+        if (storedUserId) {
+          await fetchData(storedUserId);
+        } else {
+          console.error('No se encontró el ID del usuario en AsyncStorage');
+          // Asegurarse de redirigir si no hay un ID
+          // ESTE ALERT MANDA SOLO POR CELULAR PERO SI ESTÁ NO TE APARECE EL PERFIL
+          // Alert.alert(
+          //             'No estás logueado', 
+          //             'Por favor, inicia sesión para acceder a tu perfil.',
+          //             [
+          //               {
+          //                 text: "OK",
+          //                 onPress: () => navigation.navigate('Login') // Redirigir después de que el usuario presione "OK"
+          //               }
+          //             ]
+          //           );
+          navigation.navigate("Login")
+        }
+      };
+      loadProfileData();
+    }, [route.params?.userId, navigation])
+  );
 
   const handleLogout = async () => {
-    try{
+    try {
       setUserTea([]);
       setAmigosFotos([]);
       await AsyncStorage.removeItem('userId');
       navigation.navigate('FirstPage');
-    } catch(error){
-      console.error('Error al cerrar sesión', error)
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
     }
-  }
-
+  };
 
   const renderUsuarioItem = ({ item }) => (
     <View style={styles.container}>
@@ -105,24 +144,22 @@ export default function ProfileScreen() {
           <Text style={styles.infoUser}>No tienes amigos</Text>
         )}
       </ScrollView>
-      <Button 
-        onPress={handleLogout}
-        style={styles.logout}
-        title="Cerrar Sesión"
-      />
     </View>
   );
 
-
-  console.log(userTea);
   return (
     <View style={styles.container}>
       <FlatList
         data={userTea}
-        keyExtractor={item => item.id ? item.id.toString() : 'default-key'} // Agrega una clave predeterminada
+        keyExtractor={item => item.id ? item.id.toString() : 'default-key'}
         renderItem={renderUsuarioItem}
       />
       {amigosFotos.length > 0 && renderFotosItem({ item: amigosFotos })}
+      <Button
+        onPress={handleLogout}
+        title="Cerrar Sesión"
+        color="#d32f2f"
+      />
     </View>
   );
 }
