@@ -9,8 +9,7 @@ import { fetchUser, fetchAmigos } from '@/lib/user'; // Importamos fetchUser des
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen() {
-  
-
+ 
   const route = useRoute();
   const navigation = useNavigation();
   const [amigosFotos, setAmigosFotos] = useState([]);
