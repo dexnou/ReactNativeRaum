@@ -1,5 +1,7 @@
 import { supabase } from '@/lib/supabase';
 export const fetchUser = async (id: number) => {
+
+  
   const { data, error } = await supabase.from('Usuario_TEA')
     .select(`
       *, 

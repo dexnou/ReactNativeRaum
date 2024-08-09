@@ -29,7 +29,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
       console.log("Usuario logueado:", user);
       // Aquí puedes redirigir al usuario a la pantalla principal o a otra pantalla
       console.log('Login manda el userId', user.id)
-      navigation.navigate('Profile',{ userId: user.id });
+      navigation.navigate('Home',{userId: user.id});
       //Hay que pasar por props el id del usuario conseguido
     } catch (err) {
       console.error("Error al iniciar sesión:", err.message);

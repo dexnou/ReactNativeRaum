@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
 import { fetchOrCreateUser } from '@/lib/user'; // Asegúrate de importar la función correctamente
 
 
-export default function SignUpScreen(){
+export default function SignUpScreen({ navigation }: {navigation: any}){
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [username, setUsername] = useState('');
@@ -33,7 +33,9 @@ export default function SignUpScreen(){
         num_dni: numDni 
       });
       console.log('User:', user);
+      
       // Navegar a la pantalla de inicio de sesión o inicio de la app
+      navigation.navigate('Profile',{userId: user.id})
     } catch (err) {
       setError(err.message);
     }
