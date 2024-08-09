@@ -9,6 +9,7 @@ import { fetchUser, fetchAmigos } from '@/lib/user'; // Importamos fetchUser des
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen() {
+  
   const route = useRoute();
   const userId  = route.params?.userId; // Accede al userId desde los parámetros de la ruta
   console.log(userId)
