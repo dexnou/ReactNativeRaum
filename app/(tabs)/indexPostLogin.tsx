@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
+import { StackNavigator }from "./navigation/ScreenNavigator";
 
 export default function HomeScreen({ userId }) {
     const navigation = useNavigation();

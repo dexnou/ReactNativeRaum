@@ -6,8 +6,10 @@ import LoginScreen from "../login";
 import SignUpScreen from "../signup/signup";
 import FirstPage from "../index";
 import CursosScreen from "../cursos";
+import CursosPorCategoriaScreen from "../cursosPorCategoria";
 import SeguirProgreso from "../seguirProgreso";
 import AmigosProgresoScreen from "../progresoMisAmigos";
+import JuegoCursoScreen from "../juegoCurso"
 import React from "react";
 
 const Stack = createStackNavigator();
@@ -21,8 +23,10 @@ export default function StackNavigator() {
       <Stack.Screen name="Login" component={LoginScreen}/>
       <Stack.Screen name="FirstPage" component={FirstPage}/>
       <Stack.Screen name="Cursos" component={CursosScreen}/>
+      <Stack.Screen name="CursosPorCategoria" component={CursosPorCategoriaScreen}/>
       <Stack.Screen name="SeguirProgreso" component={SeguirProgreso}/>
       <Stack.Screen name="AmigosProgreso" component={AmigosProgresoScreen}/>
+      <Stack.Screen name="JuegoCurso" component={JuegoCursoScreen}/>
 
     </Stack.Navigator>
   );

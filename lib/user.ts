@@ -144,21 +144,35 @@ export const fetchProgress = async (userId: number) => {
 
 
 export const fetchAmigosProgress = async (userId: number) => {
-  console.log('llega al buscar progress de amigos');
-  const {data, error} = await supabase.rpc('get_ranked_courses', {
-    user_id: userId // Aquí pasas el parámetro que espera el procedimiento
-  });
-  if (error) {
-    console.log('Error al retornar progreso del usuario:', error.message);
-    throw new Error('Error al obtener progreso');
-  }
+  console.log('Iniciando búsqueda de progreso de amigos para el usuario:', userId);
+  try {
+    const { data, error } = await supabase.rpc('get_ranked_courses', {
+      user_id: userId
+    });
 
-  if (!data) {
-    throw new Error('Usuario no encontrado o contraseña incorrecta');
-  }
+    if (error) {
+      console.error('Error al obtener progreso de amigos:', error.message);
+      throw new Error('Error al obtener progreso de amigos');
+    }
 
-  return data;
-}
+    if (!data || data.length === 0) {
+      console.log('No se encontró progreso de amigos');
+      return [];
+    }
+
+    console.log('Progreso de amigos obtenido con éxito:', data);
+    return data.map(amigo => ({
+      id: amigo.id_amigo,
+      nombre: amigo.nombre_amigo,
+      apellido: amigo.apellido_amigo,
+      fotoUsuario: amigo.foto_amigo,
+      // Aquí puedes añadir más campos relacionados con el progreso si están disponibles en los datos devueltos
+    }));
+  } catch (err) {
+    console.error('Error inesperado en fetchAmigosProgress:', err);
+    throw err;
+  }
+};
 
 /*
 export const registroUsuario = async () => {
@@ -202,49 +216,75 @@ export const registroUsuario = async () => {
 */
 
 // FETCH DE CATEGORIAS : TRAE TODAS LAS CATEGORAS
-// interface Categoria {
-//   id: number;
-//   nombre: string;
-// }
+interface Categoria {
+  id_categoria: number;
+  nombre: string;
+  fotoCategoria: string;
+}
 
-// export const fetchCategorias = async (): Promise<Categoria[]> => {
-//   const { data, error } = await supabase
-//     .from('Categoria')
-//     .select('id, nombre')
-//     .order('nombre', { ascending: true });
+export const fetchCategorias = async (): Promise<Categoria[]> => {
+  console.log('Iniciando fetchCategorias...');
+  try {
+    const { data, error } = await supabase
+      .from('Categoria')
+      .select('id_categoria, nombre, fotoCategoria')
+      .order('nombre', { ascending: true });
 
-//   if (error) {
-//     console.log('Error al obtener categorías:', error.message);
-//     return [];
-//   } else {
-//     console.log('Categorías obtenidas con éxito:', data);
-//     return data as Categoria[];
-//   }
-// };
+    if (error) {
+      console.error('Error al obtener categorías:', error.message);
+      throw new Error(`Error al obtener categorías: ${error.message}`);
+    }
+
+    if (!data || data.length === 0) {
+      console.log('No se encontraron categorías');
+      return [];
+    }
+
+    console.log('Categorías obtenidas con éxito:', data);
+    return data as Categoria[];
+  } catch (err) {
+    console.error('Error inesperado en fetchCategorias:', err);
+    throw err;
+  }
+};
+
+
 
 // // FETCH DE CURSOS : TE TRAE LOS CURSOS SEGÚN QUE CATEGORÍA TOQUES
-// interface Curso {
-//   id_curso: number;
-//   nombre: string;
-//   id_categoria: number;
-//   id_calificacion: number;
-// }
+interface Curso {
+  id_curso: number;
+  nombre: string;
+  id_categoria: number;
+}
 
-// export const fetchCursos = async (idCategoria: number): Promise<Curso[]> => {
-//   const { data, error } = await supabase
-//     .from('Cursos')
-//     .select('id_curso, nombre, id_categoria')
-//     .eq('id_categoria', idCategoria)
-//     .order('nombre', { ascending: true });
+export const fetchCursos = async (categoriaId: number): Promise<Curso[]> => {
+  console.log('Iniciando fetchCursos para la categoría:', categoriaId);
+  try {
+    const { data, error } = await supabase
+      .from('Curso')
+      .select('id_curso, nombre, id_categoria')
+      .eq('id_categoria', categoriaId);
 
-//   if (error) {
-//     console.log('Error al obtener cursos:', error.message);
-//     return [];
-//   } else {
-//     console.log('Cursos obtenidos con éxito:', data);
-//     return data as Curso[];
-//   }
-// };
+    console.log('Respuesta de Supabase:', { data, error });
+
+    if (error) {
+      console.error('Error al obtener cursos:', error.message);
+      throw new Error(`Error al obtener cursos: ${error.message}`);
+    }
+
+    if (!data || data.length === 0) {
+      console.log('No se encontraron cursos para esta categoría');
+      return [];
+    }
+
+    console.log('Cursos obtenidos con éxito:', data);
+    return data;
+  } catch (err) {
+    console.error('Error inesperado en fetchCursos:', err);
+    throw err;
+  }
+};
+
 
 // // FETCH DE EVENTOS : TE MUESTRA LOS EVENTOS SEGÚN LA CATEGORÍA QUE TOQUES
 
