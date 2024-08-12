@@ -5,12 +5,9 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  Alert,
 } from "react-native";
-import { supabase } from "@/lib/supabase";
-import { loginUser } from "@/lib/user"; // Asegúrate de importar correctamente la función
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { loginUser } from "@/lib/user"; // Asegúrate de importar correctamente la función
 
 const LoginScreen = ({ navigation }: { navigation: any }) => {
   const [mail, setMail] = useState("");
@@ -33,10 +30,9 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
       // Almacenar el ID del usuario en AsyncStorage
       await AsyncStorage.setItem('userId', user.id);
 
-      // Aquí puedes redirigir al usuario a la pantalla principal o a otra pantalla
-      console.log('Login manda el userId', user.id)
-      navigation.navigate('Home',{userId: user.id});
-      //Hay que pasar por props el id del usuario conseguido
+      // Redirigir al usuario a la pantalla principal o a otra pantalla
+      console.log('Login manda el userId', user.id);
+      navigation.navigate('Home', { userId: user.id });
     } catch (err) {
       console.error("Error al iniciar sesión:", err.message);
       setError("Error al iniciar sesión. Verifica tus credenciales.");
@@ -44,7 +40,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
       setLoading(false);
     }
   };
-  
+
   return (
     <View style={styles.background}>
       <View style={styles.topShape} />
@@ -56,8 +52,9 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
           placeholder="Email"
           onChangeText={setMail}
           value={mail}
-          textContentType="emai"
+          textContentType="emailAddress"
           autoCapitalize="none"
+          placeholderTextColor="#C5C5C5"
         />
         <TextInput
           style={styles.input}
@@ -65,6 +62,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
           onChangeText={setPassword}
           value={password}
           secureTextEntry
+          placeholderTextColor="#C5C5C5"
         />
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
         <TouchableOpacity
@@ -120,30 +118,30 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   input: {
-    width: "100%",
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 5,
+    width: '100%',
+    height: 50,
+    backgroundColor: '#F6F6F6',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
     marginBottom: 10,
-    paddingHorizontal: 10,
-    backgroundColor: "#f5f5f5",
+    color: '#000',
   },
   errorText: {
     color: "red",
     marginBottom: 10,
   },
   button: {
-    width: "100%",
-    height: 40,
-    backgroundColor: "#03175E",
-    borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 10,
+    width: '100%',
+    backgroundColor: '#0F1138',
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20,
   },
   buttonText: {
-    color: "white",
+    color: "#FFF",
+    fontSize: 18,
     fontWeight: "bold",
   },
   forgotPassword: {
