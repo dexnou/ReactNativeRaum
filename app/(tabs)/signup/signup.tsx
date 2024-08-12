@@ -3,7 +3,10 @@ import { View, StyleSheet } from 'react-native';
 import NameStep from './signup2';
 import EmailStep from './signup3';
 import UsernamePasswordStep from './signup4';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
+//hay que usar asyncstorage para retener la inforamción que se va pasando, al principio inicializar todo como '', pasas el componente
 export default function SignUpScreen({ navigation }: {navigation: any}) {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({

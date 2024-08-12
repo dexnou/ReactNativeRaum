@@ -10,7 +10,7 @@ import LoginScreen from "./login";
 import SignUpScreen from "./signup/signup";
 import FirstPage from "./index";
 import { AuthProvider, useUserInfo } from "@/lib/userContext";
-import StackNavigator from "./navigation/ScreenNavigator";
+import HomeScreen from "./indexPostLogin"
 
 const Tab = createBottomTabNavigator();
 export default function TabNavigator() {
@@ -46,7 +46,7 @@ export default function TabNavigator() {
         />
         <Tab.Screen
           name="Home"
-          component={StackNavigator}
+          component={HomeScreen}
           options={{
             tabBarIcon: () => (
               <Ionicons name="reorder-two" size={24} color="black" />
