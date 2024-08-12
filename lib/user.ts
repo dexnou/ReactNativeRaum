@@ -39,13 +39,6 @@ export const fetchAmigos = async (idUsuario: number) => {
   }
 };
 
-/*export const combinadoUserAmigos = () => {
-  return {
-    usuarioTea: fetchUser(userId),
-    amigos: fetchAmigos(2)
-  }
-}*/
-
 interface UserInput {
   nombre: string;
   apellido: string;
@@ -149,6 +142,23 @@ export const fetchProgress = async (userId: number) => {
     }
 }
 
+
+export const fetchAmigosProgress = async (userId: number) => {
+  console.log('llega al buscar progress de amigos');
+  const {data, error} = await supabase.rpc('get_ranked_courses', {
+    user_id: userId // Aquí pasas el parámetro que espera el procedimiento
+  });
+  if (error) {
+    console.log('Error al retornar progreso del usuario:', error.message);
+    throw new Error('Error al obtener progreso');
+  }
+
+  if (!data) {
+    throw new Error('Usuario no encontrado o contraseña incorrecta');
+  }
+
+  return data;
+}
 
 /*
 export const registroUsuario = async () => {

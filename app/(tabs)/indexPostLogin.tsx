@@ -17,7 +17,7 @@ export default function HomeScreen(userId: number) {
             <Button title='Más cursos' 
             onPress={() => navigation.navigate('Cursos')}/>
             <Button title='¿Qué hacen mis amigos?' 
-            onPress={() => navigation.navigate('')}/>
+            onPress={() => navigation.navigate('AmigosProgreso')}/>
         </View>
     );
 }

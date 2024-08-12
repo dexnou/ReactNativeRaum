@@ -56,7 +56,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
           placeholder="Email"
           onChangeText={setMail}
           value={mail}
-          keyboardType="email-address"
+          textContentType="emai"
           autoCapitalize="none"
         />
         <TextInput
@@ -84,17 +84,17 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#000080",
+    justifyContent: "flex-end",
+    backgroundColor: "#03175E",
+    paddingBottom: "20%",
   },
   topShape: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
-    height: "60%",
-    backgroundColor: "#000080",
+    height: "100%",
+    backgroundColor: "#03175E",
     borderBottomRightRadius: 200,
   },
   bottomShape: {
@@ -102,14 +102,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: "40%",
+    height: "70%",
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 200,
   },
   container: {
     backgroundColor: "white",
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 30,
     marginHorizontal: 20,
     alignItems: "center",
   },
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   button: {
     width: "100%",
     height: 40,
-    backgroundColor: "#000080",
+    backgroundColor: "#03175E",
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   forgotPassword: {
-    color: "#000080",
+    color: "#03175E",
     marginVertical: 10,
   },
 });
