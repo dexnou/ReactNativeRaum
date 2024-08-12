@@ -2,7 +2,7 @@
 import { View, Text } from "@/components/Themed";
 import { supabase } from "@/lib/supabase";
 import { NavigationContainer, useNavigation, useRoute } from "@react-navigation/native";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { FlatList, StyleSheet, ScrollView, Image, TouchableOpacity, Button } from 'react-native';
 import { fetchProgress } from "@/lib/user";
 

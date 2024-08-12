@@ -7,7 +7,7 @@ import NavBar from "@/components/NavBar";
 import ProfileScreen from "./profile";
 import TabTwoScreen from "./two";
 import LoginScreen from "./login";
-import SignUpScreen from "./signup";
+import SignUpScreen from "./signup/signup";
 import FirstPage from "./index";
 import { AuthProvider, useUserInfo } from "@/lib/userContext";
 import StackNavigator from "./navigation/ScreenNavigator";
