@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SignUpContext,useSignUp } from '@/app/Contexts/SignUpContext';
 
 export default function NameStep({ onNext }: { onNext: (data: object) => void }) {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
+ 
 
   const handleNext = () => {
     onNext({ nombre, apellido });

@@ -1,29 +1,33 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "expo-router";
+import {SignUpContext, useSignUp} from "../Contexts/SignUpContext";
 
 const LoginScreen = ({ navigation }: { navigation: any }) => {
+
   return (
-    <View style={styles.background}>
-      <View style={styles.topShape} />
-      <View style={styles.bottomShape} />
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Login")}
-        >
-          <Text style={styles.buttonText}>YA TENGO CUENTA</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.secondaryButton]}
-          onPress={() => navigation.navigate("SignUp")}
-        >
-          <Text style={styles.secondaryButtonText}>
-            QUIERO TENER UNA CUENTA
-          </Text>
-        </TouchableOpacity>
+
+      <View style={styles.background}>
+        <View style={styles.topShape} />
+        <View style={styles.bottomShape} />
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("Login")}
+          >
+            <Text style={styles.buttonText}>YA TENGO CUENTA</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.secondaryButton]}
+            onPress={() => navigation.navigate("SignUp")}
+          >
+            <Text style={styles.secondaryButtonText}>
+              QUIERO TENER UNA CUENTA
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+
   );
 };
 

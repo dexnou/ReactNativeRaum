@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: '#002366',
-    paddingVertical: 10,
+    paddingVertical: 20,
     borderRadius: 10,
   },
   tab: {
