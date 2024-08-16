@@ -1,16 +1,23 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SignUpContext,useSignUp } from '@/app/Contexts/SignUpContext';
+import { SignUpProvider, useSignUp } from '@/app/Contexts/SignUpContext';
 
 export default function NameStep({ onNext }: { onNext: (data: object) => void }) {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
- 
+  const {contextState, setContextState} = useSignUp();
+
+  useEffect(() => {
+    setContextState({newValue: nombre, type: 'SET_NOMBRE'});
+    setContextState({newValue: apellido, type: 'SET_APELLIDO'});
+  }, []);
 
   const handleNext = () => {
-    onNext({ nombre, apellido });
+    onNext({ data });
   };
+
+  
 
   return (
     <View style={styles.container}>
@@ -19,14 +26,14 @@ export default function NameStep({ onNext }: { onNext: (data: object) => void })
         style={styles.input}
         placeholder="Nombre"
         placeholderTextColor="#C5C5C5"
-        value={nombre}
+        value={data.nombre}
         onChangeText={setNombre}
       />
       <TextInput
         style={styles.input}
         placeholder="Apellido"
         placeholderTextColor="#C5C5C5"
-        value={apellido}
+        value={data.apellido}
         onChangeText={setApellido}
       />
       <TouchableOpacity style={styles.button} onPress={handleNext}>
