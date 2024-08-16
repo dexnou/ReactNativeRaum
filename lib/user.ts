@@ -286,6 +286,52 @@ export const fetchCursos = async (categoriaId: number): Promise<Curso[]> => {
 };
 
 
+// UPDATE DE USUARIO : ACTUALIZA LOS DATOS DEL USUARIO: EDITAR PERFIL
+export async function updateUserProfile(userId: string, userData: {
+  username?: string;
+  fotoUsuario?: string;
+  descripcion?: string;
+  id_provincia?: string;
+  catFav?: string;
+}) {
+  try {
+    const { data, error } = await supabase
+      .from('Usuario_TEA')
+      .update({
+        username: userData.username,
+        fotoUsuario: userData.fotoUsuario,
+        descripcion: userData.descripcion,
+        id_provincia: userData.id_provincia,
+        catFav: userData.catFav
+      })
+      .eq('id', userId)
+      .select();
+
+    if (error) throw error;
+
+    // Actualizar también la tabla Usuario_TEA
+    const { error: teaError } = await supabase
+      .from('Usuario_TEA')
+      .update({
+        username: userData.username,
+        fotoUsuario: userData.fotoUsuario,
+        descripcion: userData.descripcion,
+        id_provincia: userData.id_provincia,
+        catFav: userData.catFav
+      })
+      .eq('id_usuario', userId);
+
+    if (teaError) throw teaError;
+
+    return data;
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    throw error;
+  }
+}
+
+
+
 // // FETCH DE EVENTOS : TE MUESTRA LOS EVENTOS SEGÚN LA CATEGORÍA QUE TOQUES
 
 // interface Evento {
