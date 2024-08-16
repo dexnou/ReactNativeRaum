@@ -1,6 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome from '@expo/vector-icons/FontAwesome5';
 import Colors from "@/constants/Colors";
 
 import { useColorScheme } from "@/components/useColorScheme";
@@ -37,16 +37,16 @@ export default function TabNavigator() {
             if (route.name === 'Home') {
               iconName = 'home';
             } else if (route.name === 'Comunidad') {
-              iconName = 'users';
+              iconName = 'user-friends';
             } else if (route.name === 'Cursos') {
               iconName = 'gamepad';
             } else if (route.name === 'Eventos') {
-              iconName = 'calendar';
+              iconName = 'calendar-check';
             } else if (route.name === 'Profile') {
-              iconName = 'user';
+              iconName = 'user-alt';
             }
 
-            return <FontAwesome name={iconName} size={24} color={color} />;
+            return <FontAwesome name={iconName} size={size} color={color} />;
           },
         })}
         tabBar={(props) => <NavBar {...props} />}

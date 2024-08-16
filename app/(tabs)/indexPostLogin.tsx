@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigator }from "./navigation/ScreenNavigator";
+import { supabase } from '@/lib/supabase';
+import { fetchUser, fetchAmigos } from '@/lib/user'; 
 
 export default function HomeScreen({ userId }) {
     const navigation = useNavigation();
@@ -9,7 +11,7 @@ export default function HomeScreen({ userId }) {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.headerText}>¡Hola Emiliano!</Text>
+                <Text style={styles.headerText}>¡Hola nombre programas!</Text>
             </View>
             
             <View style={styles.content}>
@@ -34,9 +36,6 @@ export default function HomeScreen({ userId }) {
                 </TouchableOpacity>
             </View>
             
-            <View style={styles.footer}>
-                {/* Add footer icons here */}
-            </View>
         </View>
     );
 }
@@ -48,8 +47,9 @@ const styles = StyleSheet.create({
     },
     header: {
         backgroundColor: '#1E3A8A',
-        padding: 20,
+        padding: 50,
         borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 20,
     },
     headerText: {
         color: 'white',
@@ -58,9 +58,14 @@ const styles = StyleSheet.create({
     },
     content: {
         padding: 20,
+        display:"flex",
+        width:"100%",
+        height:"30%",
+        alignContent:"space-between",
     },
     capitulo: {
         backgroundColor: '#B0C4DE',
+        width:"100%",
         padding: 15,
         borderRadius: 10,
         marginBottom: 20,
@@ -80,7 +85,12 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#1E3A8A',
-        padding: 15,
+        width:"100%",
+        display:"flex",
+        alignContent:"center",
+        justifyContent:"center",
+        padding: 10,
+        height:"30%",
         borderRadius: 10,
         marginBottom: 15,
         alignItems: 'center',
