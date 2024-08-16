@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import FontAwesome from '@expo/vector-icons/FontAwesome5';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 
 const NavBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
@@ -36,10 +36,10 @@ const NavBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation })
             style={styles.tab}
           >
             {options.tabBarIcon && (
-              <Ionicons
+              <FontAwesome
                 name={options.tabBarIcon({ color: isFocused ? 'white' : 'gray', size: 24 }).props.name}
-                size={24}
-                color={isFocused ? 'white' : 'gray'}
+                size={25}
+                color={isFocused ? 'white' : 'white'}
               />
             )}
           </TouchableOpacity>
