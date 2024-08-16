@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
     },
-    categoriaItem: {
+    cursoItem: {
         padding: 15,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         marginRight: 10,
     },
-    categoriaNombre: {
+    cursoNombre: {
         fontSize: 18,
     },
     noData: {

@@ -1,7 +1,7 @@
-import { FlatList, StyleSheet, ScrollView, Image, TouchableOpacity, Button, Alert } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { FlatList, StyleSheet, ScrollView, Image, TouchableOpacity, Button, Alert, ActivityIndicator } from 'react-native';
 import 'react-native-url-polyfill/auto';
 import { Text, View } from '@/components/Themed';
-import { useState, useEffect, useCallback } from 'react';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
 import { fetchUser, fetchAmigos } from '@/lib/user'; // Importamos fetchUser desde user.ts
@@ -14,6 +14,8 @@ export default function ProfileScreen() {
   const navigation = useNavigation();
   const [amigosFotos, setAmigosFotos] = useState([]);
   const [userTea, setUserTea] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   // useEffect(() => {
   //   const checkLoginStatus = async () => {
   //     try {
@@ -41,6 +43,7 @@ export default function ProfileScreen() {
 
   const fetchData = async (storedUserId: string) => {
     try {
+      setIsLoading(true);
       const amigosData: any = await fetchAmigos(storedUserId);
       setAmigosFotos(amigosData);
 
@@ -55,6 +58,9 @@ export default function ProfileScreen() {
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
+      Alert.alert('Error', 'No se pudo cargar la información del perfil');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,7 +85,8 @@ export default function ProfileScreen() {
           //               }
           //             ]
           //           );
-          navigation.navigate("Login")
+          setIsLoading(false);
+          navigation.navigate("Login");
         }
       };
       loadProfileData();
@@ -97,10 +104,17 @@ export default function ProfileScreen() {
     }
   };
 
+  const handleEditProfile = () => {
+    navigation.navigate('EditProfile');
+  };
+
   const renderUsuarioItem = ({ item }) => (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image source={{ uri: item[0].fotoUsuario }} style={styles.profilePicture} />
+        <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
+          <Text style={styles.editButtonText}>Editar Perfil</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.section}>
@@ -145,6 +159,15 @@ export default function ProfileScreen() {
       </ScrollView>
     </View>
   );
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#1e3a8a" />
+        <Text style={styles.loadingText}>Cargando perfil...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -251,5 +274,27 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 20,
     textAlign: 'center'
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#1e3a8a',
+  },
+  editButton: {
+    backgroundColor: '#4a90e2',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  editButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

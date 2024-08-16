@@ -34,13 +34,13 @@ const CursosScreen = () => {
                 navigation.navigate('CursosPorCategoria', { categoriaId: item.id_categoria, categoriaNombre: item.nombre });
             }}
         >
-            {item.fotoCategoria && (
-                <Image 
-                    source={{ uri: item.fotoCategoria }} 
-                    style={styles.categoriaImagen} 
-                />
-            )}
-            <Text style={styles.categoriaNombre}>{item.nombre}</Text>
+        {item.fotoCategoria && (
+            <Image 
+                source={{ uri: item.fotoCategoria }} 
+                style={styles.categoriaImagen} 
+            />
+        )}
+        <Text style={styles.categoriaNombre}>{item.nombre}</Text>
         </TouchableOpacity>
     );
 
