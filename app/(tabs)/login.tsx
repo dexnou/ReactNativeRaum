@@ -5,12 +5,9 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  Alert,
 } from "react-native";
-import { supabase } from "@/lib/supabase";
-import { loginUser } from "@/lib/user"; // Asegúrate de importar correctamente la función
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { loginUser } from "@/lib/user"; // Asegúrate de importar correctamente la función
 
 const LoginScreen = ({ navigation }: { navigation: any }) => {
   const [mail, setMail] = useState("");
@@ -33,10 +30,9 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
       // Almacenar el ID del usuario en AsyncStorage
       await AsyncStorage.setItem('userId', user.id);
 
-      // Aquí puedes redirigir al usuario a la pantalla principal o a otra pantalla
-      console.log('Login manda el userId', user.id)
-      navigation.navigate('Home',{userId: user.id});
-      //Hay que pasar por props el id del usuario conseguido
+      // Redirigir al usuario a la pantalla principal o a otra pantalla
+      console.log('Login manda el userId', user.id);
+      navigation.navigate('Home', { userId: user.id });
     } catch (err) {
       console.error("Error al iniciar sesión:", err.message);
       setError("Error al iniciar sesión. Verifica tus credenciales.");
@@ -44,7 +40,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
       setLoading(false);
     }
   };
-  
+
   return (
     <View style={styles.background}>
       <View style={styles.topShape} />
@@ -56,8 +52,9 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
           placeholder="Email"
           onChangeText={setMail}
           value={mail}
-          keyboardType="email-address"
+          textContentType="emailAddress"
           autoCapitalize="none"
+          placeholderTextColor="#C5C5C5"
         />
         <TextInput
           style={styles.input}
@@ -65,6 +62,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
           onChangeText={setPassword}
           value={password}
           secureTextEntry
+          placeholderTextColor="#C5C5C5"
         />
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
         <TouchableOpacity
@@ -84,17 +82,17 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#000080",
+    justifyContent: "flex-end",
+    backgroundColor: "#03175E",
+    paddingBottom: "20%",
   },
   topShape: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
-    height: "60%",
-    backgroundColor: "#000080",
+    height: "100%",
+    backgroundColor: "#03175E",
     borderBottomRightRadius: 200,
   },
   bottomShape: {
@@ -102,14 +100,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: "40%",
+    height: "70%",
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 200,
   },
   container: {
     backgroundColor: "white",
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 30,
     marginHorizontal: 20,
     alignItems: "center",
   },
@@ -120,34 +118,34 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   input: {
-    width: "100%",
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 5,
+    width: '100%',
+    height: 50,
+    backgroundColor: '#F6F6F6',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
     marginBottom: 10,
-    paddingHorizontal: 10,
-    backgroundColor: "#f5f5f5",
+    color: '#000',
   },
   errorText: {
     color: "red",
     marginBottom: 10,
   },
   button: {
-    width: "100%",
-    height: 40,
-    backgroundColor: "#000080",
-    borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 10,
+    width: '100%',
+    backgroundColor: '#0F1138',
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20,
   },
   buttonText: {
-    color: "white",
+    color: "#FFF",
+    fontSize: 18,
     fontWeight: "bold",
   },
   forgotPassword: {
-    color: "#000080",
+    color: "#03175E",
     marginVertical: 10,
   },
 });

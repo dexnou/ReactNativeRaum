@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     backgroundColor: "#03175E",
+    paddingBottom: "15%",
   },
   topShape: {
     position: "absolute",
@@ -47,18 +48,19 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: "40%",
+    height: "50%",
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 200,
   },
   container: {
+    display:"flex",
     alignItems: "center",
     padding: 20,
   },
   button: {
     width: "80%",
     height: 50,
-    backgroundColor: "#000080",
+    backgroundColor: "#03175E",
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
@@ -70,11 +72,11 @@ const styles = StyleSheet.create({
   },
   secondaryButton: {
     backgroundColor: "#FFFFFF",
-    borderColor: "#000080",
+    borderColor: "#03175E",
     borderWidth: 2,
   },
   secondaryButtonText: {
-    color: "#000080",
+    color: "#03175E",
     fontWeight: "bold",
   },
 });
