@@ -46,7 +46,7 @@ export default function TabNavigator() {
               iconName = 'user';
             }
 
-            return <FontAwesome name={iconName} size={size} color={color} />;
+            return <FontAwesome name={iconName} size={24} color={color} />;
           },
         })}
         tabBar={(props) => <NavBar {...props} />}
