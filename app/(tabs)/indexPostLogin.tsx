@@ -1,22 +1,37 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigator }from "./navigation/ScreenNavigator";
+import {fetchUser} from '@/lib/user';
 
 export default function HomeScreen({ userId }) {
     const navigation = useNavigation();
+    const [user, setUser] = useState();
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.headerText}>¡Hola Emiliano!</Text>
-            </View>
-            
-            <View style={styles.content}>
+    const fetchData = async () => {
+        const userData: any = await fetchUser(userId);
+      if (userData) {
+        if (userData.fotoUsuario === null) {
+          userData.fotoUsuario = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+        }
+        setUser([userData]);
+      } else {
+        setUser([]);
+      }
+    }
+    const renderInfoHome = ({item}) => (
+        <View style={styles.content}>
                 <View style={styles.capitulo}>
-                    <Text style={styles.capitutoTitle}>Nombre Capítulo</Text>
-                    <Text style={styles.capitutoSubtitle}>Nombre hito</Text>
-                    <Text style={styles.capitutoNumber}>N°%</Text>
+                {item.Curso && item.Curso.length > 0 ? (
+                    <>
+                        <Text style={styles.capitutoTitle}>{'Nombre capitulo'}</Text>
+                        <Text style={styles.capitutoSubtitle}>{'Nombre curso'}</Text>
+                        <Text style={styles.capitutoNumber}>N°%</Text>
+                    </>
+                ) : (
+                    <Text style={styles.infoUser}>No hay cursos disponibles</Text>
+                )}
+                    
                 </View>
                 
                 <TouchableOpacity 
@@ -33,7 +48,18 @@ export default function HomeScreen({ userId }) {
                     <Text style={styles.buttonText}>¿Que hacen mis Amigos?</Text>
                 </TouchableOpacity>
             </View>
-            
+    );
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.headerText}>¡Hola Emiliano!</Text>
+            </View>
+            <FlatList
+                data={user}
+                keyExtractor={item => item.id ? item.id.toString() : 'default-key'}
+                renderItem={renderInfoHome}
+            />
             <View style={styles.footer}>
                 {/* Add footer icons here */}
             </View>
