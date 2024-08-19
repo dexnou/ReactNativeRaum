@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSignUp } from '@/app/Contexts/SignUpContext';
+import {fetchOrCreateUser} from '@/lib/user'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function UsernamePasswordStep({ onNext, onPrevious, navigation }: { onNext: (data: object) => void, onPrevious: () => void, navigation: any }) {
@@ -9,6 +11,8 @@ export default function UsernamePasswordStep({ onNext, onPrevious, navigation }:
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const {contextState, setContextState} = useSignUp();
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     setUsername(contextState.username);
@@ -31,18 +35,25 @@ export default function UsernamePasswordStep({ onNext, onPrevious, navigation }:
     setContextState({ newValue: text, type: 'SET_CONFIRM_PASSWORD' });
   };
 
-  const handleNext = () => {
-    if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
-      return;
+  const handleSignUp = async () => {
+    setLoading(true);
+
+    try {
+      const user = await fetchOrCreateUser(contextState.nombre,contextState.apellido,contextState.username, contextState.email, contextState.emailTutor, contextState.password, contextState.fechaNacimiento);
+      console.log("Usuario logueado:", user);
+
+      // Almacenar el ID del usuario en AsyncStorage
+      await AsyncStorage.setItem('userId', user.id);
+
+      // Redirigir al usuario a la pantalla principal o a otra pantalla
+      console.log('Login manda el userId', user.id);
+      navigation.navigate('Home', { userId: user.id });
+    } catch (err) {
+      console.error("Error al iniciar sesión:", err.message);
+      setError("Error al registrarse. Verifica tus credenciales.");
+    } finally {
+      setLoading(false);
     }
-    if (password.length < 8) {
-      setError('La contraseña debe tener al menos 8 caracteres');
-      return;
-    }
-    setError('');
-    onNext({ username, password });
-    navigation.navigate('NextScreen'); // Reemplaza 'NextScreen' con la pantalla correspondiente
   };
 
   return (
@@ -76,9 +87,10 @@ export default function UsernamePasswordStep({ onNext, onPrevious, navigation }:
         <TouchableOpacity style={styles.buttonSecondary} onPress={onPrevious}>
           <Text style={styles.buttonText}>Atrás</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleNext}>
+        <TouchableOpacity style={styles.button} onPress={handleSignUp}>
           <Text style={styles.buttonText}>Finalizar</Text>
         </TouchableOpacity>
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
       </View>
     </View>
   );

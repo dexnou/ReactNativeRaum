@@ -39,24 +39,12 @@ export const fetchAmigos = async (idUsuario: number) => {
   }
 };
 
-interface UserInput {
-  nombre: string;
-  apellido: string;
-  username: string;
-  mail: string;  
-  contraseña: string;
-  fec_nac: string;
-  num_dni: string;
-}
-
-export const fetchOrCreateUser = async (userInput: UserInput) => {
-  const { nombre, apellido, username, mail, contraseña, fec_nac, num_dni } = userInput;
-
+export const fetchOrCreateUser = async (nombre: string, apellido: string, username: string, email: string, emailTutor: string, password: string, fechaNacimiento: string) => {
   // Verificar si el usuario ya existe
   const { data: existingUser, error: fetchError } = await supabase
     .from('Usuario_TEA')
     .select('*')
-    .eq('mail', mail)  // Cambiado de email a mail
+    .eq('mail', email)  // Cambiado de email a mail
     .single();
 
   if (fetchError && fetchError.code !== 'PGRST116') {
@@ -70,18 +58,26 @@ export const fetchOrCreateUser = async (userInput: UserInput) => {
   }
 
   // Insertar el nuevo usuario
+  const {data: tutor, error} = await supabase
+  .from ('Tutor')
+  .insert([{
+    mail: emailTutor,
+  }])
+  .select('id_tutor');
+  console.log((tutor[0].id_tutor));
   const { data: newUser, error: insertError } = await supabase
     .from('Usuario_TEA')
     .insert([{ 
-      nombre, 
-      apellido, 
-      username, 
-      mail, 
-      contraseña, 
-      fec_nac, 
-      num_dni 
+      nombre: nombre, 
+      apellido: apellido, 
+      username: username, 
+      mail : email,
+      id_tutor: tutor[0].id_tutor,
+      contraseña: password, 
+      fec_nac: fechaNacimiento, 
     }])
-    .single();
+    .select();
+  
 
   if (insertError) {
     console.log('Error al insertar usuario:', insertError.message);
@@ -173,47 +169,6 @@ export const fetchAmigosProgress = async (userId: number) => {
     throw err;
   }
 };
-
-/*
-export const registroUsuario = async () => {
-    try {
-    const { data: userInsert, error: userError } = await supabase
-      .from('Usuario_TEA')
-      .insert([
-        { 
-          nombre: '',
-          apellido: '',
-          username: '',
-          mail: '',
-          contraseña: '',
-          fec_nac: '',
-          num_dni: '',
-          id_tipo_usuario: '',
-        }
-      ]); 
-    
-    const {data: tutorInsert, error: tutorError} = await supabase
-    .from('Tutor')
-    .insert([
-      {
-        mail: '',
-        nombre: '',
-        apellido: '',
-        num_dni: '',
-      }
-    ])
-
-    if (error) throw error;
-    
-    
-    console.log('Datos insertados:', data);
-    return data;
-  } catch (error) {
-    console.error('Error al insertar datos:', error.message);
-    return null;
-  }
-};
-*/
 
 // FETCH DE CATEGORIAS : TRAE TODAS LAS CATEGORAS
 interface Categoria {
