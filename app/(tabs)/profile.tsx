@@ -5,7 +5,7 @@ import { Text, View } from '@/components/Themed';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
 import { fetchUser, fetchAmigos } from '@/lib/user'; // Importamos fetchUser desde user.ts
-
+import FontAwesome from '@expo/vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen() {
@@ -112,21 +112,32 @@ export default function ProfileScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Image source={{ uri: item[0].fotoUsuario }} style={styles.profilePicture} />
+        
         <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
-          <Text style={styles.editButtonText}>Editar Perfil</Text>
+          <FontAwesome name="edit" size={24} color="white" />
         </TouchableOpacity>
       </View>
 
-      <View style={styles.section}>
+      <View style={{margin:"5%"}}>
         <Text style={styles.sectionTitle}>{`${item[0].nombre || ''} ${item[0].apellido || ''}`.trim() || 'Nombre no disponible'}</Text>
-        <Text style={styles.infoUserBold}>Ubicación: </Text>
-        <Text style={styles.infoUser}>{item[0].Provincias?.nombre || 'Ubicación no disponible'}</Text>
-        <Text style={styles.infoUserBold}>Categoría Favorita: </Text>
-        <Text style={styles.infoUser}>{item[0].Categoria?.nombre || 'Categoría no disponible'}</Text>
-        <Text style={styles.infoUserBold}>Sobre mí: </Text>
-        <Text style={styles.infoUser}>{item[0].descripcion || 'Descripción no disponible'}</Text>
       </View>
 
+      <View style={styles.section}>
+        <View style={styles.divInfo}>
+          <Text style={styles.infoUserBold}>Ubicación: </Text>
+          <Text style={styles.infoUser}>{item[0].Provincias?.nombre || 'Ubicación no disponible'}</Text>
+        </View>
+        <View style={styles.divInfo}>
+          <Text style={styles.infoUserBold}>Categoría Favorita: </Text>
+          <Text style={styles.infoUser}>{item[0].Categoria?.nombre || 'Categoría no disponible'}</Text>
+        </View>
+        <View style={styles.divInfo}>
+          <Text style={styles.infoUserBold}>Sobre mí: </Text>
+          <Text style={styles.infoUser}>{item[0].descripcion || 'Descripción no disponible'}</Text>
+        </View>
+      </View>
+
+      {/* Mover la sección de cursos arriba */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Cursos hechos:</Text>
         <View style={styles.courses}>
@@ -139,13 +150,16 @@ export default function ProfileScreen() {
           )}
         </View>
       </View>
+
+      {/* Mover la sección de amigos abajo */}
+      {amigosFotos.length > 0 && renderFotosItem({ item: amigosFotos })}
     </View>
   );
 
   const renderFotosItem = ({ item }) => (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Amigos:</Text>
-      <ScrollView horizontal style={styles.friends}>
+      <View style={styles.friendsGrid}>
         {item.length > 0 ? (
           item.map((amigo) => (
             <TouchableOpacity key={amigo.id} style={styles.friend}>
@@ -154,20 +168,17 @@ export default function ProfileScreen() {
             </TouchableOpacity>
           ))
         ) : (
-          <Text style={styles.infoUser}>No tienes amigos</Text>
+          <Text style={styles.infoUser}>No se han encontrado amigos</Text>
         )}
-      </ScrollView>
+      </View>
     </View>
   );
 
-  if (isLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#1e3a8a" />
-        <Text style={styles.loadingText}>Cargando perfil...</Text>
-      </View>
-    );
-  }
+  const LogoutButton = () => (
+    <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+      <Text style={styles.logoutButtonText}>CERRAR SESIÓN</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
@@ -176,33 +187,28 @@ export default function ProfileScreen() {
         keyExtractor={item => item.id ? item.id.toString() : 'default-key'}
         renderItem={renderUsuarioItem}
       />
-      {amigosFotos.length > 0 && renderFotosItem({ item: amigosFotos })}
-      <Button
-        onPress={handleLogout}
-        title="Cerrar Sesión"
-        color="#d32f2f"
-      />
+      
+      <LogoutButton /> {/* Aquí se renderiza el botón de Cerrar Sesión */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    display:'flex',
-    justifyContent:'center',
-    width:'100%',
-    height:'100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+    height: '100%',
     backgroundColor: '#ffff',
-    borderRadius:0,
   },
   header: {
-    display:'flex',
-    justifyContent:'flex-start',
-    backgroundColor: '#1e3a8a',
-    padding: 20,
-    alignItems: 'center',
-    borderBottomLeftRadius: 20,
+    backgroundColor: '#1E3A8A',
+    height: "30%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
   },
   profilePicture: {
     width: 100,
@@ -210,39 +216,29 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 3,
     borderColor: '#fff',
-    marginBottom: 10,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  infoUserBold:{
-    fontWeight:'bold',
-    textAlign:'justify',
-    fontSize: 16,
-    color:'#1D59CB',
-  },
-  infoUser:{
-    textAlign:'justify',
-    fontSize: 16,
   },
   section: {
-    display:'flex',
-    justifyContent:'flex-start',
-    textAlign:'justify',
-    backgroundColor: 'transparent',
-    padding: 20,
-    marginVertical: 20,
-    borderRadius: 10,
-    alignItems: 'center',
+    margin: "5%",
+    marginRight: "10%",
+    marginLeft: "10%",
   },
   sectionTitle: {
-    display:'flex',
-    justifyContent:'center',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
-    textAlign:'center'
+    textAlign: 'center',
+  },
+  divInfo: {
+    flexDirection: "row",
+    marginBottom: 5,
+  },
+  infoUserBold: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#1D59CB',
+  },
+  infoUser: {
+    fontSize: 16,
   },
   courses: {
     flexDirection: 'row',
@@ -253,27 +249,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#374151',
     backgroundColor: '#e5e7eb',
-    padding: 10,
     borderRadius: 5,
-    margin: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    margin: 2,
   },
-  friends: {
+  friendsGrid: {
+    display:"flex",
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
   },
   friend: {
     alignItems: 'center',
-    marginRight: 10,
+    margin: "5%",
   },
   friendPicture: {
     width: 50,
     height: 50,
     borderRadius: 25,
-  },
-  logout: {
-    color: '#d32f2f',
-    fontWeight: 'bold',
-    marginTop: 20,
-    textAlign: 'center'
   },
   loadingContainer: {
     flex: 1,
@@ -287,14 +281,24 @@ const styles = StyleSheet.create({
     color: '#1e3a8a',
   },
   editButton: {
-    backgroundColor: '#4a90e2',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
+    position: "absolute",
+    top: "10%",
+    right: "5%",
   },
-  editButtonText: {
-    color: '#fff',
-    fontSize: 16,
+  // Estilos para el botón de Logout
+  logoutButton: {
+    backgroundColor: '#d32f2f',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginVertical: 20,
+    width: '90%',
+    alignSelf: 'center',
+  },
+  logoutButtonText: {
+    color: 'white',
     fontWeight: 'bold',
+    fontSize: 16,
   },
 });
