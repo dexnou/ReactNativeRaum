@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 200,
   },
   container: {
-    backgroundColor: "white",
+    backgroundColor: "transparent",
     padding: 40,
     borderRadius: 30,
     marginHorizontal: 20,

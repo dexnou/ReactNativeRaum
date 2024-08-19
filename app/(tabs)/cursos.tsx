@@ -63,48 +63,96 @@ const CursosScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Categorías de Cursos</Text>
-            {categorias.length > 0 ? (
+          <View style={styles.header}>
+            <Text style={styles.headerText}>Cursos</Text>
+          </View>
+        
+            
                 <FlatList
-                    data={categorias}
-                    renderItem={renderCategoria}
-                    keyExtractor={item => item.id_categoria.toString()}
+                    contentContainerStyle={styles.categoriasList}
+                    data={[
+                    { id: '1', icon: 'leaf', color: '#90EE90', name: 'Medio Ambiente' },
+                    { id: '2', icon: 'utensils', color: '#FFD700', name: 'Comida' },
+                    { id: '3', icon: 'shopping-cart', color: '#87CEEB', name: 'Compras' },
+                    { id: '4', icon: 'heartbeat', color: '#FFA07A', name: 'Salud' },
+                    { id: '5', icon: 'users', color: '#DDA0DD', name: 'Social' },
+                    { id: '6', icon: 'plane', color: '#20B2AA', name: 'Viajes' },
+                    ]}
+                    renderItem={({ item }) => (
+                    <TouchableOpacity 
+                        style={styles.categoriaItem}
+                        onPress={() => {
+                        navigation.navigate('CursosPorCategoria', { categoriaId: item.id, categoriaNombre: item.name });
+                        }}
+                    >
+                        <View style={[styles.categoriaIcon, { backgroundColor: item.color }]}>
+                        <Image 
+                            source={{ uri: `https://example.com/icons/${item.icon}.png` }} 
+                            /*style={styles.categoriaImagen} */
+                        />
+                        </View>
+                    </TouchableOpacity>
+                    )}
+                    numColumns={2} //cada dos categoria crea nueva columna
+                    keyExtractor={item => item.id}
+                    columnWrapperStyle={styles.columnaCategoria}
                 />
-            ) : (
-                <Text style={styles.noData}>No se encontraron categorías</Text>
-            )}
+            
         </View>
-    );
+      );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 10,
+    header: {
+        backgroundColor: '#1E3A8A',
+        height: "20%",
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 20,
     },
-    centered: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    title: {
+    headerText: {
+        color: 'white',
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+    },
+    container: {
+        display:"flex",
+        justifyContent:"space-around",
+        alignContent:"center",
+        backgroundColor: 'white',
+        width:"100%",
+        height:"100%"
+    },
+
+    categoriasList: {
+        margin:"1%",
+        width:"100%",
+        height:"100%", 
+        padding:"15%",
+        display:"flex",
+        justifyContent:"space-between",
+
+    },
+    columnaCategoria:{
+        display:"flex",
+        justifyContent:"space-between",
+
     },
     categoriaItem: {
-        padding: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        display:"flex",
         flexDirection: 'row',
-        alignItems: 'center',
+        justifyContent:"space-between",
+        width:100,//esto le da el ancho y alto a los circulos
+        height:100
     },
-    categoriaImagen: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        marginRight: 10,
+    categoriaIcon: {
+        width: "100%",
+        height: "100%",
+        borderRadius: 100,
     },
+    
     categoriaNombre: {
         fontSize: 18,
     },
@@ -112,6 +160,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'center',
     },
+    centered: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    
 });
 
 export default CursosScreen;
