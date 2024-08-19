@@ -24,7 +24,7 @@ export default function HomeScreen() {
                         const user = await fetchUser(storedUserId);
                         console.log('Datos del usuario obtenidos:', user);
                         if (user) {
-                            setUserData(user);
+                            setUserData(user[0]);
                         } else {
                             console.error('No se encontraron datos del usuario');
                         }
