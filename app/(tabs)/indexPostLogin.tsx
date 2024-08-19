@@ -62,16 +62,9 @@ export default function HomeScreen() {
             
             <View style={styles.content}>
                 <View style={styles.capitulo}>
-                {item.Curso && item.Curso.length > 0 ? (
-                    <>
-                        <Text style={styles.capitutoTitle}>{'Nombre capitulo'}</Text>
-                        <Text style={styles.capitutoSubtitle}>{'Nombre curso'}</Text>
-                        <Text style={styles.capitutoNumber}>N°%</Text>
-                    </>
-                ) : (
-                    <Text style={styles.infoUser}>No hay cursos disponibles</Text>
-                )}
-                    
+                    <Text style={styles.capitutoTitle}>Nombre Capítulo</Text>
+                    <Text style={styles.capitutoSubtitle}>Nombre hito</Text>
+                    <Text style={styles.capitutoNumber}>N°%</Text>
                 </View>
                 
                 <TouchableOpacity 
