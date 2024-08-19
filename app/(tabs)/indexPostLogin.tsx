@@ -1,17 +1,63 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import React, { useState, useCallback } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { StackNavigator }from "./navigation/ScreenNavigator";
 import { supabase } from '@/lib/supabase';
-import { fetchUser, fetchAmigos } from '@/lib/user'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fetchUser } from '@/lib/user'; 
 
-export default function HomeScreen({ userId }) {
+export default function HomeScreen() {
     const navigation = useNavigation();
+    const route = useRoute();
+    const [userData, setUserData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useFocusEffect(
+        useCallback(() => {
+            const loadUserData = async () => {
+                try {
+                    setIsLoading(true);
+                    const storedUserId = route.params?.userId || await AsyncStorage.getItem('userId');
+                    console.log('ID de usuario obtenido en useFocusEffect:', storedUserId);
+                    
+                    if (storedUserId) {
+                        const user = await fetchUser(storedUserId);
+                        console.log('Datos del usuario obtenidos:', user);
+                        if (user) {
+                            setUserData(user);
+                        } else {
+                            console.error('No se encontraron datos del usuario');
+                        }
+                    } else {
+                        console.error('No se encontró el ID del usuario en AsyncStorage');
+                        navigation.navigate('Login');
+                    }
+                } catch (error) {
+                    console.error('Error al cargar los datos del usuario:', error);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            loadUserData();
+        }, [route.params?.userId, navigation])
+    );
+
+    if (isLoading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#1e3a8a" />
+                <Text style={styles.loadingText}>Cargando...</Text>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.headerText}>¡Hola nombre programas!</Text>
+                <Text style={styles.headerText}>
+                    ¡Hola {userData?.nombre || 'Usuario'}!
+                </Text>
             </View>
             
             <View style={styles.content}>
@@ -32,13 +78,13 @@ export default function HomeScreen({ userId }) {
                     style={styles.button}
                     onPress={() => navigation.navigate('AmigosProgreso')}
                 >
-                    <Text style={styles.buttonText}>¿Que hacen mis Amigos?</Text>
+                    <Text style={styles.buttonText}>¿Qué hacen mis Amigos?</Text>
                 </TouchableOpacity>
             </View>
-            
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -109,5 +155,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         backgroundColor: 'white',
         paddingVertical: 10,
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 14,
+        marginTop: 5,
     },
 });
