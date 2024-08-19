@@ -1,16 +1,34 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SignUpContext,useSignUp } from '@/app/Contexts/SignUpContext';
+import { useSignUp } from '@/app/Contexts/SignUpContext';
 
 export default function NameStep({ onNext }: { onNext: (data: object) => void }) {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
- 
+  const {contextState, setContextState} = useSignUp();
+
+  useEffect(() => {
+    setNombre(contextState.nombre);
+    setApellido(contextState.apellido);
+  }, [contextState.nombre, contextState.apellido]);
+
+  const handleNombreChange = (text: string) => {
+    setNombre(text);
+    setContextState({ newValue: text, type: 'SET_NOMBRE' });
+  };
+
+  const handleApellidoChange = (text: string) => {
+    setApellido(text);
+    setContextState({ newValue: text, type: 'SET_APELLIDO' });
+  };
 
   const handleNext = () => {
     onNext({ nombre, apellido });
   };
+  console.log('El nombre y apellido son', nombre, apellido);
+  console.log('El nombre context es',contextState.nombre);
+  console.log('El apellido context es',contextState.apellido);  
 
   return (
     <View style={styles.container}>
@@ -19,15 +37,15 @@ export default function NameStep({ onNext }: { onNext: (data: object) => void })
         style={styles.input}
         placeholder="Nombre"
         placeholderTextColor="#C5C5C5"
-        value={nombre}
-        onChangeText={setNombre}
+        value={(contextState.nombre) === '' ? nombre : contextState.nombre}
+        onChangeText={handleNombreChange}
       />
       <TextInput
         style={styles.input}
         placeholder="Apellido"
         placeholderTextColor="#C5C5C5"
-        value={apellido}
-        onChangeText={setApellido}
+        value={(contextState.apellido) === '' ? apellido : contextState.apellido}
+        onChangeText={handleApellidoChange}
       />
       <TouchableOpacity style={styles.button} onPress={handleNext}>
         <Text style={styles.buttonText}>Siguiente</Text>

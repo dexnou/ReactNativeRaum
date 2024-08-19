@@ -71,8 +71,8 @@ const CursosScreen = () => {
                 <FlatList
                     contentContainerStyle={styles.categoriasList}
                     data={[
-                    { id: '1', icon: 'leaf', color: '#90EE90', name: 'Medio Ambiente' },
-                    { id: '2', icon: 'utensils', color: '#FFD700', name: 'Comida' },
+                    { id: '2', icon: 'leaf', color: '#90EE90', name: 'Medio Ambiente' },
+                    { id: '1', icon: 'utensils', color: '#FFD700', name: 'Comida' },
                     { id: '3', icon: 'shopping-cart', color: '#87CEEB', name: 'Compras' },
                     { id: '4', icon: 'heartbeat', color: '#FFA07A', name: 'Salud' },
                     { id: '5', icon: 'users', color: '#DDA0DD', name: 'Social' },

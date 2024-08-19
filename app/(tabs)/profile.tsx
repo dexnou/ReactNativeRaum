@@ -137,6 +137,21 @@ export default function ProfileScreen() {
         </View>
       </View>
 
+      <View style={styles.section}>
+        <View style={styles.divInfo}>
+          <Text style={styles.infoUserBold}>Ubicación: </Text>
+          <Text style={styles.infoUser}>{item[0].Provincias?.nombre || 'Ubicación no disponible'}</Text>
+        </View>
+        <View style={styles.divInfo}>
+          <Text style={styles.infoUserBold}>Categoría Favorita: </Text>
+          <Text style={styles.infoUser}>{item[0].Categoria?.nombre || 'Categoría no disponible'}</Text>
+        </View>
+        <View style={styles.divInfo}>
+          <Text style={styles.infoUserBold}>Sobre mí: </Text>
+          <Text style={styles.infoUser}>{item[0].descripcion || 'Descripción no disponible'}</Text>
+        </View>
+      </View>
+
       {/* Mover la sección de cursos arriba */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Cursos hechos:</Text>

@@ -1,14 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useSignUp } from '@/app/Contexts/SignUpContext';
 
 export default function EmailStep({ onNext, onPrevious }: { onNext: (data: object) => void, onPrevious: () => void }) {
   const [email, setEmail] = useState('');
   const [emailTutor, setEmailTutor] = useState('');
   const [fecNac, setFecNac] = useState('');
+  const {contextState, setContextState} = useSignUp();
+
+  useEffect(() => {
+    setEmail(contextState.email);
+    setEmailTutor(contextState.emailTutor);
+    setFecNac(contextState.fechaNacimiento);
+  }, [contextState.email, contextState.emailTutor, contextState.fechaNacimiento]);
+
+  const handleEmailChange = (text: string) => {
+    setEmail(text);
+    setContextState({ newValue: text, type: 'SET_EMAIL' });
+  };
+
+  const handleEmailTutorChange = (text: string) => {
+    setEmailTutor(text);
+    setContextState({ newValue: text, type: 'SET_EMAIL_TUTOR' });
+  };
+
+  const handleFechaNacimientoChange = (text: string) => {
+    setFecNac(text);
+    setContextState({ newValue: text, type: 'SET_FECHA_NACIMIENTO' });
+  };
 
   const handleNext = () => {
     onNext({ email, emailTutor, fecNac });
   };
+
+  console.log('Fecha es ',fecNac);
+  console.log('Fecha context es ', contextState.fechaNacimiento);
 
   return (
     <View style={styles.container}>
@@ -17,15 +43,15 @@ export default function EmailStep({ onNext, onPrevious }: { onNext: (data: objec
         style={styles.input}
         placeholder="Email"
         placeholderTextColor="#C5C5C5"
-        value={email}
-        onChangeText={setEmail}
+        value={(contextState.email) === '' ? email : contextState.email}
+        onChangeText={handleEmailChange}
       />
       <TextInput
         style={styles.input}
         placeholder="Email del Tutor"
         placeholderTextColor="#C5C5C5"
-        value={emailTutor}
-        onChangeText={setEmailTutor}
+        value={(contextState.emailTutor) === '' ? emailTutor : contextState.emailTutor}
+        onChangeText={handleEmailTutorChange}
       />
       <Text style={styles.helperText}>
         Debe ser una persona de confianza que podrá seguir tu progreso en la app
@@ -34,8 +60,8 @@ export default function EmailStep({ onNext, onPrevious }: { onNext: (data: objec
         style={styles.input}
         placeholder="Año de Nacimiento"
         placeholderTextColor="#C5C5C5"
-        value={fecNac}
-        onChangeText={setFecNac}
+        value={(contextState.fechaNacimiento) === '' ? fecNac : contextState.fechaNacimiento}
+        onChangeText={handleFechaNacimientoChange}
       />
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.buttonSecondary} onPress={onPrevious}>
