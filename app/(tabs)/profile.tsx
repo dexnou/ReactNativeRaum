@@ -118,7 +118,7 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{`${item[0].nombre || ''} ${item[0].apellido || ''}`.trim() || 'Nombre no disponible'}</Text>
+        <Text style={styles.sectionTitle}>{`${item[0].username || ''}`.trim() || 'Nombre no disponible'}</Text>
         <Text style={styles.infoUserBold}>Ubicación: </Text>
         <Text style={styles.infoUser}>{item[0].Provincias?.nombre || 'Ubicación no disponible'}</Text>
         <Text style={styles.infoUserBold}>Categoría Favorita: </Text>
