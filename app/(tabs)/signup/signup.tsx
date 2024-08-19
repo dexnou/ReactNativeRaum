@@ -1,30 +1,23 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import NameStep from './signup2';
 import EmailStep from './signup3';
 import UsernamePasswordStep from './signup4';
-import {SignUpContext, useSignUp} from '@/app/Contexts/SignUpContext';
+import {SignUpProvider, useSignUp} from '@/app/Contexts/SignUpContext';
 
 //hay que usar asyncstorage para retener la inforamción que se va pasando, al principio inicializar todo como '', pasas el componente
 export default function SignUpScreen({ navigation }: {navigation: any}) {
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({
-    nombre: '',
-    apellido: '',
-    email: '',
-    emailTutor: '',
-    fecNac: '',
-    username: '',
-    password: ''
-  });
+  const [data, setData] = useState();
 
-  const handleNextStep = (data: object) => {
-    setFormData({ ...formData, ...data });
+  const handleNextStep = () => {
     setCurrentStep(currentStep + 1);
+    setData(data);
   };
 
   const handlePreviousStep = () => {
     setCurrentStep(currentStep - 1);
+    setData(data);
   };
 
   const renderStep = () => {
@@ -40,13 +33,13 @@ export default function SignUpScreen({ navigation }: {navigation: any}) {
     }
   };
   return (
-    
+    <SignUpProvider>
       <View style={styles.background}>
         <View style={styles.topShape} />
         <View style={styles.bottomShape} />
         {renderStep()}
       </View>
-    
+    </SignUpProvider>
   );
 }
 

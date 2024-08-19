@@ -1,26 +1,66 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import React, { useState, useCallback } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { StackNavigator }from "./navigation/ScreenNavigator";
-import {fetchUser} from '@/lib/user';
+import { supabase } from '@/lib/supabase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fetchUser } from '@/lib/user'; 
 
-export default function HomeScreen({ userId }) {
+export default function HomeScreen() {
     const navigation = useNavigation();
-    const [user, setUser] = useState();
+    const route = useRoute();
+    const [userData, setUserData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const fetchData = async () => {
-        const userData: any = await fetchUser(userId);
-      if (userData) {
-        if (userData.fotoUsuario === null) {
-          userData.fotoUsuario = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
-        }
-        setUser([userData]);
-      } else {
-        setUser([]);
-      }
+    useFocusEffect(
+        useCallback(() => {
+            const loadUserData = async () => {
+                try {
+                    setIsLoading(true);
+                    const storedUserId = route.params?.userId || await AsyncStorage.getItem('userId');
+                    console.log('ID de usuario obtenido en useFocusEffect:', storedUserId);
+                    
+                    if (storedUserId) {
+                        const user = await fetchUser(storedUserId);
+                        console.log('Datos del usuario obtenidos:', user);
+                        if (user) {
+                            setUserData(user[0]);
+                        } else {
+                            console.error('No se encontraron datos del usuario');
+                        }
+                    } else {
+                        console.error('No se encontró el ID del usuario en AsyncStorage');
+                        navigation.navigate('Login');
+                    }
+                } catch (error) {
+                    console.error('Error al cargar los datos del usuario:', error);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            loadUserData();
+        }, [route.params?.userId, navigation])
+    );
+
+    if (isLoading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#1e3a8a" />
+                <Text style={styles.loadingText}>Cargando...</Text>
+            </View>
+        );
     }
-    const renderInfoHome = ({item}) => (
-        <View style={styles.content}>
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.headerText}>
+                    ¡Hola {userData?.nombre || 'Usuario'}!
+                </Text>
+            </View>
+            
+            <View style={styles.content}>
                 <View style={styles.capitulo}>
                 {item.Curso && item.Curso.length > 0 ? (
                     <>
@@ -45,27 +85,13 @@ export default function HomeScreen({ userId }) {
                     style={styles.button}
                     onPress={() => navigation.navigate('AmigosProgreso')}
                 >
-                    <Text style={styles.buttonText}>¿Que hacen mis Amigos?</Text>
+                    <Text style={styles.buttonText}>¿Qué hacen mis Amigos?</Text>
                 </TouchableOpacity>
-            </View>
-    );
-
-    return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.headerText}>¡Hola Emiliano!</Text>
-            </View>
-            <FlatList
-                data={user}
-                keyExtractor={item => item.id ? item.id.toString() : 'default-key'}
-                renderItem={renderInfoHome}
-            />
-            <View style={styles.footer}>
-                {/* Add footer icons here */}
             </View>
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -74,7 +100,10 @@ const styles = StyleSheet.create({
     },
     header: {
         backgroundColor: '#1E3A8A',
-        padding: 50,
+        height: "20%",
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
         borderBottomRightRadius: 20,
         borderBottomLeftRadius: 20,
     },
@@ -136,5 +165,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         backgroundColor: 'white',
         paddingVertical: 10,
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 14,
+        marginTop: 5,
     },
 });
