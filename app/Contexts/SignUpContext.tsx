@@ -5,9 +5,10 @@ export const initialState = {
   apellido: '',
   email: '',
   emailTutor: '',
-  fecNac: '',
+  fechaNacimiento: '',
   username: '',
   password: '',
+  confirmPassword: '',
 }
 
 export const ActionTypes = {
@@ -18,6 +19,7 @@ export const ActionTypes = {
   SetFechaNacimiento: 'SET_FECHA_NACIMIENTO',
   SetUsername: 'SET_USERNAME',
   SetPassword: 'SET_PASSWORD',
+  SetConfirmPassword: 'SET_CONFIRM_PASSWORD',
 }
 
 export const reducer = (state = {}, action) => {
@@ -25,39 +27,44 @@ export const reducer = (state = {}, action) => {
     case ActionTypes.SetNombre:
       return {
         ...state,
-        nombre: action.value,
+        nombre: action.newValue,
       };
     case ActionTypes.SetApellido:
       return {
         ...state,
-        apellido: action.value,
+        apellido: action.newValue,
       };
     case ActionTypes.SetEmail:
       return {
         ...state,
-        email: action.value,
+        email: action.newValue,
       };
     case ActionTypes.SetEmailTutor:
       return {
         ...state,
-        emailTutor: action.value,
+        emailTutor: action.newValue,
       };
     case ActionTypes.SetFechaNacimiento:
       return {
         ...state,
-        fechaNacimiento: action.value,
+        fechaNacimiento: action.newValue,
       };
     case ActionTypes.SetUsername:
       return {
         ...state,
-        username: action.value,
+        username: action.newValue,
       };
     case ActionTypes.SetPassword:
       return {
         ...state,
-        password: action.value,
+        password: action.newValue,
       };
-    default:
+    case ActionTypes.SetConfirmPassword:
+      return {
+        ...state,
+        confirmPassword: action.newValue
+      };
+      default:
       return state;
   }
 };
@@ -89,25 +96,3 @@ return (
 export const useSignUp = () => {
   return useContext(ContextSignUp);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//en otras pantallas
-//<SignUp>

@@ -1,11 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useSignUp } from '@/app/Contexts/SignUpContext';
+
 
 export default function UsernamePasswordStep({ onNext, onPrevious, navigation }: { onNext: (data: object) => void, onPrevious: () => void, navigation: any }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const {contextState, setContextState} = useSignUp();
+
+  useEffect(() => {
+    setUsername(contextState.username);
+    setPassword(contextState.password);
+    setConfirmPassword(contextState.confirmPassword);
+  }, [contextState.username, contextState.password, contextState.confirmPassword]);
+
+  const handleUsernameChange = (text: string) => {
+    setUsername(text);
+    setContextState({ newValue: text, type: 'SET_USERNAME' });
+  };
+
+  const handlePasswordChange = (text: string) => {
+    setPassword(text);
+    setContextState({ newValue: text, type: 'SET_PASSWORD' });
+  };
+
+  const handleConfirmPasswordChange = (text: string) => {
+    setConfirmPassword(text);
+    setContextState({ newValue: text, type: 'SET_CONFIRM_PASSWORD' });
+  };
 
   const handleNext = () => {
     if (password !== confirmPassword) {
@@ -28,24 +52,24 @@ export default function UsernamePasswordStep({ onNext, onPrevious, navigation }:
         style={styles.input}
         placeholder="Nombre de Usuario"
         placeholderTextColor="#C5C5C5"
-        value={username}
-        onChangeText={setUsername}
+        value={(contextState.username) === '' ? username : contextState.username}
+        onChangeText={handleUsernameChange}
       />
       <TextInput
         style={styles.input}
         placeholder="Contraseña"
         placeholderTextColor="#C5C5C5"
         secureTextEntry
-        value={password}
-        onChangeText={setPassword}
+        value={(contextState.password) === '' ? password : contextState.password}
+        onChangeText={handlePasswordChange}
       />
       <TextInput
         style={styles.input}
         placeholder="Confirmar Contraseña"
         placeholderTextColor="#C5C5C5"
         secureTextEntry
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
+        value={(contextState.confirmPassword) === '' ? confirmPassword : contextState.confirmPassword}
+        onChangeText={handleConfirmPasswordChange}
       />
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
       <View style={styles.buttonContainer}>

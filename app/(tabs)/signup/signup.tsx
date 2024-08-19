@@ -8,6 +8,7 @@ import {SignUpProvider, useSignUp} from '@/app/Contexts/SignUpContext';
 //hay que usar asyncstorage para retener la inforamción que se va pasando, al principio inicializar todo como '', pasas el componente
 export default function SignUpScreen({ navigation }: {navigation: any}) {
   const [currentStep, setCurrentStep] = useState(1);
+  const [data, setData] = useState();
 
   const handleNextStep = () => {
     setCurrentStep(currentStep + 1);
