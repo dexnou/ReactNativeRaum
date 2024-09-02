@@ -9,7 +9,7 @@ const JuegoCursoScreen = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{cursoNombre}</Text>
-            <Text>ID del curso: {cursoId}</Text>
+            <Text>ID del curso: {cursoId}</Text> 
             {/* Aquí puedes añadir más detalles del curso */}
         </View>
     );

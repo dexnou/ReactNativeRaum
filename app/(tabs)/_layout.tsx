@@ -29,6 +29,7 @@ export default function TabNavigator() {
     <AuthProvider>
       <Tab.Navigator
         screenOptions={({ route }) => ({
+          headershown: false,
           tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
           headerShown: false,
           tabBarIcon: ({ color, size }) => {

@@ -9,7 +9,7 @@ import CursosScreen from "../cursos";
 import CursosPorCategoriaScreen from "../cursosPorCategoria";
 import SeguirProgreso from "../seguirProgreso";
 import AmigosProgresoScreen from "../progresoMisAmigos";
-import JuegoCursoScreen from "../juegoCurso"
+import JuegoCursoScreen from "../game/juegoCurso"
 import EditProfileScreen from "@/components/EditProfileScreen";
 import React from "react";
 

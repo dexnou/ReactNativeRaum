@@ -14,6 +14,7 @@ export default function ComunidadScreen() {
   const [cursos, setCursos] = useState([]);
   const [cursosUsuarios, setCursosUsuarios] = useState([]);
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,6 +22,7 @@ export default function ComunidadScreen() {
         const categoriasData: any = await fetchCategorias(); // Asume que el usuario actual tiene id 2
         console.log("Cat data:", categorias); // Verificar los datos de amigos obtenidos
         setCategorias(categoriasData);
+        setLoading(false);
         const cursosData: any = await fetchCursos(1);
         setCursos(cursosData);
         const cursosUsuariosData: any = await fetchUsuariosCursos(1);
@@ -58,7 +60,7 @@ export default function ComunidadScreen() {
     <View>
       <FlatList
         data={categorias}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.id ? item.id.toString() : 'default-key'}
         renderItem={renderCategorias}
       />
     </View>
