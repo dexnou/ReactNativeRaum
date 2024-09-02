@@ -17,7 +17,6 @@ const Stack = createStackNavigator();
 export default function StackNavigator() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Home" component={HomeScreen}/>
       <Stack.Screen name="Profile" component={ProfileScreen}/>
       <Stack.Screen name="Comunidad" component={ComunidadScreen}/>
       <Stack.Screen name="SignUp" component={SignUpScreen}/>

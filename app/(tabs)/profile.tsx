@@ -6,10 +6,11 @@ import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/nativ
 import { supabase } from '@/lib/supabase';
 import { fetchUser, fetchAmigos } from '@/lib/user'; // Importamos fetchUser desde user.ts
 import FontAwesome from '@expo/vector-icons/FontAwesome5';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';   
 
-export default function ProfileScreen() {
- 
+
+export default function ProfileScreen()   
+ {
   const route = useRoute();
   const navigation = useNavigation();
   const [amigosFotos, setAmigosFotos] = useState([]);
@@ -105,7 +106,7 @@ export default function ProfileScreen() {
   };
 
   const handleEditProfile = () => {
-    navigation.navigate('EditProfile');
+    navigation.navigate('EditProfile'); // Navigate to Edit Profile screen
   };
 
   const renderUsuarioItem = ({ item }) => (
@@ -174,21 +175,14 @@ export default function ProfileScreen() {
     </View>
   );
 
-  const LogoutButton = () => (
-    <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-      <Text style={styles.logoutButtonText}>CERRAR SESIÓN</Text>
-    </TouchableOpacity>
-  );
-
-  return (
+   return (
     <View style={styles.container}>
       <FlatList
         data={userTea}
         keyExtractor={item => item.id ? item.id.toString() : 'default-key'}
         renderItem={renderUsuarioItem}
       />
-      
-      <LogoutButton /> {/* Aquí se renderiza el botón de Cerrar Sesión */}
+      {/* ... existing code for rendering courses and friends ... */}
     </View>
   );
 }
@@ -285,20 +279,5 @@ const styles = StyleSheet.create({
     top: "10%",
     right: "5%",
   },
-  // Estilos para el botón de Logout
-  logoutButton: {
-    backgroundColor: '#d32f2f',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginVertical: 20,
-    width: '90%',
-    alignSelf: 'center',
-  },
-  logoutButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
+  
 });

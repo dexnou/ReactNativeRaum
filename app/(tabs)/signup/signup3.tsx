@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSignUp } from '@/app/Contexts/SignUpContext';
+import commonStyles from '../commonStyles';
 
 export default function EmailStep({ onNext, onPrevious }: { onNext: (data: object) => void, onPrevious: () => void }) {
   const [email, setEmail] = useState('');
@@ -37,44 +38,44 @@ export default function EmailStep({ onNext, onPrevious }: { onNext: (data: objec
   console.log('Fecha context es ', contextState.fechaNacimiento);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>REGISTRO</Text>
+    <View style={commonStyles.container}>
+      <Text style={commonStyles.title}>REGISTRO</Text>
       <TextInput
-        style={styles.input}
+        style={commonStyles.input}
         placeholder="Email"
         placeholderTextColor="#C5C5C5"
         value={(contextState.email) === '' ? email : contextState.email}
         onChangeText={handleEmailChange}
       />
       <TextInput
-        style={styles.input}
+        style={commonStyles.input}
         placeholder="Email del Tutor"
         placeholderTextColor="#C5C5C5"
         value={(contextState.emailTutor) === '' ? emailTutor : contextState.emailTutor}
         onChangeText={handleEmailTutorChange}
       />
-      <Text style={styles.helperText}>
+      <Text style={commonStyles.helperText}>
         Debe ser una persona de confianza que podrá seguir tu progreso en la app
       </Text>
       <TextInput
-        style={styles.input}
+        style={commonStyles.input}
         placeholder="Año de Nacimiento"
         placeholderTextColor="#C5C5C5"
         value={(contextState.fechaNacimiento) === '' ? fecNac : contextState.fechaNacimiento}
         onChangeText={handleFechaNacimientoChange}
       />
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.buttonSecondary} onPress={onPrevious}>
-          <Text style={styles.buttonText}>Atrás</Text>
+      <View style={commonStyles.buttonContainer}>
+        <TouchableOpacity style={commonStyles.buttonSecondary} onPress={onPrevious}>
+          <Text style={commonStyles.buttonText}>Atrás</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleNext}>
-          <Text style={styles.buttonText}>Siguiente</Text>
+        <TouchableOpacity style={commonStyles.button} onPress={handleNext}>
+          <Text style={commonStyles.buttonText}>Siguiente</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
-
+/*
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
@@ -134,4 +135,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-});
+});*/

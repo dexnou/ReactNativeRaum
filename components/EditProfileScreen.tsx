@@ -81,7 +81,17 @@ export default function EditProfileScreen() {
       setUserData({ ...userData, fotoUsuario: result.assets[0].uri });
     }
   };
-
+  const handleLogout = async () => {
+    try {
+      setUserData([]); // Clear user data for security
+      setProvincias([]);
+      setCategorias([]);
+      await AsyncStorage.removeItem('userId');
+      navigation.navigate('FirstPage'); // Navigate to login or home screen
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  };
   const handleSave = async () => {
     setIsLoading(true);
     try {
@@ -210,6 +220,11 @@ export default function EditProfileScreen() {
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
         <Text style={styles.saveButtonText}>Guardar Cambios</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutButtonText}>CERRAR SESIÓN</Text>
+      </TouchableOpacity>
+
     </ScrollView>
   );
 }
@@ -286,5 +301,20 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     color: '#1e3a8a',
+  },
+  // Estilos para el botón de Logout
+  logoutButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginVertical: 20,
+    width: '90%',
+    alignSelf: 'center',
+  },
+  logoutButtonText: {
+    color: 'red',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
