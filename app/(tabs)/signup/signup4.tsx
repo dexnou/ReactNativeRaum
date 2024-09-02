@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { useSignUp } from '@/app/Contexts/SignUpContext';
 import {fetchOrCreateUser} from '@/lib/user'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import commonStyles from '../commonStyles';
 
 
 export default function UsernamePasswordStep({ onNext, onPrevious, navigation }: { onNext: (data: object) => void, onPrevious: () => void, navigation: any }) {
@@ -57,17 +58,17 @@ export default function UsernamePasswordStep({ onNext, onPrevious, navigation }:
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>REGISTRO</Text>
+    <View style={commonStyles.container}>
+      <Text style={commonStyles.title}>REGISTRO</Text>
       <TextInput
-        style={styles.input}
+        style={commonStyles.input}
         placeholder="Nombre de Usuario"
         placeholderTextColor="#C5C5C5"
         value={(contextState.username) === '' ? username : contextState.username}
         onChangeText={handleUsernameChange}
       />
       <TextInput
-        style={styles.input}
+        style={commonStyles.input}
         placeholder="Contraseña"
         placeholderTextColor="#C5C5C5"
         secureTextEntry
@@ -75,81 +76,23 @@ export default function UsernamePasswordStep({ onNext, onPrevious, navigation }:
         onChangeText={handlePasswordChange}
       />
       <TextInput
-        style={styles.input}
+        style={commonStyles.input}
         placeholder="Confirmar Contraseña"
         placeholderTextColor="#C5C5C5"
         secureTextEntry
-        value={(contextState.confirmPassword) === '' ? confirmPassword : contextState.confirmPassword}
+        value={(contextState.confirmPassword) === '' ? confirmPassword : confirmPassword}
         onChangeText={handleConfirmPasswordChange}
       />
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.buttonSecondary} onPress={onPrevious}>
-          <Text style={styles.buttonText}>Atrás</Text>
+      {error ? <Text style={commonStyles.errorText}>{error}</Text> : null}
+      <View style={commonStyles.buttonContainer}>
+        <TouchableOpacity style={commonStyles.buttonSecondary} onPress={onPrevious}>
+          <Text style={commonStyles.buttonText}>Atrás</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-          <Text style={styles.buttonText}>Finalizar</Text>
+        <TouchableOpacity style={commonStyles.button} onPress={handleSignUp} disabled={loading}>
+          <Text style={commonStyles.buttonText}>Finalizar</Text>
         </TouchableOpacity>
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        {error ? <Text style={commonStyles.errorText}>{error}</Text> : null}
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 30,
-    marginHorizontal: 20,
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#000",
-  },
-  input: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#F6F6F6',
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    marginBottom: 10,
-    color: '#000',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  button: {
-    flex: 1,
-    backgroundColor: '#0F1138',
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 20,
-    marginLeft: 5,
-  },
-  buttonSecondary: {
-    flex: 1,
-    backgroundColor: '#AAA',
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 20,
-    marginRight: 5,
-  },
-  buttonText: {
-    color: '#FFF',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 10,
-  },
-});

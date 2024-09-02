@@ -4,6 +4,7 @@ import NameStep from './signup2';
 import EmailStep from './signup3';
 import UsernamePasswordStep from './signup4';
 import {SignUpProvider, useSignUp} from '@/app/Contexts/SignUpContext';
+import commonStyles from '../commonStyles';
 
 //hay que usar asyncstorage para retener la inforamción que se va pasando, al principio inicializar todo como '', pasas el componente
 export default function SignUpScreen({ navigation }: {navigation: any}) {
@@ -34,15 +35,15 @@ export default function SignUpScreen({ navigation }: {navigation: any}) {
   };
   return (
     <SignUpProvider>
-      <View style={styles.background}>
-        <View style={styles.topShape} />
-        <View style={styles.bottomShape} />
+      <View style={commonStyles.background}>
+        <View style={commonStyles.topShape} />
+        <View style={commonStyles.bottomShape} />
         {renderStep()}
       </View>
     </SignUpProvider>
   );
 }
-
+/*
 const styles = StyleSheet.create({
   background: {
     flex: 1,
@@ -68,4 +69,4 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 200,
   },
-});
+});*/

@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginUser } from "@/lib/user"; // Asegúrate de importar correctamente la función
+import commonStyles from './commonStyles';
+
 
 const LoginScreen = ({ navigation }: { navigation: any }) => {
   const [mail, setMail] = useState("");
@@ -42,13 +44,13 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
   };
 
   return (
-    <View style={styles.background}>
-      <View style={styles.topShape} />
-      <View style={styles.bottomShape} />
-      <View style={styles.container}>
-        <Text style={styles.title}>LOGIN</Text>
+    <View style={commonStyles.background}>
+      <View style={commonStyles.topShape} />
+      <View style={commonStyles.bottomShape} />
+      <View style={commonStyles.container}>
+        <Text style={commonStyles.title}>LOGIN</Text>
         <TextInput
-          style={styles.input}
+          style={commonStyles.input}
           placeholder="Email"
           onChangeText={setMail}
           value={mail}
@@ -57,97 +59,28 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
           placeholderTextColor="#C5C5C5"
         />
         <TextInput
-          style={styles.input}
+          style={commonStyles.input}
           placeholder="Password"
           onChangeText={setPassword}
           value={password}
           secureTextEntry
           placeholderTextColor="#C5C5C5"
         />
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleLogin}
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>
+        {error ? <Text style={commonStyles.errorText}>{error}</Text> : null}
+        <TouchableOpacity style={commonStyles.button} onPress={handleLogin} disabled={loading}>
+          <Text style={commonStyles.buttonText}>
             {loading ? "Loading..." : "Login"}
           </Text>
         </TouchableOpacity>
+        <View style={commonStyles.noAccountContainer}>
+          <Text style={commonStyles.noAccountText}>¿No tienes cuenta?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+            <Text style={commonStyles.registerText}>Registrate aquí</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "#03175E",
-    paddingBottom: "30%",
-  },
-  topShape: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: "100%",
-    backgroundColor: "#03175E",
-    borderBottomRightRadius: 200,
-  },
-  bottomShape: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: "60%",
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 200,
-  },
-  container: {
-    backgroundColor: "transparent",
-    padding: 40,
-    borderRadius: 30,
-    marginHorizontal: 20,
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#000",
-  },
-  input: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#F6F6F6',
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    marginBottom: 10,
-    color: '#000',
-  },
-  errorText: {
-    color: "red",
-    marginBottom: 10,
-  },
-  button: {
-    width: '100%',
-    backgroundColor: '#0F1138',
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  buttonText: {
-    color: "#FFF",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  forgotPassword: {
-    color: "#03175E",
-    marginVertical: 10,
-  },
-});
 
 export default LoginScreen;

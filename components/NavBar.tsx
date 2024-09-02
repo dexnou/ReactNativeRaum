@@ -5,7 +5,7 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 
 const NavBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isAuthenticated ? {} : { display: 'none' }]}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =
@@ -28,7 +28,7 @@ const NavBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation })
             navigation.navigate(route.name);
           }
         };
-
+        
         return (
           <TouchableOpacity
             key={index}
