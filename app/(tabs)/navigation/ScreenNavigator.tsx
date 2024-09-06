@@ -28,6 +28,7 @@ export default function StackNavigator() {
       <Stack.Screen name="AmigosProgreso" component={AmigosProgresoScreen}/>
       <Stack.Screen name="JuegoCurso" component={JuegoCursoScreen}/>
       <Stack.Screen name="EditProfile" component={EditProfileScreen}/>
+      <Stack.Screen name="Home" component={HomeScreen}/>
     </Stack.Navigator>
   );
 }

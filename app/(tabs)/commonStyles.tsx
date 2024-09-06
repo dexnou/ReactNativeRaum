@@ -29,7 +29,7 @@ background: {
 
   // Container styles
   container: {
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     padding: 20,
     borderRadius: 30,
     marginHorizontal: 20,

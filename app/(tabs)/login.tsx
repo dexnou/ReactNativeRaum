@@ -34,7 +34,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
 
       // Redirigir al usuario a la pantalla principal o a otra pantalla
       console.log('Login manda el userId', user.id);
-      navigation.navigate('Home', { userId: user.id });
+      navigation.navigate('Home');
     } catch (err) {
       console.error("Error al iniciar sesión:", err.message);
       setError("Error al iniciar sesión. Verifica tus credenciales.");
