@@ -13,10 +13,12 @@ import JuegoCursoScreen from "../game/juegoCurso"
 import EditProfileScreen from "@/components/EditProfileScreen";
 import React from "react";
 
+
 const Stack = createStackNavigator();
 export default function StackNavigator() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Home" component={HomeScreen}/>
       <Stack.Screen name="Profile" component={ProfileScreen}/>
       <Stack.Screen name="Comunidad" component={ComunidadScreen}/>
       <Stack.Screen name="SignUp" component={SignUpScreen}/>
@@ -28,7 +30,6 @@ export default function StackNavigator() {
       <Stack.Screen name="AmigosProgreso" component={AmigosProgresoScreen}/>
       <Stack.Screen name="JuegoCurso" component={JuegoCursoScreen}/>
       <Stack.Screen name="EditProfile" component={EditProfileScreen}/>
-      <Stack.Screen name="Home" component={HomeScreen}/>
     </Stack.Navigator>
   );
 }

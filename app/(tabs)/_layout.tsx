@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { Text } from 'react-native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -7,6 +7,7 @@ import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
 import { AuthProvider, useUserInfo } from "@/lib/userContext";
 import NavBar from "@/components/NavBar";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Screen imports
 import StackNavigator from "./navigation/ScreenNavigator";
@@ -49,7 +50,10 @@ const AuthenticatedTabs = () => {
       })}
       tabBar={(props) => <NavBar {...props} />}
     >
-      <Tab.Screen name="Home" component={StackNavigator} />
+      <Tab.Screen name="Home" component={StackNavigator} options={{
+            tabBarButton: () => null,
+            tabBarStyle: { display: "none" },
+          }}/>
       <Tab.Screen name="Comunidad" component={ComunidadScreen} />
       <Tab.Screen name="Cursos" component={CursosScreen} />
       <Tab.Screen name="Eventos" component={Eventos} />
@@ -66,16 +70,27 @@ const UnauthenticatedStack = () => (
   </Stack.Navigator>
 );
 
-export default function TabNavigator() {
-  const { session, isLoading } = useUserInfo();
-  
-  if (isLoading) {
-    return <Text>Cargando...</Text>;
+const checkIfAsyncStorageIsEmpty = async () => {
+  try {
+    const keys = await AsyncStorage.getAllKeys();
+    return keys.length === 0; // Devuelve true si está vacío, false si no lo está
+  } catch (error) {
+    console.error("Error checking AsyncStorage:", error);
+    return false; // Devuelve false en caso de error
   }
+};
+
+export default async function TabNavigator() {
+  // const session = checkIfAsyncStorageIsEmpty();
+  //const [isLoading, setIsLoading] = useState(true);
+  //const [isEmpty, setIsEmpty] = React.useState(true);
+  // setIsEmpty(session)
+
+  
 
   return (
     <AuthProvider>
-      {session ? <AuthenticatedTabs /> : <UnauthenticatedStack />}
+      {true ? <AuthenticatedTabs /> : <UnauthenticatedStack />}
     </AuthProvider>
   );
 }
