@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSignUp } from '@/app/Contexts/SignUpContext';
-import {fetchOrCreateUser} from '@/lib/user'
+import { fetchOrCreateUser } from '@/lib/user';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import commonStyles from '../commonStyles';
+import { supabase } from '@/lib/supabase'; // Asegúrate de importar tu cliente de Supabase
+import { sleep } from '@/components/helpers'; // Asegúrate de crear esta función de utilidad
 
 
 export default function UsernamePasswordStep({ onNext, onPrevious, navigation }: { onNext: (data: object) => void, onPrevious: () => void, navigation: any }) {
@@ -11,9 +13,8 @@ export default function UsernamePasswordStep({ onNext, onPrevious, navigation }:
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const {contextState, setContextState} = useSignUp();
+  const { contextState, setContextState } = useSignUp();
   const [loading, setLoading] = useState(false);
-
 
   useEffect(() => {
     setUsername(contextState.username);
@@ -36,27 +37,57 @@ export default function UsernamePasswordStep({ onNext, onPrevious, navigation }:
     setContextState({ newValue: text, type: 'SET_CONFIRM_PASSWORD' });
   };
 
+
   const handleSignUp = async () => {
     setLoading(true);
-
+    setError('');
+  
     try {
-      const user = await fetchOrCreateUser(contextState.nombre,contextState.apellido,contextState.username, contextState.email, contextState.emailTutor, contextState.password, contextState.fechaNacimiento);
-      console.log("Usuario logueado:", user);
-
-      // Almacenar el ID del usuario en AsyncStorage
-      await AsyncStorage.setItem('userId', user.id);
-
-      // Redirigir al usuario a la pantalla principal o a otra pantalla
-      console.log('Login manda el userId', user.id);
-      navigation.navigate('Home', { userId: user.id });
+      // Paso 1: Registrar al usuario (esto también inicia sesión automáticamente)
+      const { data, error } = await supabase.auth.signUp({
+        email: contextState.email,
+        password: contextState.password,
+        options: {
+          data: {
+            nombre: contextState.nombre,
+            apellido: contextState.apellido,
+            username: contextState.username,
+            email_tutor: contextState.emailTutor,
+            fecha_nacimiento: contextState.fechaNacimiento,
+          }
+        }
+      });
+  
+      if (error) throw error;
+  
+      if (data.user) {
+        // Paso 2: Crear el perfil del usuario en tu tabla personalizada
+        await fetchOrCreateUser(
+          contextState.nombre,
+          contextState.apellido,
+          contextState.username,
+          contextState.email,
+          contextState.emailTutor,
+          contextState.password,
+          contextState.fechaNacimiento
+        );
+  
+        // Paso 3: Almacenar el ID del usuario en AsyncStorage
+        await AsyncStorage.setItem('userId', data.user.id);
+  
+        // Paso 4: Redirigir al usuario a la pantalla principal
+        navigation.navigate('Home', { userId: data.user.id });
+      } else {
+        throw new Error('No se pudo crear el usuario');
+      }
     } catch (err) {
-      console.error("Error al iniciar sesión:", err.message);
-      setError("Error al registrarse. Verifica tus credenciales.");
+      console.error("Error durante el proceso de registro:", err.message);
+      setError("Error al registrarse. Por favor, intenta de nuevo.");
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <View style={commonStyles.container}>
       <Text style={commonStyles.title}>REGISTRO</Text>

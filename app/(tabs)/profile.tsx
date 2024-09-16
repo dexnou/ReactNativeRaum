@@ -47,7 +47,8 @@ export default function ProfileScreen()  
       setIsLoading(true);
       const amigosData: any = await fetchAmigos(storedUserId);
       setAmigosFotos(amigosData);
-
+console.log("estoy andando")
+console.log(amigosData)
       const userData: any = await fetchUser(storedUserId);
       if (userData) {
         if (userData.fotoUsuario === null) {
@@ -57,6 +58,8 @@ export default function ProfileScreen()  
       } else {
         setUserTea([]);
       }
+      amigosData.map((amigo) => console.log("Amigo", amigo));
+
     } catch (error) {
       console.error('Error fetching user data:', error);
       Alert.alert('Error', 'No se pudo cargar la información del perfil');

@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
-import {StackNavigator} from "./navigation/ScreenNavigator";
 import { supabase } from '@/lib/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchUser } from '@/lib/user'; 
+import ProgressBar from '@/components/ProgressBar';
 
 export default function HomeScreen() {
     const navigation = useNavigation();
@@ -17,31 +17,49 @@ export default function HomeScreen() {
             const loadUserData = async () => {
                 try {
                     setIsLoading(true);
-                    const storedUserId = route.params?.userId || await AsyncStorage.getItem('userId');
-                    console.log('ID de usuario obtenido en useFocusEffect:', storedUserId);
                     
-                    if (storedUserId) {
-                        const user = await fetchUser(storedUserId);
-                        console.log('Datos del usuario obtenidos:', user);
-                        if (user) {
+                    // Primero, intenta obtener la sesión de Supabase
+                    const { data: { session } } = await supabase.auth.getSession();
+                    
+                    if (session) {
+                        // Si hay una sesión activa, usa el ID del usuario de la sesión
+                        const user = await fetchUser(session.user.id);
+                        if (user && user.length > 0) {
                             setUserData(user[0]);
+                            // Actualiza el AsyncStorage con el ID del usuario
+                            await AsyncStorage.setItem('userId', session.user.id);
                         } else {
                             console.error('No se encontraron datos del usuario');
+                            navigation.navigate('Login');
                         }
                     } else {
-                        console.error('No se encontró el ID del usuario en AsyncStorage');
-                        navigation.navigate('Login');
+                        // Si no hay sesión, intenta obtener el ID del usuario de AsyncStorage
+                        const storedUserId = await AsyncStorage.getItem('userId');
+                        if (storedUserId) {
+                            const user = await fetchUser(storedUserId);
+                            if (user && user.length > 0) {
+                                setUserData(user[0]);
+                            } else {
+                                console.error('No se encontraron datos del usuario');
+                                navigation.navigate('Login');
+                            }
+                        } else {
+                            console.error('No se encontró sesión ni ID del usuario');
+                            navigation.navigate('Login');
+                        }
                     }
                 } catch (error) {
                     console.error('Error al cargar los datos del usuario:', error);
+                    navigation.navigate('Login');
                 } finally {
                     setIsLoading(false);
                 }
             };
 
             loadUserData();
-        }, [route.params?.userId, navigation])
+        }, [navigation])
     );
+
 
     if (isLoading) {
         return (
@@ -64,7 +82,7 @@ export default function HomeScreen() {
                 <View style={styles.capitulo}>
                     <Text style={styles.capitutoTitle}>Nombre Capítulo</Text>
                     <Text style={styles.capitutoSubtitle}>Nombre hito</Text>
-                    <Text style={styles.capitutoNumber}>N°%</Text>
+                    <ProgressBar progress={userData?.progress || 0} />{/*aca se completa con la variable de progreso*/}
                 </View>
                 
                 <TouchableOpacity 
@@ -113,7 +131,7 @@ const styles = StyleSheet.create({
         alignContent:"space-between",
     },
     capitulo: {
-        backgroundColor: '#B0C4DE',
+        backgroundColor: '#565C92',
         width:"100%",
         padding: 15,
         borderRadius: 10,
@@ -122,9 +140,11 @@ const styles = StyleSheet.create({
     capitutoTitle: {
         fontSize: 18,
         fontWeight: 'bold',
+        color:"white"
     },
     capitutoSubtitle: {
         fontSize: 16,
+        color:"white"
     },
     capitutoNumber: {
         fontSize: 16,

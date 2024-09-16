@@ -30,9 +30,10 @@ export const fetchAmigos = async (idUsuario: number) => {
   } else {
     console.log('Amigos obtenidos con éxito:', data);
     // Check the structure of 'data' before mapping
+    
     if (data && Array.isArray(data) && data.length > 0) {
-      console.log(data[0].arrayamigos)
-      return data[0].get_amigos || []; // Access the 'arrayAmigos' from the first row
+      console.log("Array amigos:", data[0].arrayamigos)
+      return data[0].arrayamigos || []; // Access the 'arrayAmigos' from the first row
     } else {
       return [];
     }
@@ -142,7 +143,7 @@ export const fetchProgress = async (userId: number) => {
 export const fetchAmigosProgress = async (userId: number) => {
   console.log('Iniciando búsqueda de progreso de amigos para el usuario:', userId);
   try {
-    const { data, error } = await supabase.rpc('get_ranked_courses', {
+    const { data, error } = await supabase.rpc('get_amigos_progress', {
       user_id: userId
     });
 
@@ -158,10 +159,9 @@ export const fetchAmigosProgress = async (userId: number) => {
 
     console.log('Progreso de amigos obtenido con éxito:', data);
     return data.map(amigo => ({
-      id: amigo.id_amigo,
-      nombre: amigo.nombre_amigo,
-      apellido: amigo.apellido_amigo,
-      fotoUsuario: amigo.foto_amigo,
+      nombre: amigo.nombreUser,
+      idCurso: amigo.idCurso,
+      progress: amigo.cursoProgress,
       // Aquí puedes añadir más campos relacionados con el progreso si están disponibles en los datos devueltos
     }));
   } catch (err) {

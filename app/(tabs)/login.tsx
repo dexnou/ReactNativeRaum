@@ -30,8 +30,7 @@ const LoginScreen = ({ navigation, onLoginSuccess }) => {
       console.log("Usuario logueado:", user);
 
       // Almacenar el ID del usuario en AsyncStorage
-      await AsyncStorage.setItem('userId', user.id);
-
+      await AsyncStorage.setItem('userId', String(user.id));
       // Llamar a onLoginSuccess para actualizar el estado en el componente padre
       onLoginSuccess();
 
