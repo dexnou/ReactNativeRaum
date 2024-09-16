@@ -153,21 +153,20 @@ export default function ProfileScreen()  
       </View>
 
       {/* Mover la sección de amigos abajo */}
-      {amigosFotos.length > 0 && renderFotosItem({ item: amigosFotos })}
+      {amigosFotos.length > 0 && renderFotosItem(amigosFotos )}
     </View>
   );
 
-  const renderFotosItem = ({ item }) => (
+  const renderFotosItem = (amigos) => (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Amigos:</Text>
       <View style={styles.friendsGrid}>
-        {item.length > 0 ? (
-          item.map((amigo) => (
+        {amigos.length > 0 ? (
+          amigos.map((amigo) => (
             <TouchableOpacity key={amigo.id} style={styles.friend}>
-              <Image source={{ uri: amigo.fotoUsuario || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }} style={styles.friendPicture} />
+              <Image source={{ uri: amigo.fotousuario || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }} style={styles.friendPicture} />
               <Text>{`${amigo.nombre || ''} ${amigo.apellido || ''}`.trim() || 'Nombre no disponible'}</Text>
             </TouchableOpacity>
-            
           ))
         ) : (
           <Text style={styles.infoUser}>No se han encontrado amigos</Text>
