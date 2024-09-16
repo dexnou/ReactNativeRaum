@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
-import { StackNavigator }from "./navigation/ScreenNavigator";
+import {StackNavigator} from "./navigation/ScreenNavigator";
 import { supabase } from '@/lib/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchUser } from '@/lib/user'; 
@@ -51,7 +51,7 @@ export default function HomeScreen() {
             </View>
         );
     }
-
+    
     return (
         <View style={styles.container}>
             <View style={styles.header}>

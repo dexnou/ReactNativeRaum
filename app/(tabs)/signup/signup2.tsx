@@ -2,12 +2,16 @@ import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSignUp } from '@/app/Contexts/SignUpContext';
+import { useNavigation } from "@react-navigation/native";
+
 import commonStyles from '../commonStyles';
 
 export default function NameStep({ onNext }: { onNext: (data: object) => void }) {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const {contextState, setContextState} = useSignUp();
+  const navigation = useNavigation();
+
 
   useEffect(() => {
     setNombre(contextState.nombre);
@@ -53,7 +57,7 @@ export default function NameStep({ onNext }: { onNext: (data: object) => void })
       </TouchableOpacity>
       <View style={commonStyles.alreadyHaveAccountContainer}>
         <Text style={commonStyles.alreadyHaveAccountText}>¿Ya tienes una cuenta?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={commonStyles.loginText}>Inicia sesión</Text>
         </TouchableOpacity>
       </View>

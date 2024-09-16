@@ -19,23 +19,23 @@ export const fetchUser = async (id: number) => {
 };
 
 
-
+//
 export const fetchAmigos = async (idUsuario: number) => {
   console.log("entraaaa");
-  const { data, error } = await supabase
-    .from('AmigosSimple')
-    .select(`
-      id_amigo,
-      amigo:Usuario_TEA!id_amigo(id, nombre, apellido, fotoUsuario)
-    `)
-    .eq('id_usuario', idUsuario);
-  
+  const { data, error } = await supabase.rpc('get_amigos', { user_id: idUsuario });
+
   if (error) {
-    console.log('Error al obtener amigos:', error.message);
+    console.error('Error al obtener amigos:', error.message);
     return [];
   } else {
     console.log('Amigos obtenidos con éxito:', data);
-    return data.map(item => item.amigo);
+    // Check the structure of 'data' before mapping
+    if (data && Array.isArray(data) && data.length > 0) {
+      console.log(data[0].arrayamigos)
+      return data[0].get_amigos || []; // Access the 'arrayAmigos' from the first row
+    } else {
+      return [];
+    }
   }
 };
 

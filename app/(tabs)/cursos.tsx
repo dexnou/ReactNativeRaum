@@ -123,11 +123,12 @@ const styles = StyleSheet.create({
         alignContent:"center",
         backgroundColor: 'white',
         width:"100%",
-        height:"100%"
+        height:"100%",
+        margin:0
     },
 
     categoriasList: {
-        margin:"1%",
+        margin:0,
         width:"100%",
         height:"100%", 
         padding:"15%",

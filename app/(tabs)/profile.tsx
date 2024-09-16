@@ -167,6 +167,7 @@ export default function ProfileScreen()  
               <Image source={{ uri: amigo.fotoUsuario || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }} style={styles.friendPicture} />
               <Text>{`${amigo.nombre || ''} ${amigo.apellido || ''}`.trim() || 'Nombre no disponible'}</Text>
             </TouchableOpacity>
+            
           ))
         ) : (
           <Text style={styles.infoUser}>No se han encontrado amigos</Text>

@@ -37,9 +37,9 @@ const CursosPorCategoriaScreen = () => {
                 navigation.navigate('JuegoCurso', { cursoId: item.id_curso, cursoNombre: item.nombre });
             }}
         >
-            <View style={[styles.cursoIcon, { backgroundColor: item.color || '#90EE90' }]}>
+            <View style={[styles.cursoIcon, { backgroundColor: item.color }]}>
                 <Image 
-                    source={{ uri: item.iconUrl || 'https://example.com/default-icon.png' }} 
+                    source={{ uri: item.fotoCategoria || 'https://img.freepik.com/vector-premium/no-hay-foto-disponible-icono-vector-simbolo-imagen-predeterminado-imagen-proximamente-sitio-web-o-aplicacion-movil_87543-10615.jpg' }} 
                     style={styles.cursoImagen}
                 />
             </View>
@@ -132,8 +132,8 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     cursoImagen: {
-        width: 60,
-        height: 60,
+        width:"100%",
+        height: "100%",
     },
     cursoNombre: {
         fontSize: 16,

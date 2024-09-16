@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { loginUser } from "@/lib/user"; // Asegúrate de importar correctamente la función
+import { loginUser } from "@/lib/user";
 import commonStyles from './commonStyles';
 import { useNavigation } from "@react-navigation/native";
 
-const LoginScreen = ({ navigation }: {navigation: any}) => {
+const LoginScreen = ({ navigation, onLoginSuccess }) => {
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -32,9 +32,12 @@ const LoginScreen = ({ navigation }: {navigation: any}) => {
       // Almacenar el ID del usuario en AsyncStorage
       await AsyncStorage.setItem('userId', user.id);
 
+      // Llamar a onLoginSuccess para actualizar el estado en el componente padre
+      onLoginSuccess();
+
       // Redirigir al usuario a la pantalla principal o a otra pantalla
       console.log('Login manda el userId', user.id);
-      navigation.navigate('StackNavigator',{screen: 'Home'});
+      navigation.navigate('StackNavigator', { screen: 'Home' });
     } catch (err) {
       console.error("Error al iniciar sesión:", err.message);
       setError("Error al iniciar sesión. Verifica tus credenciales.");
