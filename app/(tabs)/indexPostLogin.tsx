@@ -82,7 +82,7 @@ export default function HomeScreen() {
                 <View style={styles.capitulo}>
                     <Text style={styles.capitutoTitle}>Nombre Capítulo</Text>
                     <Text style={styles.capitutoSubtitle}>Nombre hito</Text>
-                    <ProgressBar progress={userData?.progress || 0} />{/*aca se completa con la variable de progreso*/}
+                    <ProgressBar progress={userData?.progress || 80} />{/*aca se completa con la variable de progreso*/}
                 </View>
                 
                 <TouchableOpacity 
