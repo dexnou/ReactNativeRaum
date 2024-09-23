@@ -103,12 +103,16 @@ const CursosScreen = () => {
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+    },
     header: {
         backgroundColor: '#1E3A8A',
         height: "20%",
         display:"flex",
         justifyContent:"center",
-        alignItems:"center",
+        paddingLeft: "10%",
         borderBottomRightRadius: 20,
         borderBottomLeftRadius: 20,
     },
@@ -117,16 +121,6 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
     },
-    container: {
-        display:"flex",
-        justifyContent:"space-around",
-        alignContent:"center",
-        backgroundColor: 'white',
-        width:"100%",
-        height:"100%",
-        margin:0
-    },
-
     categoriasList: {
         margin:0,
         width:"100%",

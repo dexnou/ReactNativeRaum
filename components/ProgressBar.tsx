@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
-import Wave from 'react-wavify';
+import { View, StyleSheet, Animated } from 'react-native';
 import { Svg, Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 
-const ProgressBar = ({ progress, chapterName, subchapterName }) => {
+const ProgressBar = ({ progress }) => {
   const clampedProgress = Math.min(100, Math.max(0, progress));
   const animatedWidth = useRef(new Animated.Value(0)).current;
 

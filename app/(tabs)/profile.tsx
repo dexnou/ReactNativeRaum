@@ -4,51 +4,24 @@ import 'react-native-url-polyfill/auto';
 import { Text, View } from '@/components/Themed';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
-import { fetchUser, fetchAmigos } from '@/lib/user'; // Importamos fetchUser desde user.ts
+import { fetchUser, fetchAmigos } from '@/lib/user';
 import FontAwesome from '@expo/vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';   
 
-
-export default function ProfileScreen()   
- {
+export default function ProfileScreen() {
   const route = useRoute();
   const navigation = useNavigation();
   const [amigosFotos, setAmigosFotos] = useState([]);
   const [userTea, setUserTea] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // useEffect(() => {
-  //   const checkLoginStatus = async () => {
-  //     try {
-  //       const userId = await AsyncStorage.getItem('userId');
-  //       console.log('Verificando si hay un ID de usuario guardado:', userId); // Log adicional
-  //       if (!userId) {
-  //         Alert.alert(
-  //           'No estás logueado', 
-  //           'Por favor, inicia sesión para acceder a tu perfil.',
-  //           [
-  //             {
-  //               text: "OK",
-  //               onPress: () => navigation.navigate('Login') // Redirigir después de que el usuario presione "OK"
-  //             }
-  //           ]
-  //         );
-  //       }
-  //     } catch (error) {
-  //       console.error('Error verificando el estado de la sesión:', error);
-  //     }
-  //   };
-
-  //   checkLoginStatus();
-  // }, [navigation]);
-
   const fetchData = async (storedUserId: string) => {
     try {
       setIsLoading(true);
       const amigosData: any = await fetchAmigos(storedUserId);
       setAmigosFotos(amigosData);
-console.log("estoy andando")
-console.log(amigosData)
+      console.log("estoy andando")
+      console.log(amigosData)
       const userData: any = await fetchUser(storedUserId);
       if (userData) {
         if (userData.fotoUsuario === null) {
@@ -58,8 +31,6 @@ console.log(amigosData)
       } else {
         setUserTea([]);
       }
-      amigosData.map((amigo) => console.log("Amigo", amigo));
-
     } catch (error) {
       console.error('Error fetching user data:', error);
       Alert.alert('Error', 'No se pudo cargar la información del perfil');
@@ -72,23 +43,11 @@ console.log(amigosData)
     useCallback(() => {
       const loadProfileData = async () => {
         const storedUserId = route.params?.userId || await AsyncStorage.getItem('userId');
-        console.log('ID de usuario obtenido en useFocusEffect:', storedUserId); // Log adicional
+        console.log('ID de usuario obtenido en useFocusEffect:', storedUserId); 
         if (storedUserId) {
           await fetchData(storedUserId);
         } else {
           console.error('No se encontró el ID del usuario en AsyncStorage');
-          // Asegurarse de redirigir si no hay un ID
-          // ESTE ALERT MANDA SOLO POR CELULAR PERO SI ESTÁ NO TE APARECE EL PERFIL
-          // Alert.alert(
-          //             'No estás logueado', 
-          //             'Por favor, inicia sesión para acceder a tu perfil.',
-          //             [
-          //               {
-          //                 text: "OK",
-          //                 onPress: () => navigation.navigate('Login') // Redirigir después de que el usuario presione "OK"
-          //               }
-          //             ]
-          //           );
           setIsLoading(false);
           navigation.navigate("Login");
         }
@@ -109,14 +68,13 @@ console.log(amigosData)
   };
 
   const handleEditProfile = () => {
-    navigation.navigate('EditProfile'); // Navigate to Edit Profile screen
+    navigation.navigate('EditProfile');
   };
 
   const renderUsuarioItem = ({ item }) => (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image source={{ uri: item[0].fotoUsuario }} style={styles.profilePicture} />
-        
         <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
           <FontAwesome name="edit" size={24} color="white" />
         </TouchableOpacity>
@@ -141,7 +99,6 @@ console.log(amigosData)
         </View>
       </View>
 
-      {/* Mover la sección de cursos arriba */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Cursos hechos:</Text>
         <View style={styles.courses}>
@@ -155,7 +112,6 @@ console.log(amigosData)
         </View>
       </View>
 
-      {/* Mover la sección de amigos abajo */}
       {amigosFotos.length > 0 && renderFotosItem(amigosFotos )}
     </View>
   );
@@ -178,35 +134,33 @@ console.log(amigosData)
     </View>
   );
 
-   return (
-    <View style={styles.container}>
-      <FlatList
-        data={userTea}
-        keyExtractor={item => item.id ? item.id.toString() : 'default-key'}
-        renderItem={renderUsuarioItem}
-      />
-      {/* ... existing code for rendering courses and friends ... */}
-    </View>
+  return (
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <View style={styles.container}>
+        <FlatList
+          data={userTea}
+          keyExtractor={item => item.id ? item.id.toString() : 'default-key'}
+          renderItem={renderUsuarioItem}
+        />
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#ffff',
-  },
-  header: {
+    flex: 1,
+    backgroundColor: 'white',
+},
+header: {
     backgroundColor: '#1E3A8A',
-    height: "30%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    height: "20%",
+    display:"flex",
+    justifyContent:"center",
+    paddingLeft: "10%",
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
-  },
+},
   profilePicture: {
     width: 100,
     height: 100,
@@ -252,7 +206,6 @@ const styles = StyleSheet.create({
     margin: 2,
   },
   friendsGrid: {
-    display:"flex",
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
@@ -266,21 +219,9 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#1e3a8a',
-  },
   editButton: {
     position: "absolute",
     top: "10%",
     right: "5%",
   },
-  
 });
