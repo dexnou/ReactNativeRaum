@@ -11,6 +11,7 @@ import SeguirProgreso from "../seguirProgreso";
 import AmigosProgresoScreen from "../progresoMisAmigos";
 import JuegoCursoScreen from "../game/juegoCurso"
 import EditProfileScreen from "@/components/EditProfileScreen";
+import ComunidadCursos from "../comunidadCursos";
 import React from "react";
 
 
@@ -30,6 +31,7 @@ export default function StackNavigator() {
       <Stack.Screen name="AmigosProgreso" component={AmigosProgresoScreen}/>
       <Stack.Screen name="JuegoCurso" component={JuegoCursoScreen}/>
       <Stack.Screen name="EditProfile" component={EditProfileScreen}/>
+      <Stack.Screen name="ComunidadCursos" component={ComunidadCursos}/>
     </Stack.Navigator>
   );
 }

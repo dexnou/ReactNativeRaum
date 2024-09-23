@@ -6,7 +6,8 @@ import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/nativ
 import { supabase } from '@/lib/supabase';
 import { fetchUser, fetchAmigos } from '@/lib/user';
 import FontAwesome from '@expo/vector-icons/FontAwesome5';
-import AsyncStorage from '@react-native-async-storage/async-storage';   
+import AsyncStorage from '@react-native-async-storage/async-storage';   
+
 
 export default function ProfileScreen() {
   const route = useRoute();
@@ -15,13 +16,12 @@ export default function ProfileScreen() {
   const [userTea, setUserTea] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchData = async (storedUserId: string) => {
+  const fetchData = useCallback(async (storedUserId: string) => {
     try {
       setIsLoading(true);
       const amigosData: any = await fetchAmigos(storedUserId);
       setAmigosFotos(amigosData);
-      console.log("estoy andando")
-      console.log(amigosData)
+
       const userData: any = await fetchUser(storedUserId);
       if (userData) {
         if (userData.fotoUsuario === null) {
@@ -37,13 +37,12 @@ export default function ProfileScreen() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
       const loadProfileData = async () => {
         const storedUserId = route.params?.userId || await AsyncStorage.getItem('userId');
-        console.log('ID de usuario obtenido en useFocusEffect:', storedUserId); 
         if (storedUserId) {
           await fetchData(storedUserId);
         } else {
@@ -53,8 +52,9 @@ export default function ProfileScreen() {
         }
       };
       loadProfileData();
-    }, [route.params?.userId, navigation])
+    }, [route.params?.userId, route.params?.updateTimestamp, navigation, fetchData])
   );
+
 
   const handleLogout = async () => {
     try {
@@ -73,6 +73,7 @@ export default function ProfileScreen() {
 
   const renderUsuarioItem = ({ item }) => (
     <View style={styles.container}>
+      
       <View style={styles.header}>
         <Image source={{ uri: item[0].fotoUsuario }} style={styles.profilePicture} />
         <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
@@ -113,6 +114,7 @@ export default function ProfileScreen() {
       </View>
 
       {amigosFotos.length > 0 && renderFotosItem(amigosFotos )}
+      
     </View>
   );
 
@@ -149,16 +151,16 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,  // Ocupar toda la pantalla
-    backgroundColor: '#ffff',
-    height:"100%"
-  },
+    flex: 1,
+    display:"flex",
+},
   header: {
     backgroundColor: '#1E3A8A',
     height: "30%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 20,
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
   },
@@ -170,10 +172,10 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
   },
   section: {
-    margin: "5%",
+    marginTop: "5%",
     marginRight: "10%",
     marginLeft: "10%",
-    zIndex:99999
+    zIndex:99999,
   },
   sectionTitle: {
     fontSize: 20,
@@ -184,6 +186,7 @@ const styles = StyleSheet.create({
   divInfo: {
     flexDirection: "row",
     marginBottom: 5,
+    
   },
   infoUserBold: {
     fontWeight: 'bold',
@@ -197,6 +200,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+
   },
   course: {
     fontSize: 14,
@@ -206,16 +210,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingVertical: 2,
     margin: 2,
+  
   },
   friendsGrid: {
     display:"flex",
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   friend: {
     alignItems: 'center',
     margin: "5%",
+  
   },
   friendPicture: {
     width: 50,

@@ -104,19 +104,17 @@ const CursosScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,  // Ocupar toda la pantalla
-        backgroundColor: '#ffff',
-        height:"100%"
-      },
-      header: {
+        flex: 1,
+        display:"flex",
+        backgroundColor: '#F3F4F6',
+    },
+    header: {
         backgroundColor: '#1E3A8A',
-        height: "30%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        paddingVertical: 60,
+        paddingHorizontal: 20,
         borderBottomRightRadius: 20,
         borderBottomLeftRadius: 20,
-      },
+    },
     headerText: {
         color: 'white',
         fontSize: 24,

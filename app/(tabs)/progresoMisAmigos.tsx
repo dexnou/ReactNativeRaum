@@ -1,8 +1,6 @@
-//Esto es lo de que hacen mis amigos desde Home
-
 import React, { useState, useEffect } from 'react';
 import { FlatList, Image, Button, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { fetchAmigos } from '@/lib/user';
+import { fetchAmigos, fetchAmigosProgress } from '@/lib/user';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
@@ -35,7 +33,7 @@ const AmigosProgresoScreen = () => {
 
     const fetchData = async (userId: number) => {
         try {
-            const amigosProgData = await fetchAmigos(userId);
+            const amigosProgData = await fetchAmigosProgress(userId);
             console.log('FetchAmigosProgress manda: ', amigosProgData);
             setAmigosProg(amigosProgData);
         } catch (error) {
@@ -44,14 +42,15 @@ const AmigosProgresoScreen = () => {
     };
 
     const renderAmigo = ({ item }) => (
-        <TouchableOpacity style={styles.amigoItem}>
+        <TouchableOpacity key={item.iduser} style={styles.amigoItem}>
             <Image 
-                source={{ uri: item.fotoUsuario || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }}
+                source={{ uri: item.fotouser || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }}
                 style={styles.amigoImage}
             />
             <View style={styles.amigoInfo}>
-                <Text style={styles.amigoName}>{`${item.nombre || ''} ${item.apellido || ''}`.trim() || 'Nombre no disponible'}</Text>
-                {/* Aquí puedes añadir más información sobre el progreso si es necesario */}
+                <Text style={styles.amigoName}>{`${item.nombreuser || ''}`.trim() || 'Nombre no disponible'}</Text>
+                <Text>{`${item.nombrecurso || ''}`.trim() || 'Curso no disponible'}</Text>
+                <Text>{`Progreso: ${item.cursoprogress || '0'}%`}</Text>
             </View>
         </TouchableOpacity>
     );
@@ -66,13 +65,13 @@ const AmigosProgresoScreen = () => {
             {amigosProg.length > 0 ? (
                 <FlatList
                     data={amigosProg}
-                    keyExtractor={(item) => item.id.toString()}
+                    keyExtractor={(item) => item.iduser.toString()}
                     renderItem={renderAmigo}
                 />
             ) : (
-                <Text style={styles.noAmigos}>No tienes amigos aún</Text>
+                <Text style={styles.noAmigos}>No se han encontrado amigos</Text>
             )}
-            <Button title="Buscar Más Amigos" onPress={() => {/* Acción para buscar amigos */}} />
+            <Button title="Buscar Más Amigos" onPress={() => navigation.navigate('Comunidad')} />
         </View>
     );
 };
