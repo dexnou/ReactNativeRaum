@@ -149,18 +149,19 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'white',
-},
-header: {
+    flex: 1,  // Ocupar toda la pantalla
+    backgroundColor: '#ffff',
+    height:"100%"
+  },
+  header: {
     backgroundColor: '#1E3A8A',
-    height: "20%",
-    display:"flex",
-    justifyContent:"center",
-    paddingLeft: "10%",
+    height: "30%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
-},
+  },
   profilePicture: {
     width: 100,
     height: 100,
@@ -172,6 +173,7 @@ header: {
     margin: "5%",
     marginRight: "10%",
     marginLeft: "10%",
+    zIndex:99999
   },
   sectionTitle: {
     fontSize: 20,
@@ -206,9 +208,10 @@ header: {
     margin: 2,
   },
   friendsGrid: {
+    display:"flex",
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   friend: {
     alignItems: 'center',
