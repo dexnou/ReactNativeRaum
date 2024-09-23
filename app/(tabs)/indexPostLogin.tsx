@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native';
+import {  View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, FlatList, SafeAreaView} from 'react-native';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +9,7 @@ import ProgressBar from '@/components/ProgressBar';
 export default function HomeScreen() {
     const navigation = useNavigation();
     const route = useRoute();
-    const [userData, setUserData] = useState();
+    const [userData, setUserData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useFocusEffect(
@@ -29,8 +29,6 @@ export default function HomeScreen() {
                             // Actualiza el AsyncStorage con el ID del usuario
                             await AsyncStorage.setItem('userId', session.user.id);
                         } else {
-                            const userSimple = await fetchUser(Number(session.user.id));
-                            setUserData(userSimple);
                             console.error('No se encontraron datos del usuario');
                         }
                     } else {
@@ -65,20 +63,32 @@ export default function HomeScreen() {
         <>
             <View style={styles.header}>
                 <Text style={styles.headerText}>
-                    ¡Hola {item.nombreuser || item.nombre || 'Nombre'}!
+                    ¡Hola {item.nombreuser || 'Usuario'}!
                 </Text>
             </View>
-            {item.length > 0 ? (
-                <View style={styles.content}>
+            
+            <View style={styles.content}>
                 <View key={item.idcurso} style={styles.capitulo}>
-                    <Text style={styles.capitutoTitle}>{item.nombrecurso || 'No hay un curso'}</Text>
-                    <ProgressBar progress={item.cursoprogress || 0} />{/*aca se completa con la variable de progreso*/}
+                    <Text style={styles.capitutoTitle}>{item.nombrecurso}</Text>
+                    <ProgressBar progress={item.cursoprogress || 80} />
+                </View>
+                
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity 
+                        style={styles.button}
+                        onPress={() => navigation.navigate('Cursos')}
+                    >
+                        <Text style={styles.buttonText}>Más escenarios</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity 
+                        style={styles.button}
+                        onPress={() => navigation.navigate('AmigosProgreso')}
+                    >
+                        <Text style={styles.buttonText}>¿Qué hacen mis Amigos?</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
-            ) : (
-                <Text>No hay cursos disponibles</Text>
-            )}
-            
         </>
     );
 
@@ -92,41 +102,30 @@ export default function HomeScreen() {
     }
     
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <FlatList
                 data={userData}
                 keyExtractor={item => item.id ? item.id.toString() : 'default-key'}
                 renderItem={renderUserHome}
+                style={styles.flatList}
             />
-            <TouchableOpacity 
-                style={styles.button}
-                onPress={() => navigation.navigate('Cursos')}
-            >
-                <Text style={styles.buttonText}>Más escenarios</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-                style={styles.button}
-                onPress={() => navigation.navigate('AmigosProgreso')}
-            >
-                <Text style={styles.buttonText}>¿Qué hacen mis Amigos?</Text>
-            </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     );
 }
-
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: '#F3F4F6',
+    },
+    flatList: {
+        flex: 1,
     },
     header: {
         backgroundColor: '#1E3A8A',
-        height: "20%",
-        display:"flex",
-        justifyContent:"center",
-        paddingLeft: "10%",
+        paddingTop: '15%',
+        paddingBottom: '10%',
+        paddingHorizontal: '5%',
         borderBottomRightRadius: 20,
         borderBottomLeftRadius: 20,
     },
@@ -136,64 +135,50 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     content: {
-        padding: 20,
+        flex: 1,
+        padding: '5%',
         display:"flex",
-        width:"100%",
-        height:"30%",
-        alignContent:"space-between",
+        flexDirection:"column"
     },
     capitulo: {
         backgroundColor: '#565C92',
-        width:"100%",
-        padding: 15,
+        padding: '5%',
         borderRadius: 10,
-        marginBottom: 20,
+        marginBottom: '5%',
     },
     capitutoTitle: {
         fontSize: 18,
         fontWeight: 'bold',
-        color:"white"
+        color: "white",
+        marginBottom: '3%',
     },
-    capitutoSubtitle: {
-        fontSize: 16,
-        color:"white"
-    },
-    capitutoNumber: {
-        fontSize: 16,
-        position: 'absolute',
-        right: 15,
-        top: 15,
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: '5%',
     },
     button: {
         backgroundColor: '#1E3A8A',
-        width:"100%",
-        display:"flex",
-        alignContent:"center",
-        justifyContent:"center",
-        padding: 10,
-        height:"30%",
+        padding: '4%',
         borderRadius: 10,
-        marginBottom: 15,
+        width: '48%',
         alignItems: 'center',
     },
     buttonText: {
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
+        textAlign: 'center',
     },
-    footer: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        backgroundColor: 'white',
-        paddingVertical: 10,
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F3F4F6',
     },
-    errorText: {
-        color: 'red',
-        fontSize: 14,
-        marginTop: 5,
+    loadingText: {
+        marginTop: '3%',
+        fontSize: 16,
+        color: '#1E3A8A',
     },
 });

@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#002366',
     paddingVertical: 20,
     borderRadius: 10,
+    margin:0
   },
   tab: {
     alignItems: 'center',

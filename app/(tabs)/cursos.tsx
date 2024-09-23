@@ -105,14 +105,13 @@ const CursosScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        display:"flex",
+        backgroundColor: '#F3F4F6',
     },
     header: {
         backgroundColor: '#1E3A8A',
-        height: "20%",
-        display:"flex",
-        justifyContent:"center",
-        paddingLeft: "10%",
+        paddingVertical: 60,
+        paddingHorizontal: 20,
         borderBottomRightRadius: 20,
         borderBottomLeftRadius: 20,
     },

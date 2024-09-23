@@ -72,6 +72,7 @@ export default function ProfileScreen() {
 
   const renderUsuarioItem = ({ item }) => (
     <View style={styles.container}>
+      
       <View style={styles.header}>
         <Image source={{ uri: item[0].fotoUsuario }} style={styles.profilePicture} />
         <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
@@ -112,6 +113,7 @@ export default function ProfileScreen() {
       </View>
 
       {amigosFotos.length > 0 && renderFotosItem(amigosFotos )}
+      
     </View>
   );
 
@@ -149,17 +151,18 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-},
-header: {
-    backgroundColor: '#1E3A8A',
-    height: "20%",
     display:"flex",
-    justifyContent:"center",
-    paddingLeft: "10%",
+},
+  header: {
+    backgroundColor: '#1E3A8A',
+    height: "30%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
-},
+  },
   profilePicture: {
     width: 100,
     height: 100,
@@ -168,9 +171,10 @@ header: {
     borderColor: '#fff',
   },
   section: {
-    margin: "5%",
+    marginTop: "5%",
     marginRight: "10%",
     marginLeft: "10%",
+    zIndex:99999,
   },
   sectionTitle: {
     fontSize: 20,
@@ -181,6 +185,7 @@ header: {
   divInfo: {
     flexDirection: "row",
     marginBottom: 5,
+    
   },
   infoUserBold: {
     fontWeight: 'bold',
@@ -194,6 +199,7 @@ header: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+
   },
   course: {
     fontSize: 14,
@@ -203,8 +209,10 @@ header: {
     paddingHorizontal: 5,
     paddingVertical: 2,
     margin: 2,
+  
   },
   friendsGrid: {
+    display:"flex",
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
@@ -212,6 +220,7 @@ header: {
   friend: {
     alignItems: 'center',
     margin: "5%",
+  
   },
   friendPicture: {
     width: 50,
