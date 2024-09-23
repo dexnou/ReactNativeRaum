@@ -118,28 +118,30 @@ export const loginUser = async ({ mail, password }: LoginInput) => {
 
 
 export const fetchProgress = async (userId: number) => {
-  console.log('llega a obtenerProgreso');
-  const { data, error } = await supabase
-    .from('Curso_Usuario')
-    .select(`
-      id,
-      id_usuario,
-      active,
-      modification_date
-    `)
-    .eq('id_usuario', userId)
-    .eq('active', true)
-    .order('modification_date', { ascending: false });
+  try {
+    const { data, error } = await supabase.rpc('get_progress', {
+      user_id: userId
+    });
+
     if (error) {
-      console.log('Error al obtener el progreso:', error.message);
-      return null;
-    } else {
-      console.log('Progreso obtenido con éxito:', data);
-      return data;
+      console.error('Error al obtener el progreso:', error.message);
+      throw new Error('Error al obtener el progreso');
     }
+
+    if (!data || data.length === 0) {
+      console.log('No se encontró progreso');
+      return [];
+    }
+
+    console.log('Progreso obtenido con éxito:', data);
+    return data;
+  } catch (err) {
+    console.error('Error inesperado en fetchProgress:', err);
+    throw err;
+  }
 }
 
-
+//Fetch Amigos Progress
 export const fetchAmigosProgress = async (userId: number) => {
   console.log('Iniciando búsqueda de progreso de amigos para el usuario:', userId);
   try {
@@ -158,12 +160,7 @@ export const fetchAmigosProgress = async (userId: number) => {
     }
 
     console.log('Progreso de amigos obtenido con éxito:', data);
-    return data.map(amigo => ({
-      nombre: amigo.nombreUser,
-      idCurso: amigo.idCurso,
-      progress: amigo.cursoProgress,
-      // Aquí puedes añadir más campos relacionados con el progreso si están disponibles en los datos devueltos
-    }));
+    return data;
   } catch (err) {
     console.error('Error inesperado en fetchAmigosProgress:', err);
     throw err;

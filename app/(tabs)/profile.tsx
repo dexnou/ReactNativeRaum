@@ -4,51 +4,23 @@ import 'react-native-url-polyfill/auto';
 import { Text, View } from '@/components/Themed';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
-import { fetchUser, fetchAmigos } from '@/lib/user'; // Importamos fetchUser desde user.ts
+import { fetchUser, fetchAmigos } from '@/lib/user';
 import FontAwesome from '@expo/vector-icons/FontAwesome5';
-import AsyncStorage from '@react-native-async-storage/async-storage';   
+import AsyncStorage from '@react-native-async-storage/async-storage';   
 
-
-export default function ProfileScreen()   
- {
+export default function ProfileScreen() {
   const route = useRoute();
   const navigation = useNavigation();
   const [amigosFotos, setAmigosFotos] = useState([]);
   const [userTea, setUserTea] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // useEffect(() => {
-  //   const checkLoginStatus = async () => {
-  //     try {
-  //       const userId = await AsyncStorage.getItem('userId');
-  //       console.log('Verificando si hay un ID de usuario guardado:', userId); // Log adicional
-  //       if (!userId) {
-  //         Alert.alert(
-  //           'No estás logueado', 
-  //           'Por favor, inicia sesión para acceder a tu perfil.',
-  //           [
-  //             {
-  //               text: "OK",
-  //               onPress: () => navigation.navigate('Login') // Redirigir después de que el usuario presione "OK"
-  //             }
-  //           ]
-  //         );
-  //       }
-  //     } catch (error) {
-  //       console.error('Error verificando el estado de la sesión:', error);
-  //     }
-  //   };
-
-  //   checkLoginStatus();
-  // }, [navigation]);
-
-  const fetchData = async (storedUserId: string) => {
+  const fetchData = useCallback(async (storedUserId: string) => {
     try {
       setIsLoading(true);
       const amigosData: any = await fetchAmigos(storedUserId);
       setAmigosFotos(amigosData);
-console.log("estoy andando")
-console.log(amigosData)
+
       const userData: any = await fetchUser(storedUserId);
       if (userData) {
         if (userData.fotoUsuario === null) {
@@ -58,44 +30,30 @@ console.log(amigosData)
       } else {
         setUserTea([]);
       }
-      amigosData.map((amigo) => console.log("Amigo", amigo));
-
     } catch (error) {
       console.error('Error fetching user data:', error);
       Alert.alert('Error', 'No se pudo cargar la información del perfil');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
       const loadProfileData = async () => {
         const storedUserId = route.params?.userId || await AsyncStorage.getItem('userId');
-        console.log('ID de usuario obtenido en useFocusEffect:', storedUserId); // Log adicional
         if (storedUserId) {
           await fetchData(storedUserId);
         } else {
           console.error('No se encontró el ID del usuario en AsyncStorage');
-          // Asegurarse de redirigir si no hay un ID
-          // ESTE ALERT MANDA SOLO POR CELULAR PERO SI ESTÁ NO TE APARECE EL PERFIL
-          // Alert.alert(
-          //             'No estás logueado', 
-          //             'Por favor, inicia sesión para acceder a tu perfil.',
-          //             [
-          //               {
-          //                 text: "OK",
-          //                 onPress: () => navigation.navigate('Login') // Redirigir después de que el usuario presione "OK"
-          //               }
-          //             ]
-          //           );
           setIsLoading(false);
           navigation.navigate("Login");
         }
       };
       loadProfileData();
-    }, [route.params?.userId, navigation])
+    }, [route.params?.userId, route.params?.updateTimestamp, navigation, fetchData])
   );
+
 
   const handleLogout = async () => {
     try {

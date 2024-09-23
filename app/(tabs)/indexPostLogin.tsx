@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { fetchUser } from '@/lib/user'; 
+import { fetchProgress, fetchUser } from '@/lib/user'; 
 import ProgressBar from '@/components/ProgressBar';
 
 export default function HomeScreen() {
@@ -23,9 +23,9 @@ export default function HomeScreen() {
                     
                     if (session) {
                         // Si hay una sesión activa, usa el ID del usuario de la sesión
-                        const user = await fetchUser(session.user.id);
+                        const user = await fetchProgress(Number(session.user.id));
                         if (user && user.length > 0) {
-                            setUserData(user[0]);
+                            setUserData(user);
                             // Actualiza el AsyncStorage con el ID del usuario
                             await AsyncStorage.setItem('userId', session.user.id);
                         } else {
@@ -36,9 +36,9 @@ export default function HomeScreen() {
                         // Si no hay sesión, intenta obtener el ID del usuario de AsyncStorage
                         const storedUserId = await AsyncStorage.getItem('userId');
                         if (storedUserId) {
-                            const user = await fetchUser(storedUserId);
+                            const user = await fetchProgress(Number(storedUserId));
                             if (user && user.length > 0) {
-                                setUserData(user[0]);
+                                setUserData(user);
                             } else {
                                 console.error('No se encontraron datos del usuario');
                                 navigation.navigate('Login');
@@ -60,6 +60,22 @@ export default function HomeScreen() {
         }, [navigation])
     );
 
+    const renderUserHome = ({ item }) => (
+        <>
+            <View style={styles.header}>
+                <Text style={styles.headerText}>
+                    ¡Hola {item.nombreuser || 'Usuario'}!
+                </Text>
+            </View>
+            
+            <View style={styles.content}>
+                <View key={item.idcurso} style={styles.capitulo}>
+                    <Text style={styles.capitutoTitle}>{item.nombrecurso}</Text>
+                    <ProgressBar progress={item.cursoprogress || 80} />{/*aca se completa con la variable de progreso*/}
+                </View>
+            </View>
+        </>
+    );
 
     if (isLoading) {
         return (
@@ -72,33 +88,24 @@ export default function HomeScreen() {
     
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.headerText}>
-                    ¡Hola {userData?.nombre || 'Usuario'}!
-                </Text>
-            </View>
+            <FlatList
+                data={userData}
+                keyExtractor={item => item.id ? item.id.toString() : 'default-key'}
+                renderItem={renderUserHome}
+            />
+            <TouchableOpacity 
+                style={styles.button}
+                onPress={() => navigation.navigate('Cursos')}
+            >
+                <Text style={styles.buttonText}>Más escenarios</Text>
+            </TouchableOpacity>
             
-            <View style={styles.content}>
-                <View style={styles.capitulo}>
-                    <Text style={styles.capitutoTitle}>Nombre Capítulo</Text>
-                    <Text style={styles.capitutoSubtitle}>Nombre hito</Text>
-                    <ProgressBar progress={userData?.progress || 80} />{/*aca se completa con la variable de progreso*/}
-                </View>
-                
-                <TouchableOpacity 
-                    style={styles.button}
-                    onPress={() => navigation.navigate('Cursos')}
-                >
-                    <Text style={styles.buttonText}>Más escenarios</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity 
-                    style={styles.button}
-                    onPress={() => navigation.navigate('AmigosProgreso')}
-                >
-                    <Text style={styles.buttonText}>¿Qué hacen mis Amigos?</Text>
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity 
+                style={styles.button}
+                onPress={() => navigation.navigate('AmigosProgreso')}
+            >
+                <Text style={styles.buttonText}>¿Qué hacen mis Amigos?</Text>
+            </TouchableOpacity>
         </View>
     );
 }
