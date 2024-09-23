@@ -5,9 +5,11 @@ import { Text, View } from '@/components/Themed';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
 import { fetchUser, fetchAmigos } from '@/lib/user';
+import { fetchUser, fetchAmigos } from '@/lib/user';
 import FontAwesome from '@expo/vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';   
 
+export default function ProfileScreen() {
 export default function ProfileScreen() {
   const route = useRoute();
   const navigation = useNavigation();
@@ -67,14 +69,13 @@ export default function ProfileScreen() {
   };
 
   const handleEditProfile = () => {
-    navigation.navigate('EditProfile'); // Navigate to Edit Profile screen
+    navigation.navigate('EditProfile');
   };
 
   const renderUsuarioItem = ({ item }) => (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image source={{ uri: item[0].fotoUsuario }} style={styles.profilePicture} />
-        
         <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
           <FontAwesome name="edit" size={24} color="white" />
         </TouchableOpacity>
@@ -99,7 +100,6 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* Mover la sección de cursos arriba */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Cursos hechos:</Text>
         <View style={styles.courses}>
@@ -113,7 +113,6 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* Mover la sección de amigos abajo */}
       {amigosFotos.length > 0 && renderFotosItem(amigosFotos )}
     </View>
   );
@@ -136,35 +135,33 @@ export default function ProfileScreen() {
     </View>
   );
 
-   return (
-    <View style={styles.container}>
-      <FlatList
-        data={userTea}
-        keyExtractor={item => item.id ? item.id.toString() : 'default-key'}
-        renderItem={renderUsuarioItem}
-      />
-      {/* ... existing code for rendering courses and friends ... */}
-    </View>
+  return (
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <View style={styles.container}>
+        <FlatList
+          data={userTea}
+          keyExtractor={item => item.id ? item.id.toString() : 'default-key'}
+          renderItem={renderUsuarioItem}
+        />
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#ffff',
-  },
-  header: {
+    flex: 1,
+    backgroundColor: 'white',
+},
+header: {
     backgroundColor: '#1E3A8A',
-    height: "30%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    height: "20%",
+    display:"flex",
+    justifyContent:"center",
+    paddingLeft: "10%",
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
-  },
+},
   profilePicture: {
     width: 100,
     height: 100,
@@ -210,7 +207,6 @@ const styles = StyleSheet.create({
     margin: 2,
   },
   friendsGrid: {
-    display:"flex",
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
@@ -224,21 +220,9 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#1e3a8a',
-  },
   editButton: {
     position: "absolute",
     top: "10%",
     right: "5%",
   },
-  
 });
