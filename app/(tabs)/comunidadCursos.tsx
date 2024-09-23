@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { fetchCursos } from '@/lib/categorias';
+import { supabase } from '@/lib/supabase';
 
 const ComunidadCursosScreen = () => {
   const [cursos, setCursos] = useState([]);
@@ -14,8 +14,15 @@ const ComunidadCursosScreen = () => {
 
   useEffect(() => {
     const loadCursos = async () => {
+      setLoading(true);
       try {
-        const data = await fetchCursos(categoriaId);
+        const { data, error } = await supabase
+          .from('Curso')
+          .select('*')
+          .eq('id_categoria', categoriaId);
+        if (error) {
+          throw error;
+        }
         setCursos(data);
       } catch (err) {
         console.error("Error al cargar cursos:", err);
@@ -26,6 +33,7 @@ const ComunidadCursosScreen = () => {
     };
     loadCursos();
   }, [categoriaId]);
+
 
   const renderCurso = ({ item }) => (
     <TouchableOpacity

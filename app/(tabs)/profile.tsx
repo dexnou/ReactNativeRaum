@@ -5,11 +5,9 @@ import { Text, View } from '@/components/Themed';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
 import { fetchUser, fetchAmigos } from '@/lib/user';
-import { fetchUser, fetchAmigos } from '@/lib/user';
 import FontAwesome from '@expo/vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';   
 
-export default function ProfileScreen() {
 export default function ProfileScreen() {
   const route = useRoute();
   const navigation = useNavigation();

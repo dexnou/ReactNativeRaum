@@ -125,12 +125,12 @@ export const fetchProgress = async (userId: number) => {
 
     if (error) {
       console.error('Error al obtener el progreso:', error.message);
-      throw new Error('Error al obtener el progreso');
+      return null;
     }
 
     if (!data || data.length === 0) {
       console.log('No se encontró progreso');
-      return [];
+      return null;
     }
 
     console.log('Progreso obtenido con éxito:', data);

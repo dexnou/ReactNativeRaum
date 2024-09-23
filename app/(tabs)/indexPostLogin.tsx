@@ -9,7 +9,7 @@ import ProgressBar from '@/components/ProgressBar';
 export default function HomeScreen() {
     const navigation = useNavigation();
     const route = useRoute();
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState();
     const [isLoading, setIsLoading] = useState(true);
 
     useFocusEffect(
@@ -29,8 +29,9 @@ export default function HomeScreen() {
                             // Actualiza el AsyncStorage con el ID del usuario
                             await AsyncStorage.setItem('userId', session.user.id);
                         } else {
+                            const userSimple = await fetchUser(Number(session.user.id));
+                            setUserData(userSimple);
                             console.error('No se encontraron datos del usuario');
-                            navigation.navigate('Login');
                         }
                     } else {
                         // Si no hay sesión, intenta obtener el ID del usuario de AsyncStorage
@@ -64,16 +65,20 @@ export default function HomeScreen() {
         <>
             <View style={styles.header}>
                 <Text style={styles.headerText}>
-                    ¡Hola {item.nombreuser || 'Usuario'}!
+                    ¡Hola {item.nombreuser || item.nombre || 'Nombre'}!
                 </Text>
             </View>
-            
-            <View style={styles.content}>
+            {item.length > 0 ? (
+                <View style={styles.content}>
                 <View key={item.idcurso} style={styles.capitulo}>
-                    <Text style={styles.capitutoTitle}>{item.nombrecurso}</Text>
-                    <ProgressBar progress={item.cursoprogress || 80} />{/*aca se completa con la variable de progreso*/}
+                    <Text style={styles.capitutoTitle}>{item.nombrecurso || 'No hay un curso'}</Text>
+                    <ProgressBar progress={item.cursoprogress || 0} />{/*aca se completa con la variable de progreso*/}
                 </View>
             </View>
+            ) : (
+                <Text>No hay cursos disponibles</Text>
+            )}
+            
         </>
     );
 
