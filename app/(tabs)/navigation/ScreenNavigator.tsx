@@ -14,6 +14,9 @@ import EditProfileScreen from "@/components/EditProfileScreen";
 import ComunidadCursos from "../comunidadCursos";
 import ComunidadUsuarios from "../comunidadUsuarios";
 import FriendsInfo from "../friendsInfo";
+import EventosCat from "../eventosCat";
+import eventos from "../eventos";
+import DetalleEvento from "../detalleEvento";
 import React from "react";
 
 
@@ -36,6 +39,9 @@ export default function StackNavigator() {
       <Stack.Screen name="ComunidadCursos" component={ComunidadCursos}/>
       <Stack.Screen name="ComunidadUsuarios" component={ComunidadUsuarios}/>
       <Stack.Screen name="FriendsInfo" component={FriendsInfo}/>
+      <Stack.Screen name="EventosCat" component={EventosCat}/>
+      <Stack.Screen name="eventos" component={eventos}/>
+      <Stack.Screen name="DetalleEvento" component={DetalleEvento}/>
     </Stack.Navigator>
   );
 }

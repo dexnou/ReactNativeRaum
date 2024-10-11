@@ -17,7 +17,7 @@ export const fetchCursos = async (idCategoria: number) => {
     const { data, error } = await supabase.from('Cursos')
     .select(`
       *`)
-    .eq('id_categoria','1');
+    .eq('id_categoria',idCategoria);
     if (error) {
       console.log(error);
     } else {
@@ -31,7 +31,7 @@ export const fetchUsuariosCursos = async (idCurso: number) => {
     .select(`
       *,
       Usuario_TEA(nombre,fotoUsuario)`)
-    .eq('id_curso','1');
+    .eq('id_curso',idCurso);
     if (error) {
       console.log(error);
     } else {

@@ -12,6 +12,7 @@ import { Picker } from '@react-native-picker/picker';
 export default function EditProfileScreen() {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [userData, setUserData] = useState({
     id: '',
     username: '',
@@ -134,7 +135,8 @@ export default function EditProfileScreen() {
       }
   
       await updateUserProfile(userData.id, updateData);
-  
+      setShowSuccessMessage(true);
+      setTimeout(() => setShowSuccessMessage(false), 3000);
       Alert.alert('Éxito', 'Perfil actualizado correctamente');
       console.log("Hola, estoy arriba del navigate");
       navigation.navigate('Profile', { userId: userData.id });
@@ -221,6 +223,12 @@ export default function EditProfileScreen() {
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
         <Text style={styles.saveButtonText}>Guardar Cambios</Text>
       </TouchableOpacity>
+
+      {showSuccessMessage && (
+        <View style={styles.successMessage}>
+          <Text style={styles.successMessageText}>Perfil actualizado correctamente</Text>
+        </View>
+      )}
 
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutButtonText}>CERRAR SESIÓN</Text>
@@ -317,5 +325,17 @@ const styles = StyleSheet.create({
     color: 'red',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  successMessage: {
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  successMessageText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
