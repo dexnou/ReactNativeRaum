@@ -40,7 +40,7 @@ const ComunidadCursosScreen = () => {
       style={styles.cursoItem}
       onPress={() => navigation.navigate('ComunidadUsuarios', { cursoId: item.id_curso })}
     >
-      <View style={[styles.cursoIcon, { backgroundColor: item.color || '#1E3A8A' }]}>
+      <View style={[styles.cursoIcon, { backgroundColor: item.color || '#03175E' }]}>
         <Image
           source={{ uri: item.fotoCurso || 'https://via.placeholder.com/100' }}
           style={styles.cursoImagen}
@@ -92,13 +92,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   header: {
-    backgroundColor: '#1E3A8A',
-    height: 60,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20,
+    backgroundColor: '#03175E',
+    height: 140,
+    paddingTop: '15%',
+    paddingBottom: '10%',
+    paddingHorizontal: '5%',
+    borderBottomRightRadius: 40,
+    borderBottomLeftRadius: 40,
   },
   backButton: {
     padding: 10,

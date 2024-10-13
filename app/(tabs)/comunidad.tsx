@@ -43,7 +43,9 @@ export default function ComunidadScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Comunidad</Text>
+    <View style={styles.header}>
+        <Text style={styles.headerText}>Comunidad</Text>
+    </View>
       <FlatList
         data={categorias}
         renderItem={renderCategoria}
@@ -58,15 +60,29 @@ export default function ComunidadScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    display:"flex",
+    backgroundColor: 'transparent',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+  header: {
+    backgroundColor: '#03175E',
+    height: 140,
+    paddingTop: '15%',
+    paddingBottom: '10%',
+    paddingHorizontal: '5%',
+    borderBottomRightRadius: 40,
+    borderBottomLeftRadius: 40,
+  },
+  headerText: {
+      color: 'white',
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginLeft: 20,
   },
   categoriasList: {
+    display:'flex',
     justifyContent: 'space-between',
+    alignContent:'center',
+    margin:'5%'
   },
   categoriaItem: {
     width: '48%',

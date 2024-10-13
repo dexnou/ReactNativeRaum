@@ -106,19 +106,25 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         display:"flex",
-        backgroundColor: '#F3F4F6',
-    },
-    header: {
-        backgroundColor: '#1E3A8A',
-        paddingVertical: 60,
-        paddingHorizontal: 20,
-        borderBottomRightRadius: 20,
-        borderBottomLeftRadius: 20,
-    },
-    headerText: {
-        color: 'white',
-        fontSize: 24,
-        fontWeight: 'bold',
+        backgroundColor: 'transparent',
+      },
+      header: {
+        backgroundColor: '#03175E',
+        height: 140,
+        paddingTop: '15%',
+        paddingBottom: '10%',
+        paddingHorizontal: '5%',
+        borderBottomRightRadius: 40,
+        borderBottomLeftRadius: 40,
+      },
+      headerText: {
+          color: 'white',
+          fontSize: 24,
+          fontWeight: 'bold',
+          marginLeft: 20,
+      },
+    flatList: {
+        flex: 1,
     },
     categoriasList: {
         margin:0,

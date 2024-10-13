@@ -154,14 +154,14 @@ const styles = StyleSheet.create({
     display:"flex",
 },
   header: {
-    backgroundColor: '#1E3A8A',
-    height: "30%",
+    backgroundColor: '#03175E',
+    height: 160,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 40,
+    borderBottomLeftRadius: 40,
   },
   profilePicture: {
     width: 100,

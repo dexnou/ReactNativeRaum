@@ -143,16 +143,23 @@ export default function FriendsInfoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    display:"flex",
+    backgroundColor: 'transparent',
   },
   header: {
-    backgroundColor: '#1E3A8A',
-    height: "20%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20,
+    backgroundColor: '#03175E',
+    height: 140,
+    paddingTop: '15%',
+    paddingBottom: '10%',
+    paddingHorizontal: '5%',
+    borderBottomRightRadius: 40,
+    borderBottomLeftRadius: 40,
+  },
+  headerText: {
+      color: 'white',
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginLeft: 20,
   },
   profilePicture: {
     width: 100,
@@ -199,7 +206,7 @@ const styles = StyleSheet.create({
     margin: 2,
   },
   addFriendButton: {
-    backgroundColor: '#1E3A8A',
+    backgroundColor: '#03175E',
     padding: 10,
     borderRadius: 5,
     marginHorizontal: 20,

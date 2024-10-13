@@ -95,7 +95,7 @@ export default function HomeScreen() {
     if (isLoading) {
         return (
             <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#1e3a8a" />
+                <ActivityIndicator size="large" color="#03175E" />
                 <Text style={styles.loadingText}>Cargando...</Text>
             </View>
         );
@@ -116,23 +116,26 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F3F4F6',
-    },
-    flatList: {
-        flex: 1,
-    },
-    header: {
-        backgroundColor: '#1E3A8A',
+        display:"flex",
+        backgroundColor: 'transparent',
+      },
+      header: {
+        backgroundColor: '#03175E',
+        height: 140,
         paddingTop: '15%',
         paddingBottom: '10%',
         paddingHorizontal: '5%',
-        borderBottomRightRadius: 20,
-        borderBottomLeftRadius: 20,
-    },
-    headerText: {
-        color: 'white',
-        fontSize: 24,
-        fontWeight: 'bold',
+        borderBottomRightRadius: 40,
+        borderBottomLeftRadius: 40,
+      },
+      headerText: {
+          color: 'white',
+          fontSize: 24,
+          fontWeight: 'bold',
+          marginLeft: 20,
+      },
+    flatList: {
+        flex: 1,
     },
     content: {
         flex: 1,
@@ -158,7 +161,7 @@ const styles = StyleSheet.create({
         marginTop: '5%',
     },
     button: {
-        backgroundColor: '#1E3A8A',
+        backgroundColor: '#1D59CB',
         padding: '4%',
         borderRadius: 10,
         width: '48%',
@@ -179,6 +182,6 @@ const styles = StyleSheet.create({
     loadingText: {
         marginTop: '3%',
         fontSize: 16,
-        color: '#1E3A8A',
+        color: '#03175E',
     },
 });

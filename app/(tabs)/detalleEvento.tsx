@@ -109,7 +109,7 @@ const DetalleEvento = () => {
 
 const styles = StyleSheet.create({
     inscribirseButton: {
-        backgroundColor: '#1E3A8A',
+        backgroundColor: '#03175E',
         padding: 15,
         borderRadius: 10,
         alignItems: 'center',
@@ -124,22 +124,29 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
-    header: {
-        backgroundColor: '#1E3A8A',
-        height: "20%",
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 10,
-        borderBottomRightRadius: 20,
-        borderBottomLeftRadius: 20,
-    },
     backButton: {
         padding: 10,
     },
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-    },
+        display:"flex",
+        backgroundColor: 'transparent',
+      },
+      header: {
+        backgroundColor: '#03175E',
+        height: 140,
+        paddingTop: '15%',
+        paddingBottom: '10%',
+        paddingHorizontal: '5%',
+        borderBottomRightRadius: 40,
+        borderBottomLeftRadius: 40,
+      },
+      headerText: {
+          color: 'white',
+          fontSize: 24,
+          fontWeight: 'bold',
+          marginLeft: 20,
+      },
     centered: {
         flex: 1,
         justifyContent: 'center',

@@ -151,7 +151,7 @@ export default function EditProfileScreen() {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#1e3a8a" />
+        <ActivityIndicator size="large" color="#03175E" />
         <Text style={styles.loadingText}>Cargando...</Text>
       </View>
     );
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   changePhotoText: {
-    color: '#1e3a8a',
+    color: '#03175E',
     fontSize: 16,
   },
   formGroup: {
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     }),
   },
   saveButton: {
-    backgroundColor: '#1e3a8a',
+    backgroundColor: '#03175E',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#1e3a8a',
+    color: '#03175E',
   },
   // Estilos para el botón de Logout
   logoutButton: {

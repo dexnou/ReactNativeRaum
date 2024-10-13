@@ -89,14 +89,15 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
     },
     header: {
-        backgroundColor: '#1E3A8A',
-        height: "20%",
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 10,
-        borderBottomRightRadius: 20,
-        borderBottomLeftRadius: 20,
-    }, backButton: {
+        backgroundColor: '#03175E',
+        height: 140,
+        paddingTop: '15%',
+        paddingBottom: '10%',
+        paddingHorizontal: '5%',
+        borderBottomRightRadius: 40,
+        borderBottomLeftRadius: 40,
+      },
+      backButton: {
         padding: 10,
     },
     headerText: {
