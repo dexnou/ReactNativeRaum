@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, Image, Button, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { fetchAmigos, fetchAmigosProgress } from '@/lib/user';
+import { FlatList, Image, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { fetchAmigosProgress } from '@/lib/user';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const AmigosProgresoScreen = () => {
     const route = useRoute();
@@ -17,11 +18,9 @@ const AmigosProgresoScreen = () => {
     const loadProfileData = async () => {
         try {
             const storedUserId = route.params?.userId || await AsyncStorage.getItem('userId');
-            console.log('ID de usuario obtenido:', storedUserId);
             if (storedUserId) {
                 await fetchData(parseInt(storedUserId));
             } else {
-                console.error('No se encontró el ID del usuario en AsyncStorage');
                 navigation.navigate("Login");
             }
         } catch (error) {
@@ -31,10 +30,9 @@ const AmigosProgresoScreen = () => {
         }
     };
 
-    const fetchData = async (userId: number) => {
+    const fetchData = async (userId) => {
         try {
             const amigosProgData = await fetchAmigosProgress(userId);
-            console.log('FetchAmigosProgress manda: ', amigosProgData);
             setAmigosProg(amigosProgData);
         } catch (error) {
             console.error('Error fetching amigos progress', error);
@@ -42,17 +40,17 @@ const AmigosProgresoScreen = () => {
     };
 
     const renderAmigo = ({ item }) => (
-        <TouchableOpacity key={item.iduser} style={styles.amigoItem}>
+        <View style={styles.amigoItem}>
             <Image 
                 source={{ uri: item.fotouser || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }}
                 style={styles.amigoImage}
             />
             <View style={styles.amigoInfo}>
                 <Text style={styles.amigoName}>{`${item.nombreuser || ''}`.trim() || 'Nombre no disponible'}</Text>
-                <Text>{`${item.nombrecurso || ''}`.trim() || 'Curso no disponible'}</Text>
-                <Text>{`Progreso: ${item.cursoprogress || '0'}%`}</Text>
+                <Text style={styles.amigoDetails}>Cursos hechos: {item.cursoscompletados || 0}</Text>
+                <Text style={styles.amigoDetails}>Categoría favorita: {item.categoriafavorita || 'No disponible'}</Text>
             </View>
-        </TouchableOpacity>
+        </View>
     );
 
     if (loading) {
@@ -61,17 +59,25 @@ const AmigosProgresoScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Progreso de mis amigos</Text>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                    <Icon name="arrow-left" size={24} color="white" />
+                </TouchableOpacity>
+                <Text style={styles.headerText}>Mis amigos</Text>
+            </View>
             {amigosProg.length > 0 ? (
                 <FlatList
                     data={amigosProg}
                     keyExtractor={(item) => item.iduser.toString()}
                     renderItem={renderAmigo}
+                    contentContainerStyle={styles.listContainer}
                 />
             ) : (
                 <Text style={styles.noAmigos}>No se han encontrado amigos</Text>
             )}
-            <Button title="Buscar Más Amigos" onPress={() => navigation.navigate('Comunidad')} />
+            <TouchableOpacity onPress={() => navigation.navigate('Comunidad')} style={styles.floatingButton}>
+                <Icon name="search" size={24} color="white" />
+            </TouchableOpacity>
         </View>
     );
 };
@@ -79,36 +85,71 @@ const AmigosProgresoScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        display:"flex",
+        backgroundColor: 'transparent',
+    },
+    header: {
+        backgroundColor: '#1E3A8A',
+        height: "20%",
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 20,
+    }, backButton: {
         padding: 10,
     },
-    title: {
+    headerText: {
+        color: 'white',
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginLeft: 20,
+    },
+    listContainer: {
+        padding: 20,
     },
     amigoItem: {
+        display:'flex',
+        justifyContent:'space-around',
         flexDirection: 'row',
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        backgroundColor: '#565C92',
+        borderRadius: 100,
+        padding: 5,
+        marginBottom: "5%",
     },
     amigoImage: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
+        width: 60,
+        height: 60,
+        borderRadius: 100,
+        marginRight:'5%'
     },
     amigoInfo: {
-        marginLeft: 10,
-        justifyContent: 'center',
+        flex: 1,
     },
     amigoName: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
+        color: 'white',
+    },
+    amigoDetails: {
+        fontSize: 14,
+        color: 'white',
     },
     noAmigos: {
         fontSize: 18,
         textAlign: 'center',
         marginTop: 20,
+    },
+    floatingButton: {
+        position: 'absolute',
+        right: 10,
+        bottom: 30,
+        backgroundColor: '#1D59CB',
+        width: 50,
+        height: 50,
+        borderRadius: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 
