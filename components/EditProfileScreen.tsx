@@ -164,7 +164,7 @@ export default function EditProfileScreen() {
   return (
     <>
     <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.navigate('Comunidad')} style={styles.backButton}>
+                <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.backButton}>
                     <Icon name="arrow-left" size={24} color="white" />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>Editar Perfil</Text>
