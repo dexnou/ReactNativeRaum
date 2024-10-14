@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
 },
   header: {
     backgroundColor: '#03175E',
-    height: 160,
+    height: 150,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -189,8 +189,9 @@ const styles = StyleSheet.create({
   },
   infoUserBold: {
     fontWeight: 'bold',
-    fontSize: 16,
-    color: '#1D59CB',
+    fontSize: 18,
+    color: '#03175E',
+
   },
   infoUser: {
     fontSize: 16,

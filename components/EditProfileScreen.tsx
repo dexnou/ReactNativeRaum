@@ -7,6 +7,8 @@ import { fetchUser, updateUserProfile } from '@/lib/user';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 
 export default function EditProfileScreen() {
@@ -160,7 +162,16 @@ export default function EditProfileScreen() {
   console.log('Renderizando categorías:', categorias);
 
   return (
+    <>
+    <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.navigate('Comunidad')} style={styles.backButton}>
+                    <Icon name="arrow-left" size={24} color="white" />
+                </TouchableOpacity>
+                <Text style={styles.headerText}>Editar Perfil</Text>
+    </View>
+
     <ScrollView style={styles.container}>
+
       <TouchableOpacity style={styles.imageContainer} onPress={handleImagePick}>
         <Image
           source={{ uri: userData.fotoUsuario || 'https://via.placeholder.com/150' }}
@@ -235,15 +246,38 @@ export default function EditProfileScreen() {
       </TouchableOpacity>
 
     </ScrollView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
+    display:"flex",
+    backgroundColor: 'transparent',
+    margin:'5%'
+},
+  header: {
+    backgroundColor: '#03175E',
+    height: 150,
+    paddingTop: '15%',
+    paddingBottom: '10%',
+    paddingHorizontal: '5%',
+    borderBottomRightRadius: 40,
+    borderBottomLeftRadius: 40,
   },
+  backButton: {
+    padding:10,
+    position: 'absolute',
+    left: 10,
+    top:10,
+},
+headerText: {
+    color: 'white',
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginLeft: 20,
+},
   imageContainer: {
     alignItems: 'center',
     marginBottom: 20,
@@ -260,12 +294,13 @@ const styles = StyleSheet.create({
   },
   formGroup: {
     marginBottom: 20,
+    backgroundColor: 'trasparent',
   },
   label: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
-    color: '#333',
+    color: '#03175E',
   },
   input: {
     borderWidth: 1,
@@ -338,4 +373,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  
 });

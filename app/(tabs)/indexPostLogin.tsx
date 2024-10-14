@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
       },
       header: {
         backgroundColor: '#03175E',
-        height: 140,
+        height: 150,
         paddingTop: '15%',
         paddingBottom: '10%',
         paddingHorizontal: '5%',
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
       },
       headerText: {
           color: 'white',
-          fontSize: 24,
+          fontSize: 30,
           fontWeight: 'bold',
           marginLeft: 20,
       },

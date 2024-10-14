@@ -38,7 +38,7 @@ background: {
 
   // Text styles
   title: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#000',

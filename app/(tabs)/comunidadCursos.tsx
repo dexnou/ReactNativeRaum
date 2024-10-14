@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ComunidadCursosScreen = () => {
   const [cursos, setCursos] = useState([]);
@@ -68,12 +69,12 @@ const ComunidadCursosScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          {/* Add back button */}
-        </TouchableOpacity>
-        <Text style={styles.headerText}>Cursos</Text>
-      </View>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                    <Icon name="arrow-left" size={24} color="white" />
+                </TouchableOpacity>
+                <Text style={styles.headerText}>Cursos</Text>
+            </View>
       <FlatList
         contentContainerStyle={styles.list}
         data={cursos}
@@ -89,11 +90,12 @@ const ComunidadCursosScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-  },
-  header: {
+    display:"flex",
+    backgroundColor: 'transparent',
+},
+header: {
     backgroundColor: '#03175E',
-    height: 140,
+    height: 150,
     paddingTop: '15%',
     paddingBottom: '10%',
     paddingHorizontal: '5%',
@@ -101,14 +103,17 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 40,
   },
   backButton: {
-    padding: 10,
-  },
-  headerText: {
+    padding:10,
+    position: 'absolute',
+    left: 10,
+    top:10,
+},
+headerText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: 'bold',
     marginLeft: 20,
-  },
+},
   list: {
     padding: 20,
   },

@@ -68,7 +68,7 @@ export default function SignUp({onSubmit}: Props){
       marginBottom: 20,
     },
     name: {
-      fontSize: 24,
+      fontSize: 30,
       fontWeight: 'bold',
       marginBottom: 10,
     },

@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ComunidadUsuariosScreen = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -56,11 +57,15 @@ const ComunidadUsuariosScreen = () => {
       style={styles.usuarioItem}
       onPress={() => handleUsuarioPress(item.id)}
     >
-      <Image
-        source={{ uri: item.fotoUsuario || 'https://via.placeholder.com/50' }}
-        style={styles.usuarioImagen}
-      />
-      <Text style={styles.usuarioNombre}>{item.nombre}</Text>
+      <View style={styles.divImagen}>
+        <Image
+          source={{ uri: item.fotoUsuario || 'https://via.placeholder.com/50' }}
+          style={styles.usuarioImagen}
+        />
+      </View>
+      <View style={styles.divNombre}>
+        <Text style={styles.usuarioNombre}>{item.nombre}</Text>
+      </View>
     </TouchableOpacity>
   );
 
@@ -82,12 +87,12 @@ const ComunidadUsuariosScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          {/* Add back button icon here */}
-        </TouchableOpacity>
-        <Text style={styles.headerText}>Usuarios</Text>
-      </View>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                    <Icon name="arrow-left" size={24} color="white" />
+                </TouchableOpacity>
+                <Text style={styles.headerText}>Usuarios</Text>
+            </View>
       <FlatList
         contentContainerStyle={styles.usuariosList}
         data={usuarios}
@@ -99,46 +104,67 @@ const ComunidadUsuariosScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: 'white',
-    },
-    header: {
+  container: {
+    flex: 1,
+    display:"flex",
+    backgroundColor: 'transparent',
+  },
+  header: {
       backgroundColor: '#03175E',
-      height: 140,
+      height: 150,
       paddingTop: '15%',
       paddingBottom: '10%',
       paddingHorizontal: '5%',
       borderBottomRightRadius: 40,
-    borderBottomLeftRadius: 40,
+      borderBottomLeftRadius: 40,
     },
     backButton: {
-      padding: 10,
+      padding:10,
+      position: 'absolute',
+      left: 10,
+      top:10,
     },
     headerText: {
-      color: 'white',
-      fontSize: 20,
-      fontWeight: 'bold',
-      marginLeft: 20,
+        color: 'white',
+        fontSize: 30,
+        fontWeight: 'bold',
+        marginLeft: 20,
     },
     usuariosList: {
       padding: 20,
     },
     usuarioItem: {
+      display:'flex',
+      flex:1,
+      justifyContent:'center',
       flexDirection: 'row',
-      alignItems: 'center',
-      padding: 10,
-      borderBottomWidth: 1,
-      borderBottomColor: '#e0e0e0',
+      alignItems:'center',
+      backgroundColor: '#565C92',
+      borderRadius: 100,
+      padding: 5,
+      marginBottom: "5%",
+    },
+    divImagen:{
+      width:'30%',
+      display:'flex',
+      justifyContent:'flex-start',
+      backgroundColor:'trasparent'
     },
     usuarioImagen: {
-      width: 50,
-      height: 50,
-      borderRadius: 25,
-      marginRight: 10,
+      width: 60,
+      height: 60,
+      borderRadius: 100,
+    },
+    divNombre:{
+      width:'70%',
+      display:'flex',
+      justifyContent:'center',
+      backgroundColor:'trasparent'
     },
     usuarioNombre: {
-      fontSize: 16,
+      fontSize: 20,
+        fontWeight: 'bold',
+        color: 'white',
     },
     centered: {
       flex: 1,

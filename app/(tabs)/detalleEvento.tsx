@@ -17,12 +17,9 @@ const DetalleEvento = () => {
     const { eventoId } = route.params;
     
     useEffect(() => {
-        
         const loadEvento = async () => {
             try {
-                console.log("Cargando evento:", eventoId);
                 const data = await fetchDetalleEvento(eventoId);
-                console.log("Evento cargado:", data);
                 setDataEvento(data[0]);
             } catch (err) {
                 console.error("Error al cargar evento:", err);
@@ -37,7 +34,7 @@ const DetalleEvento = () => {
         setInscripto(true);
         try {
             if (estaInscripto) {
-                const desinscripto = await deleteEventoEnrollment(eventoId, 2); // Asegúrate de que el id de usuario sea correcto
+                const desinscripto = await deleteEventoEnrollment(eventoId, 2);
                 if (desinscripto) {
                     alert("Desinscripción exitosa");
                     setEstaInscripto(false);
@@ -45,7 +42,7 @@ const DetalleEvento = () => {
                     alert("Error al desinscribirse");
                 }
             } else {
-                const inscripto = await setEventoEnrollment(eventoId, 2); // Asegúrate de que el id de usuario sea correcto
+                const inscripto = await setEventoEnrollment(eventoId, 2);
                 if (inscripto) {
                     alert("Inscripción exitosa");
                     setEstaInscripto(true);
@@ -59,7 +56,6 @@ const DetalleEvento = () => {
             setInscripto(false);
         }
     }
-
 
     if (isLoading) {
         return (
@@ -84,102 +80,145 @@ const DetalleEvento = () => {
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                     <Icon name="arrow-left" size={24} color="white" />
                 </TouchableOpacity>
+                <View style={styles.iconContainer}>
+                    {/*<Icon name="book" size={80} color="white" />*/}
+                </View>
             </View>
-            <Text style={styles.eventoNombre}>{dataEvento.nombre || 'Evento sin nombre'}</Text>
-            <Text style={styles.eventoFecha}>Fecha Evento: {dataEvento.fecha || 'Fecha no disponible'}</Text>
-            <Text style={styles.eventoUbicacion}>Ubicación: {dataEvento.locacion || 'Ubicación no disponible'}</Text>
-            <Text style={styles.eventoHorario}>Horario: {dataEvento.horario || 'Horario no disponible'}</Text>
-            <Text style={styles.eventoDescripcion}>Descripción: {dataEvento.descripcion || 'Descripción no disponible'}</Text>
-            <Text style={styles.eventoNombreCat}>Categoría: {dataEvento.nombrecategoria || 'Nombre Categoría no disponible'}</Text>
-            
-            <TouchableOpacity 
-                style={[styles.inscribirseButton, estaInscripto && styles.desinscribirseButton]}
-                onPress={handleInscripcion}
-                disabled={inscripto}
-            >
-                <Text style={styles.inscribirseButtonText}>
-                    {inscripto ? 'Procesando...' : (estaInscripto ? 'Desinscribirse' : 'Inscribirse')}
-                </Text>
-            </TouchableOpacity>
+            <View style={styles.content}>
+                <Text style={styles.eventoNombre}>{dataEvento.nombre || 'Evento sin nombre'}</Text>
+                <View style={styles.divInfo}>
+                    <Text style={styles.infoUserBold}>¿Dónde va a ser?: </Text>
+                    <Text style={styles.infoUser}> {dataEvento.locacion || 'Ubicación no disponible'}</Text>
+                </View>
+                <View style={styles.divInfo}>
+                    <Text style={styles.infoUserBold}>¿Cuándo va a ser?:  </Text>
+                    <Text style={styles.infoUser}>{dataEvento.fecha || 'Fecha no disponible'}</Text>
+                </View>
+                {/*<View style={styles.divInfo}>
+                    <Text style={styles.infoUserBold}>Categoría:  </Text>
+                    <Text style={styles.infoUser}>{dataEvento.nombrecategoria || 'Categoría no disponible'}</Text>
+                </View>*/}
+                <View style={styles.divInfo}>
+                    <Text style={styles.infoUserBold}>¿Quién lo organiza?:  </Text>
+                    <Text style={styles.infoUser}>{dataEvento.organizador || 'Organizador no disponible'}</Text>
+                </View>
+                <View style={styles.divInfo}>
+                    <Text style={styles.infoUserBold}>¿Qué se va a hacer en el evento?: </Text>
+                    <Text style={styles.infoUser}>{dataEvento.descripcion || 'Descripción no disponible'}</Text>
+                </View>
+                <View style={styles.divInfo}>
+                    <Text style={styles.infoUserBold}>Capacidad del evento: </Text>
+                    <Text style={styles.infoUser}>{dataEvento.capacidad || 'Capacidad no disponible'}</Text>
+                </View>
+
+                {/*<Text style={styles.participantesTitle}>Participantes:</Text>
+                <FlatList
+                    data={dataEvento.participantes || []}
+                    horizontal
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => (
+                        <View style={styles.participante}>
+                            <Image source={{ uri: item.avatar }} style={styles.avatar} />
+                            <Text style={styles.nombreParticipante}>{item.nombre}</Text>
+                        </View>
+                    )}
+                />*/}
+
+                <TouchableOpacity 
+                    style={[styles.inscribirseButton, estaInscripto && styles.desinscribirseButton]}
+                    onPress={handleInscripcion}
+                    disabled={inscripto}
+                >
+                    <Text style={styles.inscribirseButtonText}>
+                        {inscripto ? 'Procesando...' : (estaInscripto ? 'Desinscribirse' : 'Inscribirse')}
+                    </Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
-
 }
 
-
 const styles = StyleSheet.create({
-    inscribirseButton: {
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+    },
+    header: {
         backgroundColor: '#03175E',
+        height: 150,
+        borderBottomRightRadius: 40,
+        borderBottomLeftRadius: 40,
+    },
+    content: {
+        paddingHorizontal: 20,
+        paddingTop: 20,
+    },
+    iconContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    eventoNombre: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    divInfo: {
+        flexDirection: "row",
+        
+      },
+      infoUserBold: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        color: '#03175E',
+    
+      },
+      infoUser: {
+        fontSize: 16,
+      },
+    participantesTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginVertical: 20,
+    },
+    participante: {
+        alignItems: 'center',
+        marginHorizontal: 10,
+    },
+    avatar: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        marginBottom: 5,
+    },
+    nombreParticipante: {
+        fontSize: 14,
+    },
+    inscribirseButton: {
+        backgroundColor: '#1D59CB',
         padding: 15,
         borderRadius: 10,
         alignItems: 'center',
-        marginHorizontal: 20,
         marginTop: 20,
     },
     desinscribirseButton: {
-        backgroundColor: '#DC2626', // Un color rojo para desinscribirse
+        backgroundColor: '#DC2626',
     },
     inscribirseButtonText: {
         color: 'white',
         fontSize: 18,
         fontWeight: 'bold',
     },
-    backButton: {
-        padding: 10,
-    },
-    container: {
-        flex: 1,
-        display:"flex",
-        backgroundColor: 'transparent',
-      },
-      header: {
-        backgroundColor: '#03175E',
-        height: 140,
-        paddingTop: '15%',
-        paddingBottom: '10%',
-        paddingHorizontal: '5%',
-        borderBottomRightRadius: 40,
-        borderBottomLeftRadius: 40,
-      },
-      headerText: {
-          color: 'white',
-          fontSize: 24,
-          fontWeight: 'bold',
-          marginLeft: 20,
-      },
     centered: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    eventoImagen: {
-        width: '100%',
-        height: 200,
-    },
-    eventoNombre: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        margin: 10,
-    },
-    eventoFecha: {
-        fontSize: 16,
-        marginHorizontal: 10,
-    },
-    eventoUbicacion: {
-        fontSize: 16,
-        marginHorizontal: 10,
-    },
-    eventoDescripcion: {
-        fontSize: 16,
-        margin: 10,
-    },
-    eventoHorario: {
-        fontSize: 16,
-        margin: 10,
-    },
-    eventoNombreCat: {
-        fontSize: 16,
-        margin: 10,
+    backButton: {
+        padding: 10,
+        position: 'absolute',
+        left: 10,
+        top: 10,
     },
 });
 

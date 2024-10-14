@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     },
     header: {
         backgroundColor: '#03175E',
-        height: 140,
+        height: 150,
         paddingTop: '15%',
         paddingBottom: '10%',
         paddingHorizontal: '5%',
@@ -98,11 +98,14 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 40,
       },
       backButton: {
-        padding: 10,
+        padding:10,
+        position: 'absolute',
+        left: 10,
+        top:10,
     },
     headerText: {
         color: 'white',
-        fontSize: 24,
+        fontSize: 30,
         fontWeight: 'bold',
         marginLeft: 20,
     },

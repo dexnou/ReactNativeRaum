@@ -30,7 +30,7 @@ const EventosCat = () => {
     }, [categoriaId]);
 
     const renderEvento = ({ item }) => {
-        if (!item) return null; // Si el item es undefined o null, no renderizamos nada
+        if (!item) return null;
         
         return (
             <TouchableOpacity 
@@ -43,23 +43,24 @@ const EventosCat = () => {
                     });
                 }}
             >
-                <Image 
-                    source={{ uri: item.foto || 'https://via.placeholder.com/150' }} 
-                    style={styles.eventoImagen}
-                />
                 <View style={styles.eventoInfo}>
                     <Text style={styles.eventoNombre}>{item.nombre || 'Evento sin nombre'}</Text>
                     <Text style={styles.eventoUbicacion}>{item.locacion || 'Ubicación no disponible'}</Text>
                 </View>
+
+                <Image 
+                    source={{ uri: item.fotoCategoria || 'https://img.freepik.com/vector-premium/no-hay-foto-disponible-icono-vector-simbolo-imagen-predeterminado-imagen-proximamente-sitio-web-o-aplicacion-movil_87543-10615.jpg' }} 
+                    style={styles.eventoImagen}
+                />
             </TouchableOpacity>
+            
         );
     };
-
 
     if (loading) {
         return (
             <View style={styles.centered}>
-                <ActivityIndicator size="large" />
+                <ActivityIndicator size="large" color="#03175E" />
                 <Text>Cargando eventos...</Text>
             </View>
         );
@@ -99,85 +100,57 @@ const EventosCat = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        display:"flex",
-        backgroundColor: 'transparent',
-      },
-      header: {
+        backgroundColor: '#fff',
+    },
+    header: {
         backgroundColor: '#03175E',
-        height: 140,
+        height: 150,
         paddingTop: '15%',
         paddingBottom: '10%',
         paddingHorizontal: '5%',
         borderBottomRightRadius: 40,
         borderBottomLeftRadius: 40,
-      },
-      headerText: {
-          color: 'white',
-          fontSize: 24,
-          fontWeight: 'bold',
-          marginLeft: 20,
-      },
+    },
+    headerText: {
+        color: 'white',
+        fontSize: 30,
+        fontWeight: 'bold',
+        marginLeft: 20,
+        
+    },
     backButton: {
         padding: 10,
-    },
-    cursosList: {
-        padding: "5%",
-    },
-    columnaCurso: {
-        justifyContent: 'space-between',
-    },
-    cursoItem: {
-        alignItems: 'center',
-        marginBottom: 20,
-        width: '45%',
-    },
-    cursoIcon: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    cursoImagen: {
-        width:"100%",
-        height: "100%",
-    },
-    cursoNombre: {
-        fontSize: 16,
-        textAlign: 'center',
+        position: 'absolute',
+        left: 10,
+        top: 10,
     },
     eventosList: {
-        padding: 15,
+        padding: 20,
     },
     eventoItem: {
         flexDirection: 'row',
-        marginBottom: 20,
-        backgroundColor: '#f0f0f0',
+        alignItems: 'center',
+        backgroundColor: '#478EEE',
         borderRadius: 10,
-        overflow: 'hidden',
-    },
-    eventoImagen: {
-        width: 100,
-        height: 100,
+        padding: 15,
+        marginBottom: 15,
     },
     eventoInfo: {
         flex: 1,
-        padding: 10,
     },
     eventoNombre: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
+        color: '#fff',
         marginBottom: 5,
-    },
-    eventoFecha: {
-        fontSize: 14,
-        color: '#666',
-        marginBottom: 3,
     },
     eventoUbicacion: {
         fontSize: 14,
-        color: '#666',
+        color: '#fff',
+    },
+    eventoImagen: {
+        padding:30,
+        borderRadius:100
     },
     centered: {
         flex: 1,
