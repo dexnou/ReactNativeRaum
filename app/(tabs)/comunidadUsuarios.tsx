@@ -4,6 +4,7 @@ import { Text, View } from '@/components/Themed';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { supabase } from '@/lib/supabase';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ComunidadUsuariosScreen = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -12,6 +13,7 @@ const ComunidadUsuariosScreen = () => {
   const route = useRoute();
   const { cursoId } = route.params;
   const navigation = useNavigation();
+  
 
   useEffect(() => {
     const loadUsuarios = async () => {
@@ -26,12 +28,13 @@ const ComunidadUsuariosScreen = () => {
         if (cursoUsuarioError) {
           throw cursoUsuarioError;
         }
-
+        const userId = await AsyncStorage.getItem('userId');
         // Fetch the Usuario_TEA records for the users enrolled in the course
         const { data: usuarioData, error: usuarioError } = await supabase
           .from('Usuario_TEA')
           .select('*')
-          .in('id', cursoUsuarioData.map(cu => cu.id_usuario));
+          .in('id', cursoUsuarioData.map(cu => cu.id_usuario))
+          .neq('id', userId);
 
         if (usuarioError) {
           throw usuarioError;
