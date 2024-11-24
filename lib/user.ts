@@ -282,7 +282,30 @@ export async function updateUserProfile(userId: string, userData: {
   }
 }
 
+export const fetchCapitulo = async (cursoId: number) => {
+  try {
+    const { data, error } = await supabase
+      .from('Capitulo')
+      .select('*')
+      .eq('id_curso', cursoId);
 
+    if (error) {
+      console.error('Error al obtener capítulos:', error.message);
+      return null;
+    }
+
+    if (!data || data.length === 0) {
+      console.log('No se encontraron capítulos');
+      return [];
+    }
+
+    console.log('Capítulos obtenidos con éxito:', data);
+    return data;
+  } catch (err) {
+    console.error('Error inesperado en fetchCapitulo:', err);
+    throw err;
+  }
+}
 
 // // FETCH DE EVENTOS : TE MUESTRA LOS EVENTOS SEGÚN LA CATEGORÍA QUE TOQUES
 

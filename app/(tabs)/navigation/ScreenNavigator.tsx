@@ -17,6 +17,7 @@ import FriendsInfo from "../friendsInfo";
 import EventosCat from "../eventosCat";
 import eventos from "../eventos";
 import DetalleEvento from "../detalleEvento";
+import CapituloSeleccionadoScreen from "../game/selectedChapter";
 import React from "react";
 
 
@@ -32,6 +33,7 @@ export default function StackNavigator() {
       <Stack.Screen name="FirstPage" component={FirstPage}/>
       <Stack.Screen name="Cursos" component={CursosScreen}/>
       <Stack.Screen name="CursosPorCategoria" component={CursosPorCategoriaScreen}/>
+      <Stack.Screen name="CapituloSeleccionado" component={CapituloSeleccionadoScreen}/>
       <Stack.Screen name="SeguirProgreso" component={SeguirProgreso}/>
       <Stack.Screen name="AmigosProgreso" component={AmigosProgresoScreen}/>
       <Stack.Screen name="JuegoCurso" component={JuegoCursoScreen}/>

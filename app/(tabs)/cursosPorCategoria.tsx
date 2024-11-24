@@ -34,7 +34,7 @@ const CursosPorCategoriaScreen = () => {
             style={styles.cursoItem}
             onPress={() => {
                 console.log("Navegando a juegodeCurso con:", item.id_curso, item.nombre);
-                navigation.navigate('JuegoCurso', { cursoId: item.id_curso, cursoNombre: item.nombre });
+                navigation.navigate('CapituloSeleccionado', { cursoId: item.id_curso, cursoNombre: item.nombre });
             }}
         >
             <View style={[styles.cursoIcon, { backgroundColor: item.color }]}>
