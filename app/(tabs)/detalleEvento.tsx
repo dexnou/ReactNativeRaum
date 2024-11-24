@@ -1,61 +1,76 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, TouchableOpacity, View, Text, StyleSheet, ActivityIndicator, Image } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { fetchDetalleEvento } from '../../lib/eventos'; // Asegúrate de que la ruta sea correcta
+import { fetchDetalleEvento, fetchEnrollment, setEventoEnrollment, deleteEventoEnrollment } from '../../lib/eventos'; 
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { setEventoEnrollment } from '../../lib/eventos';
-import { deleteEventoEnrollment } from '../../lib/eventos';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DetalleEvento = () => {
     const [dataEvento, setDataEvento] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [inscripto, setInscripto] = useState(false);
     const [estaInscripto, setEstaInscripto] = useState(false);
+    const [userId, setUserId] = useState(null);
 
     const route = useRoute();
     const navigation = useNavigation();
     const { eventoId } = route.params;
-    
+
+    useEffect(() => {
+        const loadUserIdAndEnrollment = async () => {
+            try {
+                const storedUserId = await AsyncStorage.getItem('userId');
+                setUserId(storedUserId);
+
+                if (storedUserId) {
+                    const enrollmentStatus = await fetchEnrollment(eventoId, storedUserId);
+                    setEstaInscripto(enrollmentStatus);
+                }
+            } catch (err) {
+                console.error('Error loading userId or enrollment:', err);
+            }
+        };
+
+        loadUserIdAndEnrollment();
+    }, [eventoId]);
+
     useEffect(() => {
         const loadEvento = async () => {
             try {
                 const data = await fetchDetalleEvento(eventoId);
                 setDataEvento(data[0]);
             } catch (err) {
-                console.error("Error al cargar evento:", err);
+                console.error('Error al cargar evento:', err);
             } finally {
                 setIsLoading(false);
             }
         };
+
         loadEvento();
     }, [eventoId]);
-    
+
     const handleInscripcion = async () => {
-        setInscripto(true);
         try {
             if (estaInscripto) {
-                const desinscripto = await deleteEventoEnrollment(eventoId, 2);
+                const desinscripto = await deleteEventoEnrollment(eventoId, userId);
                 if (desinscripto) {
-                    alert("Desinscripción exitosa");
+                    alert('Desinscripción exitosa');
                     setEstaInscripto(false);
                 } else {
-                    alert("Error al desinscribirse");
+                    alert('Error al desinscribirse');
                 }
             } else {
-                const inscripto = await setEventoEnrollment(eventoId, 2);
+                const inscripto = await setEventoEnrollment(eventoId, userId);
                 if (inscripto) {
-                    alert("Inscripción exitosa");
+                    alert('Inscripción exitosa');
                     setEstaInscripto(true);
                 } else {
-                    alert("Error al inscribirse");
+                    alert('Error al inscribirse');
                 }
             }
         } catch (err) {
-            console.error("Error al procesar la inscripción:", err);
-        } finally {
-            setInscripto(false);
+            console.error('Error al procesar la inscripción:', err);
         }
-    }
+    };
 
     if (isLoading) {
         return (
@@ -80,26 +95,20 @@ const DetalleEvento = () => {
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                     <Icon name="arrow-left" size={24} color="white" />
                 </TouchableOpacity>
-                <View style={styles.iconContainer}>
-                    {/*<Icon name="book" size={80} color="white" />*/}
-                </View>
+                <View style={styles.iconContainer}></View>
             </View>
             <View style={styles.content}>
                 <Text style={styles.eventoNombre}>{dataEvento.nombre || 'Evento sin nombre'}</Text>
                 <View style={styles.divInfo}>
                     <Text style={styles.infoUserBold}>¿Dónde va a ser?: </Text>
-                    <Text style={styles.infoUser}> {dataEvento.locacion || 'Ubicación no disponible'}</Text>
+                    <Text style={styles.infoUser}>{dataEvento.locacion || 'Ubicación no disponible'}</Text>
                 </View>
                 <View style={styles.divInfo}>
-                    <Text style={styles.infoUserBold}>¿Cuándo va a ser?:  </Text>
+                    <Text style={styles.infoUserBold}>¿Cuándo va a ser?: </Text>
                     <Text style={styles.infoUser}>{dataEvento.fecha || 'Fecha no disponible'}</Text>
                 </View>
-                {/*<View style={styles.divInfo}>
-                    <Text style={styles.infoUserBold}>Categoría:  </Text>
-                    <Text style={styles.infoUser}>{dataEvento.nombrecategoria || 'Categoría no disponible'}</Text>
-                </View>*/}
                 <View style={styles.divInfo}>
-                    <Text style={styles.infoUserBold}>¿Quién lo organiza?:  </Text>
+                    <Text style={styles.infoUserBold}>¿Quién lo organiza?: </Text>
                     <Text style={styles.infoUser}>{dataEvento.organizador || 'Organizador no disponible'}</Text>
                 </View>
                 <View style={styles.divInfo}>
@@ -111,32 +120,18 @@ const DetalleEvento = () => {
                     <Text style={styles.infoUser}>{dataEvento.capacidad || 'Capacidad no disponible'}</Text>
                 </View>
 
-                {/*<Text style={styles.participantesTitle}>Participantes:</Text>
-                <FlatList
-                    data={dataEvento.participantes || []}
-                    horizontal
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => (
-                        <View style={styles.participante}>
-                            <Image source={{ uri: item.avatar }} style={styles.avatar} />
-                            <Text style={styles.nombreParticipante}>{item.nombre}</Text>
-                        </View>
-                    )}
-                />*/}
-
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={[styles.inscribirseButton, estaInscripto && styles.desinscribirseButton]}
                     onPress={handleInscripcion}
-                    disabled={inscripto}
                 >
                     <Text style={styles.inscribirseButtonText}>
-                        {inscripto ? 'Procesando...' : (estaInscripto ? 'Desinscribirse' : 'Inscribirse')}
+                        {estaInscripto ? 'Desinscribirse' : 'Inscribirse'}
                     </Text>
                 </TouchableOpacity>
             </View>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {

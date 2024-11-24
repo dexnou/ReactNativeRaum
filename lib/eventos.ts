@@ -22,6 +22,17 @@ export const fetchDetalleEvento = async (idEvento: number) => {
     }
 }
 
+export const fetchEnrollment = async (idEvento: number, idUser: number) => {
+  console.log('Llega al fetchEnrollment con idEvento: ', idEvento, ' y idUser: ', idUser);
+    const { data, error } = await  supabase.rpc('get_event_enrollment', { evento: idEvento, usuario: idUser });
+    console.log('El usuario esta inscripto: ', data);
+    if(data > 0){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 export const setEventoEnrollment = async (idEvento: number, idUser: number) => {
     const { data, error } = await  supabase.rpc('event_enrollment', { evento: idEvento, usuario: idUser });
 
