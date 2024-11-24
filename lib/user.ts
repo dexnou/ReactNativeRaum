@@ -307,6 +307,83 @@ export const fetchCapitulo = async (cursoId: number) => {
   }
 }
 
+export const fetchPreguntas = async (capituloId: number) => {
+  try {
+    const { data, error } = await supabase
+      .from('Preguntas') // Cambia aquí según el nombre real de la tabla
+      .select('*')
+      .eq('id_capitulo', capituloId);
+
+
+    if (error) {
+      console.error('Error al obtener preguntas:', error.message);
+      return null;
+    }
+
+    if (!data || data.length === 0) {
+      console.log('No se encontraron preguntas');
+      return [];
+    }
+
+    console.log('Preguntas obtenidas con éxito:', data);
+    return data;
+  } catch (err) {
+    console.error('Error inesperado en fetchPreguntas:', err);
+    throw err;
+  }
+} 
+
+export const fetchInfoPrevia = async (capituloId: number) => {
+  try {
+    const { data, error } = await supabase
+      .from('Aprendizaje')
+      .select('*')
+      .eq('id_capitulo', capituloId); // Usa el parámetro recibido
+
+    if (error) {
+      console.error('Error al obtener información previa:', error.message);
+      return null;
+    }
+
+    if (!data || data.length === 0) {
+      console.log('No se encontró información previa');
+      return [];
+    }
+
+    console.log('Información previa obtenida con éxito:', data);
+    return data;
+  } catch (err) {
+    console.error('Error inesperado en fetchInfoPrevia:', err);
+    throw err;
+  }
+};
+
+
+export const fetchRespuestas = async (preguntaSeleccionada: number) => {
+  try {
+    const { data, error } = await supabase
+      .from('Respuestas')
+      .select('*')
+      .eq('id_pregunta', preguntaSeleccionada);
+
+    if (error) {
+      console.error('Error al obtener respuestas:', error.message);
+      return null;
+    }
+
+    if (!data || data.length === 0) {
+      console.log('No se encontraron respuestas');
+      return [];
+    }
+
+    console.log('Respuestas obtenidas con éxito:', data);
+    return data;
+  } catch (err) {
+    console.error('Error inesperado en fetchRespuestas:', err);
+    throw err;
+  }
+}
+
 // // FETCH DE EVENTOS : TE MUESTRA LOS EVENTOS SEGÚN LA CATEGORÍA QUE TOQUES
 
 // interface Evento {

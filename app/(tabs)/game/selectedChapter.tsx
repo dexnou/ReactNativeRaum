@@ -35,7 +35,7 @@ const CapituloSeleccionadoScreen = () => {
     }, [cursoId]);
 
     const renderItem = ({ item }) => (
-        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('JuegoCurso', { capituloId: item.id })}>
+        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('JuegoCurso', { capituloId: item.id_capitulo, capituloNombre: item.nombre})}>
             <View style={styles.item}>
                 <Text style={styles.itemText}>{item.nombre}</Text>
                 <Text>{item.descripcion}</Text>
