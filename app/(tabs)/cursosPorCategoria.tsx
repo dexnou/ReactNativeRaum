@@ -1,24 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, TouchableOpacity, View, Text, StyleSheet, ActivityIndicator, Image } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { fetchCursos } from '../../lib/user'; // Asegúrate de que la ruta sea correcta
+import { fetchCursos,fetchUsuariosCursos, fetchCapituloCount } from '../../lib/user'; // Asegúrate de que la ruta sea correcta
 import Icon from 'react-native-vector-icons/FontAwesome'; // Asegúrate de tener instalada esta librería
 
 const CursosPorCategoriaScreen = () => {
     const [cursos, setCursos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [usuariosCursos, setUsuariosCursos] = useState([]);
     const route = useRoute();
     const navigation = useNavigation();
     const { categoriaId, categoriaNombre } = route.params;
+    const [countCapitulosCursos, setCountCapitulosCursos] = useState([]);
 
     useEffect(() => {
         const loadCursos = async () => {
             try {
                 console.log("Cargando cursos para la categoría:", categoriaId);
                 const data = await fetchCursos(categoriaId);
+                const data2 = await fetchUsuariosCursos(categoriaId);
+                const data3 = await fetchCapituloCount(categoriaId);
                 console.log("Cursos cargados:", data);
                 setCursos(data);
+                setUsuariosCursos(data2);
+                setCountCapitulosCursos(data3);
+                /*hay que poner si tanto usuariosCursos o countCapitulosCursos = null tiene que poner 0,
+                es decir si !usuariosCursos[x] -> 0 || lo mismo para countCapitulosCursos*/
             } catch (err) {
                 console.error("Error al cargar cursos:", err);
                 setError(err.message);

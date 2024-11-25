@@ -1,266 +1,131 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { fetchPreguntas, fetchInfoPrevia, fetchRespuestas } from '../../../lib/user';
-import { useRoute } from '@react-navigation/native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
+import { fetchCapitulo } from '../../../lib/user';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure this library is installed
 
-const JuegoCursoScreen = () => {
+const CapituloSeleccionadoScreen = () => {
     const route = useRoute();
-    const { capituloId, capituloNombre } = route.params;
-
-    const [infoPrevia, setInfoPrevia] = useState([]);
-    const [preguntas, setPreguntas] = useState([]);
-    const [preguntaSeleccionada, setPreguntaSeleccionada] = useState(null);
-    const [respuestas, setRespuestas] = useState([]);
-    const [respuestaSeleccionada, setRespuestaSeleccionada] = useState(null);
-    const [mostrarPreguntas, setMostrarPreguntas] = useState(false);
-    const [mensajeRespuesta, setMensajeRespuesta] = useState('');
-    const [cargandoPreguntas, setCargandoPreguntas] = useState(true);
-    const [juegoTerminado, setJuegoTerminado] = useState(false);
+    const navigation = useNavigation();
+    const { cursoId, cursoNombre } = route.params;
+    const [capitulos, setCapitulos] = useState([]);
 
     useEffect(() => {
-        const loadInfoPrevia = async () => {
-            if (!capituloId) {
-                console.error('capituloId is undefined');
+        const loadCapitulos = async () => {
+            if (!cursoId) {
+                console.error('cursoId is undefined');
                 return;
             }
             try {
-                const fetchedInfoPrevia = await fetchInfoPrevia(capituloId);
-                setInfoPrevia(fetchedInfoPrevia);
+                console.log('Fetching Capitulos for cursoId:', cursoId);
+                const fetchedCapitulos = await fetchCapitulo(cursoId);
+                console.log('Fetched Capitulos:', fetchedCapitulos);
+                setCapitulos(fetchedCapitulos);
             } catch (error) {
-                console.error('Error fetching infoPrevia:', error);
+                console.error('Error fetching capitulos:', error);
             }
         };
-        loadInfoPrevia();
-    }, [capituloId]);
+        loadCapitulos();
+    }, [cursoId]);
 
-    useEffect(() => {
-        const loadPreguntas = async () => {
-            setCargandoPreguntas(true);
-            if (!capituloId) {
-                console.error('capituloId is undefined');
-                setCargandoPreguntas(false);
-                return;
-            }
-            try {
-                const fetchedPreguntas = await fetchPreguntas(capituloId);
-                setPreguntas(Array.isArray(fetchedPreguntas) ? fetchedPreguntas : []);
-                setPreguntaSeleccionada(fetchedPreguntas[0]); // Primera pregunta fija
-            } catch (error) {
-                console.error('Error fetching preguntas:', error);
-                setPreguntas([]);
-            } finally {
-                setCargandoPreguntas(false);
-            }
-        };
-        loadPreguntas();
-    }, [capituloId]);
+    const renderItem = ({ item }) => (
+        <TouchableOpacity 
+            onPress={() => navigation.navigate('JuegoCurso', { capituloId: item.id_capitulo, capituloNombre: item.nombre })}
+        >
+            <View style={styles.card}>
+                <View>
+                    <Text style={styles.cardTitle}>{item.nombre}</Text>
+                    {item.descripcion && (
+                        <Text style={styles.cardSubtitle}>{item.descripcion}</Text>
+                    )}
+                </View>
+                <View style={styles.badge}>
+                    <Text style={styles.badgeText}>{item.id_capitulo}</Text>
+                </View>
+            </View>
+        </TouchableOpacity>
+    );
 
-    useEffect(() => {
-        const loadRespuestas = async () => {
-            if (!preguntaSeleccionada) return;
-            try {
-                const fetchedRespuestas = await fetchRespuestas(preguntaSeleccionada.id_pregunta);
-                setRespuestas(fetchedRespuestas);
-            } catch (error) {
-                console.error('Error fetching respuestas:', error);
-            }
-        };
-        loadRespuestas();
-    }, [preguntaSeleccionada]);
-
-    const handleAsegurarRespuesta = () => {
-        if (!respuestaSeleccionada) {
-            setMensajeRespuesta('Debes seleccionar una respuesta antes de continuar.');
-            return;
-        }
-
-        if (respuestaSeleccionada.correcta) {
-            setMensajeRespuesta('¡Correcto! Pasando a la siguiente pregunta...');
-            setTimeout(() => {
-                setRespuestaSeleccionada(null);
-                avanzarPregunta();
-            }, 1500);
-        } else {
-            const respuestaCorrecta = respuestas.find((respuesta) => respuesta.correcta);
-            setMensajeRespuesta(
-                `Incorrecto. La respuesta correcta era: "${respuestaCorrecta?.info}".`
-            );
-        }
-    };
-
-    const avanzarPregunta = () => {
-        const siguientePregunta = preguntas[preguntas.indexOf(preguntaSeleccionada) + 1];
-        if (siguientePregunta) {
-            setPreguntaSeleccionada(siguientePregunta);
-            setMensajeRespuesta('');
-        } else {
-            setJuegoTerminado(true); // Marcamos el juego como terminado
-            setTimeout(() => {
-                reiniciarJuego(); // Reiniciamos después de mostrar el mensaje
-            }, 3000);
-        }
-    };
-
-    const reiniciarJuego = () => {
-        setPreguntaSeleccionada(null);
-        setRespuestaSeleccionada(null);
-        setMostrarPreguntas(false);
-        setMensajeRespuesta('');
-        setJuegoTerminado(false);
-    };
-
-    return (
+    return ( 
         <View style={styles.container}>
-            <Text style={styles.title}>{capituloNombre}</Text>
-
-            {!mostrarPreguntas ? (
-                <View>
-                    {infoPrevia.length > 0 ? (
-                        infoPrevia.map((item) => (
-                            <Text key={item.id_aprendizaje} style={styles.infoPrevia}>
-                                {item.contenido}
-                            </Text>
-                        ))
-                    ) : (
-                        <Text style={styles.infoPrevia}>Cargando información previa...</Text>
-                    )}
-
-                    <TouchableOpacity
-                        style={[
-                            styles.siguienteButton,
-                            (cargandoPreguntas || preguntas.length === 0) && styles.buttonDisabled,
-                        ]}
-                        onPress={() => setMostrarPreguntas(true)}
-                        disabled={cargandoPreguntas || preguntas.length === 0}
-                    >
-                        <Text style={styles.buttonText}>
-                            {cargandoPreguntas ? 'Cargando...' : 'Empezar'}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            ) : (
-                <View>
-                    {juegoTerminado ? (
-                        <Text style={styles.mensajeFinal}>
-                            Genial! Terminaste todas las preguntas, lo completaste con éxito!
-                        </Text>
-                    ) : (
-                        <>
-                            <Text style={styles.pregunta}>
-                                {preguntaSeleccionada?.info || 'Cargando pregunta...'}
-                            </Text>
-
-                            {respuestas.map((respuesta) => (
-                                <TouchableOpacity
-                                    key={respuesta.id_respuesta}
-                                    style={[
-                                        styles.respuesta,
-                                        respuestaSeleccionada === respuesta &&
-                                            styles.respuestaSeleccionada,
-                                    ]}
-                                    onPress={() => setRespuestaSeleccionada(respuesta)}
-                                >
-                                    <Text>{respuesta.info}</Text>
-                                </TouchableOpacity>
-                            ))}
-
-                            <TouchableOpacity
-                                style={[
-                                    styles.asegurarButton,
-                                    !respuestaSeleccionada && styles.buttonDisabled,
-                                ]}
-                                onPress={handleAsegurarRespuesta}
-                                disabled={!respuestaSeleccionada}
-                            >
-                                <Text style={styles.buttonText}>Asegurar</Text>
-                            </TouchableOpacity>
-
-                            {mensajeRespuesta ? (
-                                <Text style={styles.mensaje}>{mensajeRespuesta}</Text>
-                            ) : null}
-                        </>
-                    )}
-                </View>
-            )}
-        </View>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                    <Icon name="arrow-left" size={24} color="white" />
+                </TouchableOpacity>
+                <Text style={styles.headerText}>{cursoNombre}</Text>
+            </View>
+            <FlatList
+                data={capitulos}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id ? item.id.toString() : Math.random().toString()}
+                style={styles.list}
+            />
+        </View> 
     );
 };
-
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
-        backgroundColor: '#fff',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-    },
-    infoPrevia: {
-        fontSize: 16,
-        marginBottom: 20,
-    },
-    siguienteButton: {
-        backgroundColor: '#007BFF',
+        display:"flex",
+        backgroundColor: 'transparent',
+      },
+      header: {
+        backgroundColor: '#03175E',
+        height: 150,
+        paddingTop: '15%',
+        paddingBottom: '10%',
+        paddingHorizontal: '5%',
+        borderBottomRightRadius: 40,
+        borderBottomLeftRadius: 40,
+      },
+      headerText: {
+          color: 'white',
+          fontSize: 30,
+          fontWeight: 'bold',
+          marginLeft: 20,
+      },
+      backButton: {
         padding: 10,
-        borderRadius: 5,
+        position: 'absolute',
+        left: 10,
+        top: 10,
+    },
+    card: {
+        backgroundColor: '#4A90E2', // Card background blue
+        borderRadius: 8,           // Rounded corners for cards
+        padding: 15,
+        marginHorizontal: 20,
+        marginVertical: 10,
+        flexDirection: 'row',      // Aligns items horizontally
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
-    pregunta: {
+    cardTitle: {
+        color: '#ffffff',
         fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
+        fontWeight: '600',
     },
-    respuesta: {
-        padding: 10,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        marginBottom: 10,
+    cardSubtitle: {
+        color: '#ffffff',
+        fontSize: 14,
     },
-    respuestaSeleccionada: {
-        backgroundColor: '#D3E5FF',
-    },
-    asegurarButton: {
-        backgroundColor: '#28A745',
-        padding: 10,
-        borderRadius: 5,
-        alignItems: 'center',
-        marginTop: 20,
-    },
-    buttonText: {
-        color: '#fff',
-        fontWeight: 'bold',
-    },
-    buttonDisabled: {
-        backgroundColor: '#ccc',
-    },
-    mensaje: {
-        marginTop: 20,
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#d9534f',
-    },
-    mensajeFinal: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#28a745',
-        textAlign: 'center',
-        marginTop: 20,
-    },
-    finalContainer: {
+    badge: {
+        backgroundColor: '#ffffff', // Badge white background
+        width: 30,
+        height: 30,
+        borderRadius: 15,          // Circular badge
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 50,
     },
-    reintentarButton: {
-        backgroundColor: '#007BFF',
-        padding: 10,
-        borderRadius: 5,
-        marginTop: 20,
+    badgeText: {
+        color: '#002B7F',          // Blue badge text color
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    list: {
+        marginTop: 10,
     },
 });
 
-export default JuegoCursoScreen;
+export default CapituloSeleccionadoScreen;

@@ -1,14 +1,8 @@
-/*o deberpiamos hacer un IF para saber si es práctico o teórico, 
-ya que la actividad puede no tener multiple choice, y que sea sólo informativa*/
-/*acá te debería llevar akl seleccionar un curso, se muestra la breve descripcion 
-y hay un botón para arrancar a jugar y ese te lleva a el juego en sí*/
-
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import {fetchCapitulo} from '../../../lib/user';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Asegúrate de tener instalada esta librería
-
+import { fetchCapitulo } from '../../../lib/user';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure this library is installed
 
 const CapituloSeleccionadoScreen = () => {
     const route = useRoute();
@@ -35,14 +29,20 @@ const CapituloSeleccionadoScreen = () => {
     }, [cursoId]);
 
     const renderItem = ({ item }) => (
-        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('JuegoCurso', { capituloId: item.id_capitulo, capituloNombre: item.nombre})}>
+        <TouchableOpacity 
+            onPress={() => navigation.navigate('JuegoCurso', { capituloId: item.id_capitulo, capituloNombre: item.nombre})}
+        >
             <View style={styles.item}>
-                <Text style={styles.itemText}>{item.nombre}</Text>
-                <Text>{item.descripcion}</Text>
+                <View style={styles.itemContent}>
+                    <Text style={styles.itemText}>{item.nombre}</Text>
+                    {item.descripcion && (
+                        <Text style={styles.descriptionText}>{item.descripcion}</Text>
+                    )}
+                </View>
+                
             </View>
         </TouchableOpacity>
     );
-
     return ( 
         <View style={styles.container}>
             <View style={styles.header}>
@@ -55,6 +55,7 @@ const CapituloSeleccionadoScreen = () => {
                 data={capitulos}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id ? item.id.toString() : Math.random().toString()}
+                style={styles.list}
             />
         </View> 
     );
@@ -65,8 +66,8 @@ const styles = StyleSheet.create({
         flex: 1,
         display:"flex",
         backgroundColor: 'transparent',
-    },
-    header: {
+      },
+      header: {
         backgroundColor: '#03175E',
         height: 150,
         paddingTop: '15%',
@@ -75,63 +76,62 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 40,
         borderBottomLeftRadius: 40,
       },
-      backButton: {
-        padding:10,
+      headerText: {
+          color: 'white',
+          fontSize: 30,
+          fontWeight: 'bold',
+          marginLeft: 20,
+      },
+    backButton: {
+        padding: 10,
         position: 'absolute',
         left: 10,
-        top:10,
+        top: 10,
     },
-    headerText: {
-        color: 'white',
-        fontSize: 30,
-        fontWeight: 'bold',
-        marginLeft: 20,
-    },
-      list: {
+    list: {
         padding: 20,
-      },
-      columnWrapper: {
-        justifyContent: 'space-between',
-      },
-      cursoItem: {
-        alignItems: 'center',
-        marginBottom: 20,
-        width: '45%',
-      },
-      cursoIcon: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 10,
-      },
-      cursoImagen: {
-        width: '100%',
-        height: '100%',
-        borderRadius: 50,
-      },
-      cursoNombre: {
-        fontSize: 16,
-        textAlign: 'center',
-      },
-      centered: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-    title: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        marginBottom: 20,
     },
     item: {
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        backgroundColor: '#4169E1', // Royal blue color
+        borderRadius: 15,
+        padding: 15,
+        marginBottom: 15,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    itemContent: {
+        flex: 1,
     },
     itemText: {
         fontSize: 18,
+        color: 'white',
+        fontWeight: '500',
+        marginBottom: 4,
+    },
+    descriptionText: {
+        color: 'rgba(255, 255, 255, 0.8)',
+        fontSize: 14,
+    },
+    userCount: {
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        borderRadius: 12,
+        paddingVertical: 4,
+        paddingHorizontal: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginLeft: 10,
+    },
+    centered: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        color: 'white',
+        marginBottom: 20,
     },
 });
 

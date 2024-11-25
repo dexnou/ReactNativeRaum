@@ -237,6 +237,55 @@ export const fetchCursos = async (categoriaId: number): Promise<Curso[]> => {
   }
 };
 
+export async function fetchUsuariosCursos(idCategoria: number){
+  try {
+    const { data, error } = await supabase.rpc('get_usuarios_cursos', {
+      categoria: idCategoria
+    });
+
+    if (error) {
+      console.error('Error al obtener usuarios por curso:', error.message);
+      throw new Error('Error al obtener usuarios por curso');
+    }
+
+    if (!data || data.length === 0) {
+      console.log('No se encontró usuarios por curso');
+      return [];
+    }
+
+    console.log('Usuarios por curso obtenido con éxito:', data);
+    return data;
+  } catch (err) {
+    console.error('Error inesperado en fetchUsuariosCursos:', err);
+    throw err;
+  }
+
+};
+
+export async function fetchCapituloCount(idCategoria: number){
+  try {
+    const { data, error } = await supabase.rpc('get_capitulo_count', {
+      categoria: idCategoria
+    });
+
+    if (error) {
+      console.error('Error al obtener capitulo count:', error.message);
+      throw new Error('Error al obtener capitulo count');
+    }
+
+    if (!data || data.length === 0) {
+      console.log('No se encontró capitulo count');
+      return [];
+    }
+
+    console.log('capitulo count obtenido con éxito:', data);
+    return data;
+  } catch (err) {
+    console.error('Error inesperado en fetchCapituloCount:', err);
+    throw err;
+  }
+
+};
 
 // UPDATE DE USUARIO : ACTUALIZA LOS DATOS DEL USUARIO: EDITAR PERFIL
 export async function updateUserProfile(userId: string, userData: {
