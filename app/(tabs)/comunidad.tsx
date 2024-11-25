@@ -10,26 +10,29 @@ export default function ComunidadScreen() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const loadCategorias = async () => {
       try {
-        const categoriasData = await fetchCategorias();
-        setCategorias(categoriasData);
-      } catch (error) {
-        console.error("Error fetching categorias:", error);
-      } finally {
-        setLoading(false);
+          console.log("Iniciando carga de categorías...");
+          const data = await fetchCategorias();
+          console.log("Categorías cargadas:", data);
+          setCategorias(data);
+          setLoading(false);
+      } catch (err) {
+          console.error("Error al cargar categorías:", err);
+          setError(err.message);
+          setLoading(false);
       }
-    };
-    fetchData();
+  };
+  loadCategorias();
   }, []);
+  
 
   const renderCategoria = ({ item }) => (
     <TouchableOpacity
-      style={styles.categoriaItem}
-      onPress={() => navigation.navigate('ComunidadCursos', { categoriaId: item.id_categoria })}
-    >
-      <Image source={{ uri: item.fotoCategoria }} style={styles.categoriaImagen} />
-      <Text style={styles.categoriaNombre}>{item.nombre}</Text>
+          style={styles.categoriaItem}
+          onPress={() => navigation.navigate('ComunidadCursos', { categoriaId: item.id_categoria, categoriaNombre: item.nombre })}
+        >
+          <Image source={{ uri: item.fotoCategoria }} style={styles.categoriaImagen} />
     </TouchableOpacity>
   );
 
@@ -80,28 +83,20 @@ const styles = StyleSheet.create({
   },
   categoriasList: {
     display:'flex',
-    justifyContent: 'space-between',
-    alignContent:'center',
-    margin:'5%'
+    justifyContent: 'space-around',
+    margin:'6%',
+    marginTop:'15%'
   },
   categoriaItem: {
     width: '48%',
-    marginBottom: 20,
+    margin: '2%',
     alignItems: 'center',
   },
   categoriaImagen: {
-    width: 100,
-    height: 100,
+    width: 150,
+    height: 150,
     borderRadius: 50,
-    marginBottom: 10,
-  },
-  categoriaNombre: {
-    textAlign: 'center',
-    fontSize: 16,
-  },
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
+
+

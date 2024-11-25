@@ -225,6 +225,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
+        textAlign:'center'
     },
     infoPrevia: {
         fontSize: 16,
@@ -235,6 +236,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         alignItems: 'center',
+        margin:'2%'
     },
     pregunta: {
         fontSize: 18,

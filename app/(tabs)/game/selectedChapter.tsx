@@ -30,18 +30,17 @@ const CapituloSeleccionadoScreen = () => {
 
     const renderItem = ({ item }) => (
         <TouchableOpacity 
-            onPress={() => navigation.navigate('JuegoCurso', { capituloId: item.id_capitulo, capituloNombre: item.nombre})}
-        >
-            <View style={styles.item}>
-                <View style={styles.itemContent}>
-                    <Text style={styles.itemText}>{item.nombre}</Text>
-                    {item.descripcion && (
-                        <Text style={styles.descriptionText}>{item.descripcion}</Text>
-                    )}
-                </View>
-                
+        onPress={() => navigation.navigate('JuegoCurso', {capituloId: item.id_capitulo, capituloNombre: item.nombre})}
+    >
+        <View style={styles.item}>
+            <View style={styles.itemContent}>
+                <Text style={styles.itemText}>{item.nombre}</Text>
+                {item.descripcion && (
+                    <Text style={styles.descriptionText}>{item.descripcion}</Text>
+                )}
             </View>
-        </TouchableOpacity>
+        </View>
+    </TouchableOpacity>
     );
     return ( 
         <View style={styles.container}>
@@ -64,10 +63,10 @@ const CapituloSeleccionadoScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        display:"flex",
+        display: "flex",
         backgroundColor: 'transparent',
-      },
-      header: {
+    },
+    header: {
         backgroundColor: '#03175E',
         height: 150,
         paddingTop: '15%',
@@ -75,24 +74,24 @@ const styles = StyleSheet.create({
         paddingHorizontal: '5%',
         borderBottomRightRadius: 40,
         borderBottomLeftRadius: 40,
-      },
-      headerText: {
-          color: 'white',
-          fontSize: 30,
-          fontWeight: 'bold',
-          marginLeft: 20,
-      },
+    },
     backButton: {
         padding: 10,
         position: 'absolute',
         left: 10,
         top: 10,
     },
+    headerText: {
+        color: 'white',
+        fontSize: 30,
+        fontWeight: 'bold',
+        marginLeft: 20,
+    },
     list: {
         padding: 20,
     },
     item: {
-        backgroundColor: '#4169E1', // Royal blue color
+        backgroundColor: '#8CBDFF', // Royal blue color
         borderRadius: 15,
         padding: 15,
         marginBottom: 15,
@@ -122,6 +121,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 10,
     },
+    userCountText: {
+        color: 'white',
+        fontSize: 16,
+        marginLeft: 5,
+    },
     centered: {
         flex: 1,
         justifyContent: 'center',
@@ -134,5 +138,4 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
 });
-
 export default CapituloSeleccionadoScreen;

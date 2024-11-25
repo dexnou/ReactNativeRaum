@@ -1,57 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, TouchableOpacity, View, Text, StyleSheet, ActivityIndicator, Image } from 'react-native';
+import { FlatList, TouchableOpacity, View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { fetchCursos,fetchUsuariosCursos, fetchCapituloCount } from '../../lib/user'; // Asegúrate de que la ruta sea correcta
-import Icon from 'react-native-vector-icons/FontAwesome'; // Asegúrate de tener instalada esta librería
+import { fetchCursos } from '../../lib/user';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { fetchUsuariosCursos, fetchCapituloCount } from '../../lib/user';
 
 const CursosPorCategoriaScreen = () => {
     const [cursos, setCursos] = useState([]);
+    const [usuariosCursos, setUsuariosCursos] = useState([]);
+    const [countCapitulos, setCountCapitulos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [usuariosCursos, setUsuariosCursos] = useState([]);
     const route = useRoute();
     const navigation = useNavigation();
     const { categoriaId, categoriaNombre } = route.params;
-    const [countCapitulosCursos, setCountCapitulosCursos] = useState([]);
 
     useEffect(() => {
         const loadCursos = async () => {
+            if (!categoriaId) {
+                console.error('categoriaId is undefined');
+                return;
+            }
             try {
-                console.log("Cargando cursos para la categoría:", categoriaId);
-                const data = await fetchCursos(categoriaId);
-                const data2 = await fetchUsuariosCursos(categoriaId);
-                const data3 = await fetchCapituloCount(categoriaId);
-                console.log("Cursos cargados:", data);
-                setCursos(data);
-                setUsuariosCursos(data2);
-                setCountCapitulosCursos(data3);
-                /*hay que poner si tanto usuariosCursos o countCapitulosCursos = null tiene que poner 0,
-                es decir si !usuariosCursos[x] -> 0 || lo mismo para countCapitulosCursos*/
-            } catch (err) {
-                console.error("Error al cargar cursos:", err);
-                setError(err.message);
-            } finally {
+                console.log('Fetching Cursos for categoriaId:', categoriaId);
+                const fetchedCursos = await fetchCursos(categoriaId);
+                const fetchedUsuariosCursos = await fetchUsuariosCursos(categoriaId);
+                const fetchedCapitulosCount = await fetchCapituloCount(categoriaId);
+    
+                console.log('Fetched Cursos:', fetchedCursos);
+    
+                // Combina los datos de las tres listas
+                const combinedData = fetchedCursos.map((curso, index) => ({
+                    ...curso,
+                    userCount: fetchedUsuariosCursos[index] || 0, // Usuarios por curso
+                    chapterCount: fetchedCapitulosCount[index] || 0, // Capítulos por curso
+                }));
+    
+                setCursos(combinedData); // Actualiza cursos con los datos combinados
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching cursos:', error);
+                setError(error.message);
                 setLoading(false);
             }
         };
         loadCursos();
     }, [categoriaId]);
+    
 
-    const renderCurso = ({ item }) => (
+
+    const renderItem = ({ item }) => (
         <TouchableOpacity 
-            style={styles.cursoItem}
-            onPress={() => {
-                console.log("Navegando a juegodeCurso con:", item.id_curso, item.nombre);
-                navigation.navigate('CapituloSeleccionado', { cursoId: item.id_curso, cursoNombre: item.nombre });
-            }}
+            onPress={() => navigation.navigate('CapituloSeleccionado', { cursoId: item.id_curso, cursoNombre: item.nombre })}
         >
-            <View style={[styles.cursoIcon, { backgroundColor: item.color }]}>
-                <Image 
-                    source={{ uri: item.fotoCategoria || 'https://img.freepik.com/vector-premium/no-hay-foto-disponible-icono-vector-simbolo-imagen-predeterminado-imagen-proximamente-sitio-web-o-aplicacion-movil_87543-10615.jpg' }} 
-                    style={styles.cursoImagen}
-                />
+            <View style={styles.item}>
+                <View style={styles.itemContent}>
+                    <Text style={styles.itemText}>{item.nombre}</Text>
+                </View>
+                
             </View>
-            <Text style={styles.cursoNombre}>{item.nombre}</Text>
         </TouchableOpacity>
     );
 
@@ -72,7 +79,7 @@ const CursosPorCategoriaScreen = () => {
         );
     }
 
-    return (
+    return ( 
         <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.navigate('Cursos')} style={styles.backButton}>
@@ -80,30 +87,23 @@ const CursosPorCategoriaScreen = () => {
                 </TouchableOpacity>
                 <Text style={styles.headerText}>{categoriaNombre}</Text>
             </View>
-            
-            {cursos.length > 0 ? (
-                <FlatList
-                    contentContainerStyle={styles.cursosList}
-                    data={cursos}
-                    renderItem={renderCurso}
-                    keyExtractor={item => item.id_curso.toString()}
-                    numColumns={2}
-                    columnWrapperStyle={styles.columnaCurso}
-                />
-            ) : (
-                <Text style={styles.noData}>No se encontraron cursos para esta categoría</Text>
-            )}
-        </View>
+            <FlatList
+                data={cursos}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id_curso ? item.id_curso.toString() : Math.random().toString()}
+                style={styles.list}
+            />
+        </View> 
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        display:"flex",
+        display: "flex",
         backgroundColor: 'transparent',
-      },
-      header: {
+    },
+    header: {
         backgroundColor: '#03175E',
         height: 150,
         paddingTop: '15%',
@@ -111,55 +111,58 @@ const styles = StyleSheet.create({
         paddingHorizontal: '5%',
         borderBottomRightRadius: 40,
         borderBottomLeftRadius: 40,
-      },
-      headerText: {
-          color: 'white',
-          fontSize: 30,
-          fontWeight: 'bold',
-          marginLeft: 20,
-      },
-      backButton: {
-        padding:10,
+    },
+    backButton: {
+        padding: 10,
         position: 'absolute',
         left: 10,
-        top:10,
+        top: 10,
     },
-    cursosList: {
-        padding: "5%",
+    headerText: {
+        color: 'white',
+        fontSize: 30,
+        fontWeight: 'bold',
+        marginLeft: 20,
     },
-    columnaCurso: {
+    list: {
+        padding: 20,
+    },
+    item: {
+        backgroundColor: '#478EEE',
+        borderRadius: 15,
+        padding: 25,
+        marginBottom: 15,
+        flexDirection: 'row',
         justifyContent: 'space-between',
-    },
-    cursoItem: {
         alignItems: 'center',
-        marginBottom: 20,
-        width: '45%',
     },
-    cursoIcon: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        justifyContent: 'center',
+    itemContent: {
+        flex: 1,
+    },
+    itemText: {
+        fontSize: 20,
+        color: 'white',
+        fontWeight: '500',
+        marginBottom: 4,
+    },
+    userCount: {
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        borderRadius: 12,
+        paddingVertical: 4,
+        paddingHorizontal: 12,
+        flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 10,
+        marginLeft: 10,
     },
-    cursoImagen: {
-        width:"100%",
-        height: "100%",
-    },
-    cursoNombre: {
+    userCountText: {
+        color: 'white',
         fontSize: 16,
-        textAlign: 'center',
+        marginLeft: 5,
     },
     centered: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    noData: {
-        fontSize: 18,
-        textAlign: 'center',
-        marginTop: 20,
     },
 });
 

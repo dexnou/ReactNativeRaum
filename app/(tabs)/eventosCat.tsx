@@ -37,10 +37,7 @@ const EventosCat = () => {
                 style={styles.eventoItem}
                 onPress={() => {
                     console.log("Navegando a DetalleEvento con:", item.idevento, item.nombre);
-                    navigation.navigate('DetalleEvento', { 
-                        eventoId: item.idevento, 
-                        eventoNombre: item.nombre 
-                    });
+                    navigation.navigate('DetalleEvento', { eventoId: item.idevento, eventoNombre: item.nombre });
                 }}
             >
                 <View style={styles.eventoInfo}>
@@ -48,10 +45,7 @@ const EventosCat = () => {
                     <Text style={styles.eventoUbicacion}>{item.locacion || 'Ubicación no disponible'}</Text>
                 </View>
 
-                <Image 
-                    source={{ uri: item.fotoCategoria || 'https://img.freepik.com/vector-premium/no-hay-foto-disponible-icono-vector-simbolo-imagen-predeterminado-imagen-proximamente-sitio-web-o-aplicacion-movil_87543-10615.jpg' }} 
-                    style={styles.eventoImagen}
-                />
+                
             </TouchableOpacity>
             
         );
@@ -77,7 +71,7 @@ const EventosCat = () => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                <TouchableOpacity onPress={() => navigation.navigate('Eventos')} style={styles.backButton}>
                     <Icon name="arrow-left" size={24} color="white" />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>Eventos {categoriaNombre}</Text>
@@ -148,10 +142,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#fff',
     },
-    eventoImagen: {
-        padding:30,
-        borderRadius:100
-    },
+    
     centered: {
         flex: 1,
         justifyContent: 'center',

@@ -33,7 +33,7 @@ export default function HomeScreen() {
                         }
                     } else {
                         // Si no hay sesión, intenta obtener el ID del usuario de AsyncStorage
-                        const storedUserId = await AsyncStorage.getItem('userId');
+                        const storedUserId = await AsyncStorage.getItem('userId');  
                         if (storedUserId) {
                             const user = await fetchProgress(Number(storedUserId));
                             if (user && user.length > 0) {

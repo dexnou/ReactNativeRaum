@@ -10,8 +10,9 @@ const ComunidadCursosScreen = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const route = useRoute();
-  const { categoriaId } = route.params;
+  const { categoriaId, categoriaNombre } = route.params;
   const navigation = useNavigation();
+  console.log('Este es el nombreCategoria que le llega a comunidadCursos', categoriaNombre);
 
   useEffect(() => {
     const loadCursos = async () => {
@@ -70,10 +71,10 @@ const ComunidadCursosScreen = () => {
   return (
     <View style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                <TouchableOpacity onPress={() => navigation.navigate('Comunidad')} style={styles.backButton}>
                     <Icon name="arrow-left" size={24} color="white" />
                 </TouchableOpacity>
-                <Text style={styles.headerText}>Cursos</Text>
+                <Text style={styles.headerText}>{categoriaNombre}</Text>
             </View>
       <FlatList
         contentContainerStyle={styles.list}
