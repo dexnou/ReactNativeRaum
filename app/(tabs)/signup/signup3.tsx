@@ -59,7 +59,7 @@ export default function EmailStep({ onNext, onPrevious }: { onNext: (data: objec
       </Text>
       <TextInput
         style={commonStyles.input}
-        placeholder="Año de Nacimiento"
+        placeholder="Fecha de Nacimiento: AAAA-MM-DD"
         placeholderTextColor="#C5C5C5"
         value={(contextState.fechaNacimiento) === '' ? fecNac : contextState.fechaNacimiento}
         onChangeText={handleFechaNacimientoChange}
